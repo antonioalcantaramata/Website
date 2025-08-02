@@ -11,6 +11,7 @@ function initializeWebsite() {
     initContactForm();
     initThemeAnimations();
     initLoadingAnimations();
+    initPublicationFilters();
 }
 
 // Navigation functionality
@@ -44,16 +45,50 @@ function initNavigation() {
     });
 
     // Active navigation link highlighting
-    updateActiveNavLink();
-    window.addEventListener('scroll', updateActiveNavLink);
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const sections = document.querySelectorAll('section[id]');
+    
+    if (sections.length > 0 && currentPage === 'index.html') {
+        // For home page with sections, use scroll-based navigation
+        window.addEventListener('scroll', updateActiveNavLink);
+        updateActiveNavLink(); // Initial call
+    } else {
+        // For other pages, use page-based navigation
+        setActiveNavLink();
+    }
+}
+
+function setActiveNavLink() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        const linkHref = link.getAttribute('href');
+        
+        // Check if the link href matches the current page
+        if (linkHref === currentPage || 
+            (currentPage === '' && linkHref === 'index.html') ||
+            (currentPage === '/' && linkHref === 'index.html') ||
+            (currentPage === 'index.html' && linkHref === 'index.html')) {
+            link.classList.add('active');
+        }
+    });
 }
 
 function updateActiveNavLink() {
+    // This function is for single-page navigation with sections
+    // Only run if we're on a page with sections (like index.html)
     const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
     
+    if (sections.length === 0) {
+        return; // No sections, use page-based navigation
+    }
+    
+    const navLinks = document.querySelectorAll('.nav-link');
     let current = '';
     
+    // Get the current section based on scroll position
     sections.forEach(section => {
         const sectionTop = section.offsetTop - 100;
         const sectionHeight = section.clientHeight;
@@ -63,9 +98,18 @@ function updateActiveNavLink() {
         }
     });
     
+    // If no section is detected or we're at the top, default to home
+    if (!current || window.scrollY < 100) {
+        current = 'home';
+    }
+    
     navLinks.forEach(link => {
         link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
+        const linkHref = link.getAttribute('href');
+        
+        // For section-based navigation on home page
+        if ((linkHref === `#${current}`) || 
+            (current === 'home' && linkHref === 'index.html')) {
             link.classList.add('active');
         }
     });
@@ -416,6 +460,171 @@ if ('performance' in window) {
     });
 }
 
+// Publication Filters
+function initPublicationFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const sortButtons = document.querySelectorAll('.sort-btn');
+    const publicationItems = document.querySelectorAll('.publication-item');
+    const publicationsList = document.querySelector('.publications-list');
+    
+    if (filterButtons.length === 0) return; // Exit if not on publications page
+    
+    // Current filter and sort state
+    let currentFilter = 'all';
+    let currentSort = 'desc';
+    
+    // Initialize button counts
+    updateAllButtonCounts(publicationItems);
+    
+    // Filter functionality
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+            currentFilter = filter;
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Apply filter and sort
+            applyFilterAndSort(currentFilter, currentSort);
+        });
+    });
+    
+    // Sort functionality
+    sortButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const sort = this.getAttribute('data-sort');
+            currentSort = sort;
+            
+            // Update active button
+            sortButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Apply filter and sort
+            applyFilterAndSort(currentFilter, currentSort);
+        });
+    });
+    
+    function applyFilterAndSort(filter, sort) {
+        // Get all publication items as array
+        const itemsArray = Array.from(publicationItems);
+        
+        // Filter items
+        const filteredItems = itemsArray.filter(item => {
+            const itemType = item.getAttribute('data-type');
+            return filter === 'all' || itemType === filter;
+        });
+        
+        // Sort filtered items by year
+        filteredItems.sort((a, b) => {
+            const yearA = parseInt(a.getAttribute('data-year')) || 0;
+            const yearB = parseInt(b.getAttribute('data-year')) || 0;
+            
+            // Primary sort by year
+            if (yearA !== yearB) {
+                if (sort === 'desc') {
+                    return yearB - yearA; // Newest first
+                } else {
+                    return yearA - yearB; // Oldest first
+                }
+            }
+            
+            // Secondary sort: reverse order for items with same year
+            // Get their original DOM position as tiebreaker
+            const indexA = Array.from(publicationItems).indexOf(a);
+            const indexB = Array.from(publicationItems).indexOf(b);
+            
+            if (sort === 'desc') {
+                return indexA - indexB; // Keep original order for desc
+            } else {
+                return indexB - indexA; // Reverse original order for asc
+            }
+        });
+        
+        // Hide all items first with animation
+        itemsArray.forEach(item => {
+            item.classList.add('fade-out');
+            setTimeout(() => {
+                item.classList.add('hidden');
+                item.style.display = 'none';
+            }, 300);
+        });
+        
+        // Show and reorder filtered items
+        setTimeout(() => {
+            // Clear the container
+            publicationsList.innerHTML = '';
+            
+            // Add filtered and sorted items back
+            filteredItems.forEach((item, index) => {
+                item.classList.remove('fade-out', 'hidden');
+                item.style.display = 'grid'; // Force grid display
+                publicationsList.appendChild(item);
+                
+                // Stagger the fade-in animation
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'scale(1)';
+                }, index * 100);
+            });
+        }, 350);
+    }
+    
+    // Initial sort (newest first by default)
+    setTimeout(() => {
+        applyFilterAndSort(currentFilter, currentSort);
+    }, 100);
+}
+
+function updateAllButtonCounts(items) {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    filterButtons.forEach(button => {
+        const filter = button.getAttribute('data-filter');
+        let count = 0;
+        let originalText = '';
+        
+        // Get the original button text (without count)
+        if (filter === 'all') {
+            originalText = 'All Publications';
+            count = items.length;
+        } else if (filter === 'journal') {
+            originalText = 'Journal Articles';
+            count = Array.from(items).filter(item => 
+                item.getAttribute('data-type') === 'journal'
+            ).length;
+        } else if (filter === 'conference') {
+            originalText = 'Conference Papers';
+            count = Array.from(items).filter(item => 
+                item.getAttribute('data-type') === 'conference'
+            ).length;
+        } else if (filter === 'working') {
+            originalText = 'Working Papers';
+            count = Array.from(items).filter(item => 
+                item.getAttribute('data-type') === 'working'
+            ).length;
+        }
+        
+        // Update button text with count
+        button.textContent = `${originalText} (${count})`;
+    });
+}
+
+function updatePublicationCount(filter, items) {
+    let count = 0;
+    if (filter === 'all') {
+        count = items.length;
+    } else {
+        count = Array.from(items).filter(item => 
+            item.getAttribute('data-type') === filter
+        ).length;
+    }
+    
+    // You can use this count to display somewhere if needed
+    console.log(`Showing ${count} publications of type: ${filter}`);
+}
+
 // Error handling
 window.addEventListener('error', function(e) {
     console.error('JavaScript error:', e.error);
@@ -430,4 +639,23 @@ if ('serviceWorker' in navigator) {
         //     .then(registration => console.log('SW registered'))
         //     .catch(error => console.log('SW registration failed'));
     });
+}
+
+// Toggle abstract visibility
+function toggleAbstract(button) {
+    const publicationItem = button.closest('.publication-item');
+    const abstract = publicationItem.querySelector('.pub-abstract');
+    const icon = button.querySelector('i');
+    
+    if (abstract.style.display === 'none' || abstract.style.display === '') {
+        abstract.style.display = 'block';
+        button.classList.add('expanded');
+        icon.classList.remove('fa-plus');
+        icon.classList.add('fa-minus');
+    } else {
+        abstract.style.display = 'none';
+        button.classList.remove('expanded');
+        icon.classList.remove('fa-minus');
+        icon.classList.add('fa-plus');
+    }
 }

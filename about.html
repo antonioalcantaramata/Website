@@ -21,7 +21,6 @@
             <div class="nav-menu" id="nav-menu">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="about.html" class="nav-link active">About</a>
-                <a href="research.html" class="nav-link">Research</a>
                 <a href="publications.html" class="nav-link">Publications</a>
                 <a href="teaching.html" class="nav-link">Teaching</a>
                 <a href="contact.html" class="nav-link">Contact</a>
@@ -37,8 +36,15 @@
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
-            <h1 class="page-title">About Me</h1>
-            <p class="page-subtitle">Learn more about my academic journey and research interests</p>
+            <div class="page-header-content">
+                <div class="page-header-image">
+                    <img src="images/profile.JPG" alt="Antonio Alcántara Mata" class="page-profile-image" loading="lazy" decoding="async">
+                </div>
+                <div class="page-header-text">
+                    <h1 class="page-title">About Me</h1>
+                    <p class="page-subtitle">Learn more about my academic journey and research interests</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -48,61 +54,192 @@
             <div class="about-content">
                 <div class="about-text">
                     <p class="lead">
-                        I am a predoctoral researcher at Universidad Carlos III de Madrid (UC3M, Spain), 
-                        funded by the FPU fellowship program (University Faculty Training Program by the Spanish Universities Ministry).
+                        I am a postdoctoral researcher at <a href="https://www.dtu.dk/" target="_blank" class="inline-link">DTU Wind and Energy Systems</a> (Denmark), 
+                        working with <a href="http://www.chatziva.com/" target="_blank">Prof. Spyros Chatzivasileiadis</a>. 
+                        I obtained my Ph.D in Mathematical Engineering from <a href="https://www.uc3m.es/" target="_blank" class="inline-link">Universidad Carlos III de Madrid</a>,
+                        where I was supervised by <a href="https://carlosruizmora.github.io/" target="_blank">Prof. Carlos Ruiz Mora</a>.
+                        My doctoral research focused on machine learning and surrogate modeling for optimization.
+                    </p>
+                    
+                    <p class="lead">
+                        My research interests include machine learning, probabilistic forecasting, data-driven optimization, and surrogate modeling, with a particular focus on applications in sustainable energy systems. 
+                        Further information about my research activities and achievements is available in my list of <a href="publications.html" class="inline-link">publications</a> 
+                        and academic <a href="cv/antonio_alcantara_cv.pdf" class="inline-link" target="_blank"> Curriculum Vitae</a>. 
+                    </p>
+                    
+                    <p class="cv-note">
+                        <i class="fas fa-info-circle"></i> CV last updated: July 2025
                     </p>
                     
                     <div class="about-details">
-                        <div class="detail-item">
-                            <i class="fas fa-graduation-cap"></i>
+                        <div class="detail-item positions-section">
                             <div>
-                                <h3>Current Position</h3>
-                                <p>Ph.D. Candidate in Mathematical Engineering at UC3M Statistics Department</p>
+                                <h3>Positions</h3>
+                                <ul class="position-list">
+                                    <li class="position-item">
+                                        <div class="position-content">
+                                            <div class="position-logo">
+                                                <img src="images/logos/dtu-logo.png" alt="DTU Logo" class="university-logo" onerror="this.style.display='none'">
+                                            </div>
+                                            <div class="position-details">
+                                                <span class="position-title">Postdoctoral Researcher</span>
+                                                <span class="position-org">Danish Technical University (DTU)</span>
+                                                <span class="position-org">Wind and Energy Systems</span>
+                                                <span class="position-org">Copenhagen, Denmark</span>
+                                                <span class="position-date">09/2025 - Present</span>
+                                                <span class="position-description">Engaged in innovative research on Trustworthy AI/ML and data-driven optimization at one of Europe's leading technical universities, with a strong focus on sustainable energy systems and power systems applications.</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="position-item">
+                                        <div class="position-content">
+                                            <div class="position-logo">
+                                                <img src="images/logos/uc3m-logo.png" alt="UC3M Logo" class="university-logo" onerror="this.style.display='none'">
+                                            </div>
+                                            <div class="position-details">
+                                                <span class="position-title">Predoctoral Researcher</span>
+                                                <span class="position-org">Universidad Carlos III de Madrid (UC3M)</span>
+                                                <span class="position-org">Statistics Department</span>
+                                                <span class="position-org">Madrid, Spain</span>
+                                                <span class="position-date">12/2021 - 06/2025</span>
+                                                <span class="position-description">Developed expertise in machine learning and operations research within UC3M's Department of Statistics, focusing on the use of ML models as surrogates in optimization problems (such as neural network MILP reformulations), while contributing to both research and teaching activities.</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="position-item">
+                                        <div class="position-content">
+                                            <div class="position-logo">
+                                                <img src="images/logos/uc3m-logo.png" alt="UC3M Logo" class="university-logo" onerror="this.style.display='none'">
+                                            </div>
+                                            <div class="position-details">
+                                                <span class="position-title">Research Assistant</span>
+                                                <span class="position-org">Universidad Carlos III de Madrid (UC3M)</span>
+                                                <span class="position-org">Computer Science Department</span>
+                                                <span class="position-org">Madrid, Spain</span>
+                                                <span class="position-date">01/2021 - 11/2021</span>
+                                                <span class="position-description">I began my research career at UC3M's Computer Science Department, focusing on probabilistic forecasting for regional renewable energy generation, which laid the foundation for my interdisciplinary approach to decision-making.</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                         
-                        <div class="detail-item">
-                            <i class="fas fa-brain"></i>
-                            <div>
-                                <h3>Research Focus</h3>
-                                <p>Data-driven optimization, machine learning, and probabilistic forecasting</p>
-                            </div>
-                        </div>
-                        
-                        <div class="detail-item">
-                            <i class="fas fa-award"></i>
+                        <div class="detail-item education-section">
                             <div>
                                 <h3>Education</h3>
-                                <p>Master's in Applied Statistics (Universidad de Granada, 2021)<br>
-                                Bachelor's in Statistics and Business (UC3M, 2016-2020)</p>
+                                <ul class="education-list">
+                                    <li class="education-item">
+                                        <div class="education-content">
+                                            <div class="education-logo">
+                                                <img src="images/logos/uc3m-logo.png" alt="UC3M Logo" class="university-logo" onerror="this.style.display='none'">
+                                            </div>
+                                            <div class="education-details">
+                                                <span class="degree-title">Ph.D. in Mathematical Engineering</span>
+                                                <span class="degree-org">Universidad Carlos III de Madrid (UC3M)</span>
+                                                <span class="degree-org">Madrid, Spain</span>
+                                                <span class="degree-date">2021 - 2025</span>
+                                                <!-- <span class="degree-description">Focused on machine learning and probabilistic forecasting applications, combining mathematical rigor with practical engineering solutions.</span> -->
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="education-item">
+                                        <div class="education-content">
+                                            <div class="education-logo">
+                                                <img src="images/logos/ugr-logo.png" alt="UGR Logo" class="university-logo" onerror="this.style.display='none'">
+                                            </div>
+                                            <div class="education-details">
+                                                <span class="degree-title">Master's in Applied Statistics</span>
+                                                <span class="degree-org">Universidad de Granada (UGR)</span>
+                                                <span class="degree-org">Granada, Spain</span>
+                                                <span class="degree-date">2020 - 2021</span>
+                                                <!-- <span class="degree-description">Advanced statistical methods and data analysis techniques at one of Spain's most prestigious statistics programs.</span> -->
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="education-item">
+                                        <div class="education-content">
+                                            <div class="education-logo">
+                                                <img src="images/logos/uc3m-logo.png" alt="UC3M Logo" class="university-logo" onerror="this.style.display='none'">
+                                            </div>
+                                            <div class="education-details">
+                                                <span class="degree-title">Bachelor's in Statistics and Business</span>
+                                                <span class="degree-org">Universidad Carlos III de Madrid (UC3M)</span>
+                                                <span class="degree-org">Madrid, Spain</span>
+                                                <span class="degree-date">2016 - 2020</span>
+                                                <!-- <span class="degree-description">Interdisciplinary foundation combining statistical methods with business applications, fostering a data-driven approach to problem-solving.</span> -->
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                     
-                    <p>
-                        My interdisciplinary educational background has generated a wide range of research interests, 
-                        from machine learning and probabilistic forecasting to data-driven optimization, 
-                        the field on which I am more focused during my predoctoral stage.
-                    </p>
-                </div>
-                
-                <div class="about-sidebar">
-                    <div class="research-link-card">
-                        <i class="fas fa-microscope"></i>
-                        <h3>Research Interests</h3>
-                        <p>Explore my current research areas, ongoing projects, and academic interests in detail.</p>
-                        <a href="research.html" class="btn btn-primary">
-                            Check My Research
-                        </a>
+                    <!-- Awards Section below the grid -->
+                    <div class="awards-section">
+                        <h3>Awards & Recognition</h3>
+                        <div class="awards-list">
+                            <div class="award-item">
+                                <div class="award-content">
+                                    <div class="award-info">
+                                        <span class="award-title">FPU Fellowship, Spanish Ministry of Science and Universities</span>
+                                        <span class="award-description">I was awarded one of the fifteen highly competitive fellowships available nationally in my field of expertise.</span>
+                                    </div>
+                                    <span class="award-year">2021-2025</span>
+                                </div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-content">
+                                    <div class="award-info">
+                                        <span class="award-title">Teaching Excellence Acknowledgement, Universidad Carlos III de Madrid</span>
+                                    </div>
+                                    <span class="award-year">2022-2024</span>
+                                </div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-content">
+                                    <div class="award-info">
+                                        <span class="award-title">Competitive Mobility Grant, Universidad Carlos III de Madrid</span>
+                                    </div>
+                                    <span class="award-year">2023</span>
+                                </div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-content">
+                                    <div class="award-info">
+                                        <span class="award-title">Extraordinary End of Studies Award, Universidad Carlos III de Madrid</span>
+                                    </div>
+                                    <span class="award-year">2020</span>
+                                </div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-content">
+                                    <div class="award-info">
+                                        <span class="award-title">Social Council Excellence Award, Universidad Carlos III de Madrid</span>
+                                    </div>
+                                    <span class="award-year">2019</span>
+                                </div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-content">
+                                    <div class="award-info">
+                                        <span class="award-title">Santander Progreso Scholarship, Santander Bank</span>
+                                    </div>
+                                    <span class="award-year">2019</span>
+                                </div>
+                            </div>
+                            <div class="award-item">
+                                <div class="award-content">
+                                    <div class="award-info">
+                                        <span class="award-title">Excellence Award, Comunidad de Madrid</span>
+                                    </div>
+                                    <span class="award-year">2018</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="cv-section">
-                        <h3>Academic CV</h3>
-                        <p>For a complete overview of my academic background, publications, and achievements:</p>
-                        <a href="cv/antonio_alcantara_cv.pdf" class="btn btn-primary" target="_blank">
-                            <i class="fas fa-download"></i> Download CV
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -118,7 +255,6 @@
                 <div class="footer-links">
                     <a href="index.html">Home</a>
                     <a href="about.html">About</a>
-                    <a href="research.html">Research</a>
                     <a href="contact.html">Contact</a>
                 </div>
             </div>
