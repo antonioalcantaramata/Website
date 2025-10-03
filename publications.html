@@ -82,6 +82,40 @@
             </div>
             
             <div class="publications-list">
+                <div class="publication-item" data-type="working" data-year="2025">
+                    <div class="pub-cover">
+                        <img src="images/journal-covers/working-paper.png" alt="Working Paper" class="journal-cover" onerror="this.src='images/journal-covers/default-journal.png'">
+                    </div>
+                    <div class="pub-content">
+                        <div class="pub-title-row">
+                            <h3 class="pub-title">Optimal placement of wind farms via quantile constraint learning</h3>
+                            <div class="pub-badges">
+                                <span class="pub-type-badge working">Working Paper</span>
+                            </div>
+                        </div>
+                        <p class="pub-authors"> Feng, W., <strong>Alcántara, A.</strong>, & Ruiz, C.</p>
+                        <div class="pub-venue-info">
+                            <span class="pub-venue">arXiv</span>
+                            <span class="pub-year">2025</span>
+                        </div>
+                        <div class="pub-links">
+                            <a href="https://arxiv.org/abs/2510.01093" class="pub-link" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> View Article
+                            </a>
+                            <span class="pub-open-access-badge">
+                                <i class="fas fa-unlock-alt"></i> Open Access
+                            </span>
+                            <button class="expand-btn" onclick="toggleAbstract(this)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="pub-abstract" style="display: none;">
+                            <p><strong>Abstract:</strong> Wind farm placement arranges the size and the location of multiple wind farms within a given region. The power output is highly related to the wind speed on spatial and temporal levels, which can be modeled by advanced data-driven approaches. To this end, we use a probabilistic neural network as a surrogate that accounts for the spatiotemporal correlations of wind speed. This neural network uses ReLU activation functions so that it can be reformulated as mixed-integer linear set of constraints (constraint learning). We embed these constraints into the placement decision problem, formulated as a two-stage stochastic optimization problem. Specifically, conditional quantiles of the total electricity production are regarded as recursive decisions in the second stage. 
+                                We use real high-resolution regional data from a northern region in Spain. We validate that the constraint learning approach outperforms the classical bilinear interpolation method. Numerical experiments are implemented on risk-averse investors. The results indicate that risk-averse investors concentrate on dominant sites with strong wind, while exhibiting spatial diversification and sensitive capacity spread in non-dominant sites. Furthermore, we show that if we introduce transmission line costs in the problem, risk-averse investors favor locations closer to the substations. On the contrary, risk-neutral investors are willing to move to further locations to achieve higher expected profits. Our results conclude that the proposed novel approach is able to tackle a portfolio of regional wind farm placements and further provide guidance for risk-averse investors.</p>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="publication-item" data-type="journal" data-year="2025">
                     <div class="pub-cover">
                         <img src="images/journal-covers/energy-ai.jpg" alt="Energy and AI" class="journal-cover" onerror="this.src='images/journal-covers/default-journal.png'">
