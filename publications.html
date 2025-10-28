@@ -82,6 +82,40 @@
             </div>
             
             <div class="publications-list">
+                <div class="publication-item" data-type="journal" data-year="2025">
+                    <div class="pub-cover">
+                        <img src="images/journal-covers/iec.jpg" alt="Industrial & Engineering Chemistry Research" class="journal-cover" onerror="this.src='images/journal-covers/default-journal.png'">
+                    </div>
+                    <div class="pub-content">
+                        <div class="pub-title-row">
+                            <h3 class="pub-title">Integrated Design and Scheduling of Hydrogen Processes under Uncertainty: A Quantile Neural Network Approach</h3>
+                            <div class="pub-badges">
+                                <span class="pub-type-badge journal">Journal Article</span>
+                            </div>
+                        </div>
+                        <p class="pub-authors">Ghilardi, L. M., Patrón, G. D., <strong>Alcántara, A.</strong>, & Tsay, C.</p>
+                        <div class="pub-venue-info">
+                            <span class="pub-venue">Industrial & Engineering Chemistry Research</span>
+                            <span class="pub-year">2025</span>
+                        </div>
+                        <div class="pub-links">
+                            <a href="https://doi.org/10.1021/acs.iecr.5c03288" class="pub-link" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> View Article
+                            </a>
+                            <span class="pub-open-access-badge">
+                                <i class="fas fa-unlock-alt"></i> Open Access
+                            </span>
+                            <button class="expand-btn" onclick="toggleAbstract(this)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="pub-abstract" style="display: none;">
+                            <p><strong>Abstract:</strong>The design and scheduling of electrolysis-based hydrogen production plants are subject to uncertainty in future electricity price predictions. Two-stage stochastic programming, which can model this uncertainty, often suffers from high computational costs. In this work, we propose the use of quantile neural networks as surrogates to model the so-called “second stage” for the integrated design and scheduling problem of a hydrogen process. Our surrogate model captures the distribution of the second-stage value function conditioned on electricity price-dependendent first-stage decisions. 
+                                The neural network surrogate is then embedded into the two-stage stochastic program, enabling solutions to be found without computationally expensive sampling approaches. As the surrogate model outputs a distribution of the second-stage value function, we show this approach further enables joint optimization based on expectation and conditional value at risk, which is a measure of tail risk. Our results show that the inclusion of risk measures leads to higher investments in the electrolyzer and the storage to hedge against high electricity cost scenarios. The surrogate-based approach yields high-quality decisions and requires significantly less computational resources than the conventional sample average approximation.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="publication-item" data-type="working" data-year="2025">
                     <div class="pub-cover">
                         <img src="images/journal-covers/working-paper.png" alt="Working Paper" class="journal-cover" onerror="this.src='images/journal-covers/default-journal.png'">
