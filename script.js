@@ -8,10 +8,10 @@ function initializeWebsite() {
     initNavigation();
     initScrollAnimations();
     initSmoothScrolling();
-    initContactForm();
     initThemeAnimations();
     initLoadingAnimations();
     initPublicationFilters();
+    initResearchNav();
 }
 
 // Navigation functionality
@@ -21,18 +21,32 @@ function initNavigation() {
     const navbar = document.getElementById('navbar');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    // Mobile menu toggle
+    // Mobile menu toggle. The hamburger is a real <button>, so Enter/Space
+    // come for free; this keeps the announced state in sync.
+    function setMenu(open) {
+        hamburger.classList.toggle('active', open);
+        navMenu.classList.toggle('active', open);
+        hamburger.setAttribute('aria-expanded', String(open));
+        hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+
     hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
+        setMenu(!navMenu.classList.contains('active'));
     });
 
     // Close mobile menu when clicking on a link
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
+            setMenu(false);
         });
+    });
+
+    // Escape closes the menu and returns focus to the toggle
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            setMenu(false);
+            hamburger.focus();
+        }
     });
 
     // Navbar scroll effect
@@ -44,18 +58,8 @@ function initNavigation() {
         }
     });
 
-    // Active navigation link highlighting
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const sections = document.querySelectorAll('section[id]');
-    
-    if (sections.length > 0 && currentPage === 'index.html') {
-        // For home page with sections, use scroll-based navigation
-        window.addEventListener('scroll', updateActiveNavLink);
-        updateActiveNavLink(); // Initial call
-    } else {
-        // For other pages, use page-based navigation
-        setActiveNavLink();
-    }
+    // The site is multi-page, so the active link is decided by the URL.
+    setActiveNavLink();
 }
 
 function setActiveNavLink() {
@@ -76,45 +80,6 @@ function setActiveNavLink() {
     });
 }
 
-function updateActiveNavLink() {
-    // This function is for single-page navigation with sections
-    // Only run if we're on a page with sections (like index.html)
-    const sections = document.querySelectorAll('section[id]');
-    
-    if (sections.length === 0) {
-        return; // No sections, use page-based navigation
-    }
-    
-    const navLinks = document.querySelectorAll('.nav-link');
-    let current = '';
-    
-    // Get the current section based on scroll position
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100;
-        const sectionHeight = section.clientHeight;
-        
-        if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-            current = section.getAttribute('id');
-        }
-    });
-    
-    // If no section is detected or we're at the top, default to home
-    if (!current || window.scrollY < 100) {
-        current = 'home';
-    }
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        const linkHref = link.getAttribute('href');
-        
-        // For section-based navigation on home page
-        if ((linkHref === `#${current}`) || 
-            (current === 'home' && linkHref === 'index.html')) {
-            link.classList.add('active');
-        }
-    });
-}
-
 // Smooth scrolling for anchor links
 function initSmoothScrolling() {
     const links = document.querySelectorAll('a[href^="#"]');
@@ -127,12 +92,20 @@ function initSmoothScrolling() {
             const targetElement = document.getElementById(targetId);
             
             if (targetElement) {
-                const offsetTop = targetElement.offsetTop - 80;
-                
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
+                const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                // scrollIntoView honours each target's CSS scroll-margin-top,
+                // so the fixed navbar (and the sticky section nav on the
+                // Research page) never covers the heading we land on.
+                targetElement.scrollIntoView({
+                    behavior: reduce ? 'auto' : 'smooth',
+                    block: 'start'
                 });
+                // Scrolling alone leaves focus behind, which defeats the skip
+                // link for keyboard users.
+                targetElement.focus({ preventScroll: true });
+                if (history.replaceState) {
+                    history.replaceState(null, '', '#' + targetId);
+                }
             }
         });
     });
@@ -171,131 +144,6 @@ function initScrollAnimations() {
 }
 
 // Contact form functionality
-function initContactForm() {
-    const contactForm = document.getElementById('contactForm');
-    
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(contactForm);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const subject = formData.get('subject');
-            const message = formData.get('message');
-            
-            // Basic validation
-            if (!name || !email || !subject || !message) {
-                showNotification('Please fill in all fields.', 'error');
-                return;
-            }
-            
-            if (!isValidEmail(email)) {
-                showNotification('Please enter a valid email address.', 'error');
-                return;
-            }
-            
-            // Simulate form submission
-            submitContactForm(name, email, subject, message);
-        });
-    }
-}
-
-function submitContactForm(name, email, subject, message) {
-    // Show loading state
-    const submitButton = document.querySelector('#contactForm button[type="submit"]');
-    const originalText = submitButton.innerHTML;
-    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    submitButton.disabled = true;
-    
-    // Simulate API call
-    setTimeout(() => {
-        // Reset button
-        submitButton.innerHTML = originalText;
-        submitButton.disabled = false;
-        
-        // Show success message
-        showNotification('Thank you for your message! I will get back to you soon.', 'success');
-        
-        // Reset form
-        document.getElementById('contactForm').reset();
-        
-        // In a real application, you would send this data to your backend
-        console.log('Contact form submission:', { name, email, subject, message });
-    }, 2000);
-}
-
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-function showNotification(message, type = 'info') {
-    // Remove existing notifications
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-    
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <span class="notification-message">${message}</span>
-            <button class="notification-close">&times;</button>
-        </div>
-    `;
-    
-    // Add styles
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        z-index: 10000;
-        opacity: 0;
-        transform: translateX(100%);
-        transition: all 0.3s ease;
-        max-width: 400px;
-    `;
-    
-    // Add to DOM
-    document.body.appendChild(notification);
-    
-    // Show notification
-    setTimeout(() => {
-        notification.style.opacity = '1';
-        notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Close functionality
-    const closeButton = notification.querySelector('.notification-close');
-    closeButton.addEventListener('click', () => {
-        hideNotification(notification);
-    });
-    
-    // Auto hide after 5 seconds
-    setTimeout(() => {
-        hideNotification(notification);
-    }, 5000);
-}
-
-function hideNotification(notification) {
-    notification.style.opacity = '0';
-    notification.style.transform = 'translateX(100%)';
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
-    }, 300);
-}
-
 // Theme animations and interactions
 function initThemeAnimations() {
     // Add hover effects to cards
@@ -383,47 +231,6 @@ function initLoadingAnimations() {
     });
 }
 
-// Utility functions
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-}
-
-// Optimized scroll handler
-const optimizedScrollHandler = throttle(function() {
-    updateActiveNavLink();
-}, 100);
-
-window.addEventListener('scroll', optimizedScrollHandler);
-
-// Handle resize events
-const optimizedResizeHandler = debounce(function() {
-    // Recalculate positions if needed
-    updateActiveNavLink();
-}, 250);
-
-window.addEventListener('resize', optimizedResizeHandler);
-
 // Keyboard navigation
 document.addEventListener('keydown', function(e) {
     // Handle escape key to close mobile menu
@@ -458,6 +265,80 @@ if ('performance' in window) {
             }
         }, 0);
     });
+}
+
+
+// In-page section nav (Research page). Keeps the active link in sync with
+// whichever section is currently in view.
+function initResearchNav() {
+    const links = Array.from(document.querySelectorAll('.section-nav-link'));
+    if (links.length === 0) return;
+
+    const sections = links
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+    if (sections.length === 0) return;
+
+    function setActive(id) {
+        links.forEach(link => {
+            const on = link.getAttribute('href') === '#' + id;
+            link.classList.toggle('active', on);
+            if (on) {
+                link.setAttribute('aria-current', 'true');
+            } else {
+                link.removeAttribute('aria-current');
+            }
+        });
+    }
+
+    // Clicking a link should light it up straight away rather than waiting for
+    // the scroll to settle -- and at the very bottom of the page the last
+    // section may never win the measurement below.
+    links.forEach(link => {
+        link.addEventListener('click', function () {
+            setActive(link.getAttribute('href').slice(1));
+        });
+    });
+
+    if (!('IntersectionObserver' in window)) {
+        setActive(sections[0].id);
+        return;
+    }
+
+    // Compare how many *viewport* pixels each section covers, not
+    // intersectionRatio: that is a fraction of the element, so a short section
+    // peeking in would always outscore the long publications list.
+    const covered = new Map();
+    const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(entry => {
+            covered.set(entry.target.id,
+                entry.isIntersecting ? entry.intersectionRect.height : 0);
+        });
+
+        // At the bottom of the page the final section can never fill the
+        // reading area, so claim it explicitly.
+        const atBottom = window.innerHeight + window.scrollY >=
+            document.documentElement.scrollHeight - 4;
+        if (atBottom) {
+            setActive(sections[sections.length - 1].id);
+            return;
+        }
+
+        let best = null;
+        let bestPx = 0;
+        sections.forEach(section => {
+            const px = covered.get(section.id) || 0;
+            if (px > bestPx) { bestPx = px; best = section.id; }
+        });
+        if (best) setActive(best);
+    }, {
+        // Discount the fixed navbar plus the sticky section nav.
+        rootMargin: '-130px 0px -30% 0px',
+        threshold: [0, 0.01, 0.1, 0.25, 0.5, 0.75, 1]
+    });
+
+    sections.forEach(section => observer.observe(section));
+    setActive(sections[0].id);
 }
 
 // Publication Filters
@@ -579,35 +460,18 @@ function initPublicationFilters() {
 
 function updateAllButtonCounts(items) {
     const filterButtons = document.querySelectorAll('.filter-btn');
-    
+
     filterButtons.forEach(button => {
         const filter = button.getAttribute('data-filter');
-        let count = 0;
-        let originalText = '';
-        
-        // Get the original button text (without count)
-        if (filter === 'all') {
-            originalText = 'All Publications';
-            count = items.length;
-        } else if (filter === 'journal') {
-            originalText = 'Journal Articles';
-            count = Array.from(items).filter(item => 
-                item.getAttribute('data-type') === 'journal'
-            ).length;
-        } else if (filter === 'conference') {
-            originalText = 'Conference Papers';
-            count = Array.from(items).filter(item => 
-                item.getAttribute('data-type') === 'conference'
-            ).length;
-        } else if (filter === 'working') {
-            originalText = 'Working Papers';
-            count = Array.from(items).filter(item => 
-                item.getAttribute('data-type') === 'working'
-            ).length;
-        }
-        
-        // Update button text with count
-        button.textContent = `${originalText} (${count})`;
+        const label = button.getAttribute('data-label') || button.textContent.trim();
+        const count = filter === 'all'
+            ? items.length
+            : Array.from(items).filter(item => item.getAttribute('data-type') === filter).length;
+
+        button.textContent = `${label} (${count})`;
+        // A filter that cannot match anything is a dead control -- hide it
+        // rather than offering "Conference Papers (0)".
+        button.hidden = count === 0;
     });
 }
 
@@ -645,17 +509,14 @@ if ('serviceWorker' in navigator) {
 function toggleAbstract(button) {
     const publicationItem = button.closest('.publication-item');
     const abstract = publicationItem.querySelector('.pub-abstract');
-    const icon = button.querySelector('i');
-    
-    if (abstract.style.display === 'none' || abstract.style.display === '') {
-        abstract.style.display = 'block';
-        button.classList.add('expanded');
-        icon.classList.remove('fa-plus');
-        icon.classList.add('fa-minus');
-    } else {
-        abstract.style.display = 'none';
-        button.classList.remove('expanded');
-        icon.classList.remove('fa-minus');
-        icon.classList.add('fa-plus');
+    const use = button.querySelector('.icon use');
+    const opening = abstract.style.display === 'none' || abstract.style.display === '';
+
+    abstract.style.display = opening ? 'block' : 'none';
+    button.classList.toggle('expanded', opening);
+    button.setAttribute('aria-expanded', String(opening));
+    button.setAttribute('aria-label', (opening ? 'Hide' : 'Show') + ' abstract');
+    if (use) {
+        use.setAttribute('href', opening ? '#i-minus' : '#i-plus');
     }
 }

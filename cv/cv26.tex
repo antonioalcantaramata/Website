@@ -1,0 +1,365 @@
+\documentclass[10pt,a4paper]{article}
+
+% =====================================================================
+%  Antonio Alcántara Mata -- Curriculum Vitae
+%  Build:  latexmk -pdf cv26.tex
+% =====================================================================
+
+% --- Packages ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{XCharter}                 % body text: Charter (readable in print and on screen)
+\usepackage[charter,vvarbb]{newtxmath}
+\usepackage[left=0.7in,top=0.72in,right=0.7in,bottom=0.7in]{geometry}
+\usepackage{microtype}                % better justification, fewer overfull lines
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+% --- Colours ---
+\definecolor{accent}{HTML}{1A1F6C}    % deep navy, matches antonioalcantara.com
+\definecolor{rulegray}{HTML}{BFBFBF}
+\definecolor{mutedtext}{HTML}{4A463F}
+
+% --- Last-updated stamp -------------------------------------------------
+% Taken from the build date, so recompiling always refreshes it and it can
+% never go stale. To pin it to a fixed month instead, replace the body of
+% \cvupdated with e.g. {September 2026}.
+\newcommand{\cvmonthname}{%
+  \ifcase\month\or January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or December\fi}
+\newcommand{\cvupdated}{\cvmonthname\space\number\year}
+
+\usepackage[colorlinks=true,
+            breaklinks=true,
+            linkcolor=accent,
+            urlcolor=accent,
+            citecolor=accent,
+            pdftitle={Antonio Alcantara Mata -- Curriculum Vitae},
+            pdfauthor={Antonio Alcantara Mata},
+            pdfsubject={Curriculum Vitae},
+            pdfcreator={pdflatex}]{hyperref}
+\usepackage{url}
+% A DOI is one long token with no hyphenation points, so it overflows the
+% margin if it lands at a line end. \nolinkurl lets it break after the
+% punctuation; \urlstyle{same} keeps the body font.
+\urlstyle{same}
+
+% --- Page formatting ---
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{\footnotesize\color{mutedtext}Antonio Alc\'antara Mata}
+\fancyfoot[C]{\footnotesize\color{mutedtext}Page \thepage\ of \pageref*{LastPage}}
+\fancyfoot[R]{\footnotesize\color{mutedtext}Updated \cvupdated}
+
+\setlength{\parindent}{0pt}
+\setlength{\tabcolsep}{6pt}
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{0pt}
+
+% --- Section headings ---
+% \MakeUppercase must sit in the before-code slot (5th argument), where
+% titlesec passes it the title as an argument. In the format slot it would
+% grab only the first token.
+\titleformat{\section}
+  {\normalsize\bfseries\color{accent}}
+  {}{0em}{\MakeUppercase}[{\color{rulegray}\titlerule[0.8pt]}]
+\titlespacing{\section}{0pt}{11pt}{5pt}
+
+% Display, not [runin]: a run-in subsection collides with the first row of a
+% longtable, because \LTpre is 0 and the table starts immediately after it.
+\titleformat{\subsection}
+  {\small\bfseries\color{mutedtext}}{}{0em}{}
+\titlespacing{\subsection}{0pt}{8pt}{3pt}
+
+% No \needspace guards on headings: reserving space for them left quarter-page
+% holes at the foot of pages. Insert \newpage by hand where a break reads badly.
+
+% --- Entry layout ------------------------------------------------------
+% The date column and the body column are declared once here, so the
+% widths cannot drift out of sync with the table they sit in (the previous
+% version nested 0.15/0.82\textwidth minipages inside 0.13/0.80 columns,
+% which pushed every single row 9.6pt past the right margin).
+\newenvironment{cvtable}
+  {\begin{longtable}{@{} >{\raggedright\arraybackslash\bfseries}p{0.135\textwidth}
+                        !{\color{rulegray}\vrule width 0.9pt}
+                        >{\raggedright\arraybackslash}p{0.83\textwidth} @{}}}
+  {\end{longtable}}
+
+% \cventry{dates}{institution}{location}{body}
+\newcommand{\cventry}[4]{%
+  #1 & \textbf{#2}\hfill\textit{\color{mutedtext}#3}\newline #4
+  \tabularnewline \noalign{\vskip 5pt}%
+}
+
+% \cvitem{label}{body}
+\newcommand{\cvitem}[2]{%
+  #1 & #2 \tabularnewline \noalign{\vskip 4pt}%
+}
+
+% =====================================================================
+\begin{document}
+
+% --- Header ---
+\begin{center}
+    {\LARGE\bfseries\color{accent} Antonio Alc\'antara Mata}\\[4pt]
+    {\normalsize Tenure-track Assistant Professor}\\[3pt]
+    {\small
+    Department of Quantitative Methods, CUNEF Universidad\\
+    Campus Almansa, Building D, Room 4.29 \ $\cdot$ \ Calle Almansa 101, 28040 Madrid, Spain\\[3pt]
+    \href{mailto:antonio.alcantara@cunef.edu}{antonio.alcantara@cunef.edu}
+    \ $\cdot$ \ (+34) 665 019 751
+    \ $\cdot$ \ \href{https://www.antonioalcantara.com/}{antonioalcantara.com}
+    \ $\cdot$ \ \href{https://orcid.org/0000-0002-3306-2246}{ORCID 0000-0002-3306-2246}
+    }
+\end{center}
+
+\vspace{6pt}
+
+% --- Appointments ---
+\section*{Academic Appointments}
+\begin{cvtable}
+    \cventry{Sep. 2026 -- Present}
+    {CUNEF Universidad}
+    {Spain}
+    {Tenure-track Assistant Professor, Quantitative Methods Department\newline
+    Researching on machine learning and data-driven optimization for decision-making
+    under uncertainty, with a particular interest in energy/power systems, alongside
+    teaching courses in analytics and operations research.}
+
+    \cventry{Sep. 2025 -- Aug. 2026}
+    {Technical University of Denmark (DTU)}
+    {Denmark}
+    {Postdoctoral Researcher, Department of Wind and Energy Systems\newline
+    Advisor: Prof. Spyros Chatzivasileiadis\newline
+    Foundation models for power systems, with a focus on uncertainty
+    quantification and trustworthiness.}
+
+    \cventry{Dec. 2021 -- Jun. 2025}
+    {Universidad Carlos III de Madrid (UC3M)}
+    {Spain}
+    {Predoctoral Researcher (FPU Fellow), Department of Statistics\newline
+    Advisor: Prof. Carlos Ruiz Mora\newline
+    Machine learning and operations research, focusing on the use of ML models as
+    surrogates in optimization problems, such as neural network MILP reformulations.}
+
+    \cventry{Jan. 2021 -- Dec. 2021}
+    {Universidad Carlos III de Madrid (UC3M)}
+    {Spain}
+    {Research Assistant, Department of Computer Science\newline
+    Advisor: Prof. In\'es M. Galv\'an\newline
+    Probabilistic forecasting models for regional renewable energy generation.}
+\end{cvtable}
+
+% --- Research stays ---
+\section*{Research Stays}
+\begin{cvtable}
+    \cventry{Aug. 2024 -- Oct. 2024}
+    {KTH Royal Institute of Technology}
+    {Sweden}
+    {Visiting Researcher, Department of Mathematics\newline
+    Host: Prof. Jan Kronqvist}
+
+    \cventry{Sep. 2023 -- Dec. 2023}
+    {Imperial College London}
+    {United Kingdom}
+    {Visiting Researcher, Department of Computing\newline
+    Host: Prof. Calvin Tsay}
+\end{cvtable}
+
+% --- Education ---
+\section*{Education}
+\begin{cvtable}
+    \cventry{May 2025}
+    {Universidad Carlos III de Madrid (UC3M)}
+    {Spain}
+    {Ph.D., Mathematical Engineering\newline
+    Advisor: Prof. Carlos Ruiz Mora\newline
+    Dissertation: ``Machine Learning for Decision-making under Uncertainty:
+    New Methodologies and Energy Applications''}
+
+    \cventry{Jul. 2021}
+    {Universidad de Granada (UGR)}
+    {Spain}
+    {M.S., Applied Statistics}
+
+    \cventry{Jul. 2020}
+    {Universidad Carlos III de Madrid (UC3M)}
+    {Spain}
+    {B.S., Statistics and Business}
+\end{cvtable}
+
+% --- Research interests ---
+\section*{Research Interests}
+\begin{itemize}[leftmargin=1.2em,itemsep=1.5pt,topsep=2pt,parsep=0pt]
+    \item Constraint learning and surrogate models: embedding machine learning
+          models into optimization problems
+    \item Uncertainty quantification: prediction intervals, quantile regression
+          and conformal prediction
+    \item Trustworthy AI/ML for power and energy systems
+\end{itemize}
+\newpage
+% --- Publications ---
+\section*{Publications}
+
+\subsection*{Journal Articles (9)}
+\begin{enumerate}[label={[\arabic*]}, series=publist, leftmargin=2.1em,
+                  itemsep=5pt, topsep=3pt, parsep=0pt]
+\item \textbf{Integrated design and scheduling of hydrogen processes under uncertainty: a quantile neural network approach.}\newline
+      Ghilardi, L. M., Patr\'on, G. D., \textbf{Alc\'antara, A.}, \& Tsay, C. (2025). \textit{Industrial \& Engineering Chemistry Research.} \href{https://doi.org/10.1021/acs.iecr.5c03288}{\nolinkurl{doi:10.1021/acs.iecr.5c03288}}\item \textbf{Leveraging neural networks to optimize heliostat field aiming strategies in concentrating solar power tower plants.}\newline
+      \textbf{Alc\'antara, A.}, Diaz-Cachinero, P., S\'anchez-Gonz\'alez, A., \& Ruiz, C. (2025). \textit{Energy and AI.} \href{https://doi.org/10.1016/j.egyai.2025.100520}{\nolinkurl{doi:10.1016/j.egyai.2025.100520}}\item \textbf{A quantile neural network framework for two-stage stochastic optimization.}\newline
+      \textbf{Alc\'antara, A.}, Ruiz, C., \& Tsay, C. (2025). \textit{Expert Systems with Applications.} \href{https://doi.org/10.1016/j.eswa.2025.127876}{\nolinkurl{doi:10.1016/j.eswa.2025.127876}}\item \textbf{Optimal day-ahead offering strategy for large producers based on market price response learning.}\newline
+      \textbf{Alc\'antara, A.}, \& Ruiz, C. (2024). \textit{European Journal of Operational Research.} \href{https://doi.org/10.1016/j.ejor.2024.06.038}{\nolinkurl{doi:10.1016/j.ejor.2024.06.038}}\item \textbf{A neural network-based distributional constraint learning methodology for mixed-integer stochastic optimization.}\newline
+      \textbf{Alc\'antara, A.}, \& Ruiz, C. (2023). \textit{Expert Systems with Applications.} \href{https://doi.org/10.1016/j.eswa.2023.120895}{\nolinkurl{doi:10.1016/j.eswa.2023.120895}}\item \textbf{On data-driven chance constraint learning for mixed-integer optimization problems.}\newline
+      \textbf{Alc\'antara, A.}, \& Ruiz, C. (2023). \textit{Applied Mathematical Modelling.} \href{https://doi.org/10.1016/j.apm.2023.04.032}{\nolinkurl{doi:10.1016/j.apm.2023.04.032}}\item \textbf{Deep neural networks for the quantile estimation of regional renewable energy production.}\newline
+      \textbf{Alc\'antara, A.}, Galv\'an, I. M., \& Aler, R. (2023). \textit{Applied Intelligence.} \href{https://doi.org/10.1007/s10489-022-03958-7}{\nolinkurl{doi:10.1007/s10489-022-03958-7}}\item \textbf{Pareto optimal prediction intervals with hypernetworks.}\newline
+      \textbf{Alc\'antara, A.}, Galv\'an, I. M., \& Aler, R. (2023). \textit{Applied Soft Computing.} \href{https://doi.org/10.1016/j.asoc.2022.109930}{\nolinkurl{doi:10.1016/j.asoc.2022.109930}}\item \textbf{Direct estimation of prediction intervals for solar and wind regional energy forecasting with deep neural networks.}\newline
+      \textbf{Alc\'antara, A.}, Galv\'an, I. M., \& Aler, R. (2022). \textit{Engineering Applications of Artificial Intelligence.} \href{https://doi.org/10.1016/j.engappai.2022.105128}{\nolinkurl{doi:10.1016/j.engappai.2022.105128}}
+\end{enumerate}
+
+\subsection*{Working Papers (2)}
+\begin{enumerate}[label={[\arabic*]}, resume=publist, leftmargin=2.1em,
+                  itemsep=5pt, topsep=3pt, parsep=0pt]
+\item \textbf{Trustworthiness layer for foundation models in power systems: application to
+      N-k contingency screening.}\newline
+      \textbf{Alc\'antara, A.}, \& Chatzivasileiadis, S. (2026).
+      \href{https://arxiv.org/abs/2602.07995}{\textit{\nolinkurl{arXiv:2602.07995}}}
+\item \textbf{Optimal placement of wind farms via quantile constraint learning.}\newline
+      Feng, W., \textbf{Alc\'antara, A.}, \& Ruiz, C. (2025).
+      \href{https://arxiv.org/abs/2510.01093}{\textit{\nolinkurl{arXiv:2510.01093}}}
+\end{enumerate}
+
+% --- Teaching ---
+\section*{Teaching Experience}
+\begin{cvtable}
+    \cventry{Fall 2026}
+    {Data Analysis}
+    {CUNEF}
+    {B.S. in International Business and Economics (1 group)\newline
+    Main lecturer}
+
+    \cventry{2022--2025}
+    {Statistics for Engineering}
+    {UC3M}
+    {B.S. in Mechanical, Electrical, Industrial and Aerospace Engineering (4 groups)\newline
+    Co-course responsible for lectures, exam design and grading\newline
+    Student evaluations: 4.38, 4.52, 4.75 and 4.92 (out of 5)}
+
+    \cventry{2023--2024}
+    {Introduction to Statistical Modeling}
+    {UC3M}
+    {B.S. in Data Science and Communication Engineering (2 groups)\newline
+    Co-course responsible for lectures, exam design and grading\newline
+    Student evaluations: 4.92 and 5.00 (out of 5)}
+\end{cvtable}
+
+% --- Grants & awards ---
+\section*{Grants \& Awards}
+\begin{cvtable}
+    \cvitem{2021--2025}{FPU Fellowship, Spanish Ministry of Science and Universities\newline
+    \textit{\color{mutedtext}Highly competitive national fellowship (15 awarded nationally in field)}}
+    \cvitem{2022--2024}{Teaching Excellence Acknowledgement, UC3M}
+    \cvitem{2023}{Competitive Mobility Grant, UC3M}
+    \cvitem{2020}{Extraordinary End of Studies Award, UC3M}
+    \cvitem{2019}{Social Council Excellence Award, UC3M}
+    \cvitem{2019}{Santander Progreso Scholarship, Santander Bank}
+    \cvitem{2018}{Excellence Award, Regional Government of Madrid}
+\end{cvtable}
+
+% --- Talks ---
+% Each talk is its own row with the date in the left column, matching every
+% other section. Venue first, then the title in italics on the next line --
+% that way every row opens with a venue, whether or not it has a title:
+%     \cvitem{Oct. 2024}{Link\"oping University, Dept.\ of Mathematics, Sweden\newline
+%     \textit{Title of the talk}}
+\section*{Selected Talks}
+
+\subsection*{Invited Seminars}
+\begin{cvtable}
+    \cvitem{Apr. 2026}{GridFM Working Group\newline
+    \textit{Trustworthiness Layer for Foundation Models in Power Systems.}}
+    \cvitem{Mar. 2026}{International System Operator Network (ISON)\newline
+    \textit{Trustworthiness Layer for Foundation Models in Power Systems.}}
+    \cvitem{Feb. 2026}{CUNEF Universidad, Quantitative Methods Department, Spain\newline
+    \textit{Embedding Machine Learning into Optimization: Strategic Decision-making in Energy Markets.}}
+    \cvitem{Oct. 2024}{Link\"oping University, Dept.\ of Mathematics, Sweden\newline
+    \textit{A Quantile Neural Network Framework for Two-stage Stochastic Optimization.}}
+    \cvitem{Sep. 2024}{KTH Royal Institute of Technology, Dept.\ of Mathematics, Sweden\newline
+    \textit{A Quantile Neural Network Framework for Two-stage Stochastic Optimization.}}
+    \cvitem{Sep. 2023}{Imperial College London, Dept.\ of Computing, United Kingdom\newline
+    \textit{Probabilistic Forecasting, Quantile Neural Networks, and Stochastic Optimization.}}
+\end{cvtable}
+
+\subsection*{Conference Presentations}
+\begin{cvtable}
+    \cvitem{Jul. 2026}{24th Conference of the International Federation of Operational
+    Research Societies (IFORS), Vienna, Austria\newline
+    \textit{Leveraging neural networks to optimize heliostat field aiming strategies in Concentrating Solar Power Tower plants.}}
+    \cvitem{Jul. 2025}{41st National Congress of Statistics and OR (SEIO), Lleida, Spain\newline
+    \textit{A Quantile Neural Network Framework for Two-stage Stochastic Optimization.}}
+    \cvitem{Jul. 2025}{34th European Conference on Operational Research (EURO), Leeds, United Kingdom\newline
+    \textit{From Sample Average Approximation to Surrogate Models in Smart Grids Operation.}}
+    \cvitem{Jul. 2024}{33rd European Conference on Operational Research (EURO), Copenhagen, Denmark\newline
+    \textit{A Quantile Neural Network Framework for Two-stage Stochastic Optimization: Application to Power Systems Operation.}}
+    \cvitem{Jun. 2023}{20th Int.\ Conf.\ on Constraint Programming, AI and OR (CPAIOR), Nice, France\newline
+    \textit{A Neural Network-Based Distributional Constraint Learning Methodology for Mixed-Integer Stochastic Optimization.}}
+\end{cvtable}
+
+% --- Funded projects ---
+\section*{Funded Projects}
+\begin{cvtable}
+    \cvitem{2025 -- Present}{\textit{ODEON -- Federated Data and Intelligence Orchestration
+    \& Sharing for the Digital Energy TransitioN}\newline
+    {\color{mutedtext}Horizon Europe \ $\cdot$ \ Role: Researcher}}
+
+    \cvitem{2024 -- Present}{\textit{Algorithms for Stochastic Optimization Using
+    Data-driven and Learning Analysis}\newline
+    {\color{mutedtext}Spanish State Research Agency (PID2023-151013NB-I00) \ $\cdot$ \ Role: Researcher}}
+
+    \cvitem{2024 -- Present}{\textit{SOLAROPIA-CM-UC3M -- Operaci\'on e Integraci\'on de
+    las Plantas Solares de Torre en el Sistema El\'ectrico Espa\~nol}\newline
+    {\color{mutedtext}Comunidad de Madrid \ $\cdot$ \ Role: Researcher}}
+
+    \cvitem{2021--2024}{\textit{Optimization under Uncertainty and Stochastic Control}\newline
+    {\color{mutedtext}Spanish State Research Agency (PID2020-116694GB-I00) \ $\cdot$ \ Role: Researcher}}
+
+    \cvitem{2021}{\textit{Probabilistic Forecasting and Meta-heuristic Optimization for
+    Solar/Wind Resources in the Iberian Peninsula}\newline
+    {\color{mutedtext}Spanish State Research Agency (PID2019-107455RB-C22) \ $\cdot$ \ Role: Research Assistant}}
+\end{cvtable}
+
+% --- Software ---
+\section*{Software}
+\begin{cvtable}
+    \cvitem{CONDUCTOR}{\href{https://github.com/antonioalcantaramata/CONDUCTOR}{github.com/antonioalcantaramata/CONDUCTOR}
+    \ $\cdot$ \ {\color{mutedtext}Main developer, 2026}\newline
+    LLM-orchestrated digital twin for uncertainty-aware power-system operations,
+    pairing a pandapower/Pyomo analysis backend with a natural-language agent.}
+
+    \cvitem{Quantile2SP}{\href{https://github.com/antonioalcantaramata/Quantile2SP}{github.com/antonioalcantaramata/Quantile2SP}
+    \ $\cdot$ \ {\color{mutedtext}2025}\newline
+    Quantile neural network surrogates for two-stage stochastic programs.}
+
+    \cvitem{CCL-Tool}{\href{https://github.com/antonioalcantaramata/ccl_tool}{github.com/antonioalcantaramata/ccl\_tool}
+    \ $\cdot$ \ {\color{mutedtext}2023}\newline
+    Chance-constraint learning and its integration with mixed-integer optimization.}
+
+    \cvitem{POPI-HN}{\href{https://github.com/antonioalcantaramata/POPI-HN}{github.com/antonioalcantaramata/POPI-HN}
+    \ $\cdot$ \ {\color{mutedtext}2022}\newline
+    PyTorch framework for hypernetwork-based Pareto optimal prediction intervals.}
+\end{cvtable}
+
+% --- Skills ---
+\section*{Languages \& Computer Skills}
+\begin{cvtable}
+    \cvitem{Languages}{Spanish (native), English (fluent), Italian (basic)}
+    \cvitem{Programming}{Python, R, MATLAB}
+    \cvitem{Libraries}{PyTorch, scikit-learn, Gurobi, Pyomo, pandapower}
+\end{cvtable}
+
+\end{document}

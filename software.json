@@ -1,0 +1,17 @@
+{
+  "_comment": "Source of truth for the Software section of research.html. Edit this file, then run `python3 build_research.py`. While the list is empty the section renders the placeholder below instead of cards. Fields per entry: name, description and url (repo link) are required; role (your involvement, e.g. \"Main developer\", \"Contributor\", \"Maintainer\"), logo (a file in images/software/), language, license, and paper_title + paper_url are optional -- leave a field as \"\" and it is simply not rendered.",
+  "placeholder": "Code accompanying my papers is linked from each publication above. A curated list of tools and packages will appear here.",
+  "software": [
+    {
+      "name": "CONDUCTOR",
+      "description": "An LLM-orchestrated digital twin for uncertainty-aware power-system operations. A FastAPI backend exposes security assessment, N-1 contingency, probabilistic risk, robust corrective dispatch and flexibility studies as tools; a natural-language agent drives them from a chat interface, running on a hosted model or fully locally so that no grid data leaves the machine.",
+      "url": "https://github.com/antonioalcantaramata/CONDUCTOR",
+      "logo": "conductor.webp",
+      "role": "Main developer",
+      "language": "Python",
+      "license": "Apache-2.0",
+      "paper_title": "",
+      "paper_url": ""
+    }
+  ]
+}

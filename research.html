@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research - Antonio Alcántara Mata</title>
+    <meta name="description" content="Research interests, publications and software by Antonio Alcántara Mata - machine learning, probabilistic forecasting and data-driven optimization for energy systems.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- CUNEF brand faces: Aeonik is licensed and not redistributed here, so
+         Manrope stands in as the primary geometric grotesque; Taviraj is the
+         manual's own secondary face (sec. 3.2.2). Arial is the CSS fallback. -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Taviraj:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Icon sprite. Icons from Font Awesome Free 6.4.0, CC BY 4.0
+         (https://fontawesome.com/license/free). Inlined so the site needs
+         no webfont and no third-party request. -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon-sprite" aria-hidden="true" focusable="false">
+      <symbol id="i-unlock-alt" viewBox="0 0 448 512"><path d="M224 64c-44.2 0-80 35.8-80 80v48H384c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80V144C80 64.5 144.5 0 224 0c57.5 0 107 33.7 130.1 82.3c7.6 16 .8 35.1-15.2 42.6s-35.1 .8-42.6-15.2C283.4 82.6 255.9 64 224 64zm32 320c17.7 0 32-14.3 32-32s-14.3-32-32-32H192c-17.7 0-32 14.3-32 32s14.3 32 32 32h64z"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></symbol>
+      <symbol id="i-minus" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></symbol>
+      <symbol id="i-external-link" viewBox="0 0 512 512"><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></symbol>
+      <symbol id="i-star" viewBox="0 0 576 512"><path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"/></symbol>
+      <symbol id="i-quote-left" viewBox="0 0 448 512"><path d="M0 216C0 149.7 53.7 96 120 96h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V320 288 216zm256 0c0-66.3 53.7-120 120-120h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64H320c-35.3 0-64-28.7-64-64V320 288 216z"/></symbol>
+      <symbol id="i-envelope" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></symbol>
+      <symbol id="i-sort-num-down" viewBox="0 0 576 512"><path d="M450.7 38c-8.3-6-19.1-7.7-28.8-4.4l-48 16c-16.8 5.6-25.8 23.7-20.2 40.5s23.7 25.8 40.5 20.2l5.9-2V160H384c-17.7 0-32 14.3-32 32s14.3 32 32 32h48 48c17.7 0 32-14.3 32-32s-14.3-32-32-32H464V64c0-10.3-4.9-19.9-13.3-26zM160 480c9 0 17.5-3.8 23.6-10.4l88-96c11.9-13 11.1-33.3-2-45.2s-33.3-11.1-45.2 2L192 365.7V64c0-17.7-14.3-32-32-32s-32 14.3-32 32V365.7L95.6 330.4c-11.9-13-32.2-13.9-45.2-2s-13.9 32.2-2 45.2l88 96C142.5 476.2 151 480 160 480zM418.3 307a32 32 0 1 1 27.4 57.9A32 32 0 1 1 418.3 307zM405.1 419.8l-6.8 9.2c-10.5 14.2-7.5 34.2 6.7 44.8s34.2 7.5 44.8-6.7l48.8-65.8c14-18.9 21.5-41.7 21.5-65.2c0-48.6-39.4-88-88-88s-88 39.4-88 88c0 39.2 25.6 72.4 61.1 83.8z"/></symbol>
+      <symbol id="i-sort-num-up" viewBox="0 0 576 512"><path d="M450.7 38c8.3 6 13.3 15.7 13.3 26v96h16c17.7 0 32 14.3 32 32s-14.3 32-32 32H432 384c-17.7 0-32-14.3-32-32s14.3-32 32-32h16V108.4l-5.9 2c-16.8 5.6-34.9-3.5-40.5-20.2s3.5-34.9 20.2-40.5l48-16c9.8-3.3 20.5-1.6 28.8 4.4zM160 32c9 0 17.5 3.8 23.6 10.4l88 96c11.9 13 11.1 33.3-2 45.2s-33.3 11.1-45.2-2L192 146.3V448c0 17.7-14.3 32-32 32s-32-14.3-32-32V146.3L95.6 181.6c-11.9 13-32.2 13.9-45.2 2s-13.9-32.2-2-45.2l88-96C142.5 35.8 151 32 160 32zM445.7 364.9A32 32 0 1 0 418.3 307a32 32 0 1 0 27.4 57.9zm-40.7 54.9C369.6 408.4 344 375.2 344 336c0-48.6 39.4-88 88-88s88 39.4 88 88c0 23.5-7.5 46.3-21.5 65.2L449.7 467c-10.5 14.2-30.6 17.2-44.8 6.7s-17.2-30.6-6.7-44.8l6.8-9.2z"/></symbol>
+      <symbol id="i-map-marker" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 512 512"><path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></symbol>
+      <symbol id="i-circle" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"/></symbol>
+      <symbol id="i-github" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></symbol>
+      <symbol id="i-google" viewBox="0 0 488 512"><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></symbol>
+      <symbol id="i-linkedin" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></symbol>
+      <symbol id="i-orcid" viewBox="0 0 512 512"><path d="M294.75 188.19h-45.92V342h47.47c67.62 0 83.12-51.34 83.12-76.91 0-41.64-26.54-76.9-84.67-76.9zM256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm-80.79 360.76h-29.84v-207.5h29.84zm-14.92-231.14a19.57 19.57 0 1 1 19.57-19.57 19.64 19.64 0 0 1-19.57 19.57zM300 369h-81V161.26h80.6c76.73 0 110.44 54.83 110.44 103.85C410 318.39 368.38 369 300 369z"/></symbol>
+    </svg>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">Antonio Alcántara Mata</a>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="research.html" class="nav-link active">Research</a>
+                <a href="teaching.html" class="nav-link">Teaching</a>
+                <a href="cv/antonio_alcantara_cv.pdf" class="nav-link" target="_blank" rel="noopener">CV</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <button class="hamburger" id="hamburger" type="button"
+                    aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section id="main" tabindex="-1" class="page-header">
+        <div class="container">
+            <div class="page-header-content page-header-content-solo">
+                <div class="page-header-text">
+                    <h1 class="page-title">Research</h1>
+                    <p class="page-subtitle">Interests, publications and software</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- In-page section nav. Sticks under the header; the active link is kept
+         in sync by initResearchNav() in script.js. -->
+    <nav class="section-nav" aria-label="Research sections">
+        <div class="container">
+            <ul class="section-nav-list">
+                <li><a href="#interests" class="section-nav-link">Research Interests</a></li>
+                <li><a href="#publications" class="section-nav-link">Publications</a></li>
+                <li><a href="#software" class="section-nav-link">Software</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Research Interests -->
+    <section id="interests" tabindex="-1" class="research-section">
+        <div class="container">
+            <div class="detail-item interests-section">
+                <div>
+                    <h2>Research Interests</h2>
+                    <div class="interest-grid">
+                        <div class="interest-box">
+                            <span class="interest-icon interest-icon-constraint" aria-hidden="true"></span>
+                            <h3>Constraint learning and surrogate models</h3>
+                            <p>Embedding trained machine learning models directly into optimization
+                               problems, as constraints or objective terms, so that components which are
+                               unknown, data-driven or too costly to evaluate can still be optimized over.</p>
+                        </div>
+                        <div class="interest-box">
+                            <span class="interest-icon interest-icon-uncertainty" aria-hidden="true"></span>
+                            <h3>Uncertainty quantification</h3>
+                            <p>Forecasts that report what they do not know. I work on quantile neural
+                               networks, direct estimation of prediction intervals and conformal methods,
+                               looking for intervals that are sharp without giving up reliable
+                               coverage &mdash; and that stay useful once an optimizer consumes them.</p>
+                        </div>
+                        <div class="interest-box">
+                            <span class="interest-icon interest-icon-trust" aria-hidden="true"></span>
+                            <h3>Trustworthy AI/ML for power systems</h3>
+                            <p>Learned models are increasingly asked to inform decisions in a
+                               safety-critical system. I study what has to hold before that is reasonable:
+                               verifying behaviour rather than trusting average accuracy, and keeping the
+                               reasoning behind a result traceable and checkable.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications -->
+    <section id="publications" tabindex="-1" class="research-section">
+        <div class="container">
+            <div class="detail-item publications-section">
+                <div>
+                    <h2>Publications</h2>
+                    <p class="last-updated">
+                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-clock"></use></svg> Last updated: <!-- BUILD:last-updated start -->June 2026<!-- BUILD:last-updated end --> &bull;
+                        <a href="https://scholar.google.es/citations?user=xMW2VDgAAAAJ" target="_blank" rel="noopener" class="scholar-link">
+                            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-google"></use></svg> Google Scholar Profile
+                        </a>
+                    </p>
+
+                    <div class="pub-filters">
+                        <div class="filter-group">
+                            <label>Filter by type:</label>
+                            <!-- BUILD:publication-filters start -- generated by build_research.py -->
+                            <div class="filter-buttons">
+                                <button class="filter-btn active" type="button" data-filter="all" data-label="All Publications">All Publications</button>
+                                <button class="filter-btn" type="button" data-filter="journal" data-label="Journal Articles">Journal Articles</button>
+                                <button class="filter-btn" type="button" data-filter="working" data-label="Working Papers">Working Papers</button>
+                            </div>
+                    <!-- BUILD:publication-filters end -->
+                        </div>
+                        <div class="sort-group">
+                            <label>Sort by year:</label>
+                            <div class="sort-buttons">
+                                <button class="sort-btn active" type="button" data-sort="desc">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sort-num-down"></use></svg> Newest First
+                                </button>
+                                <button class="sort-btn" type="button" data-sort="asc">
+                                    <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sort-num-up"></use></svg> Oldest First
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="publications-list">
+                        <!-- BUILD:publications-list start -- generated by build_research.py -->
+                        <div class="publication-item" data-type="working" data-year="2026">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/working-paper.webp" alt="Working Paper" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">Trustworthiness Layer for Foundation Models in Power Systems: Application to N-k Contingency Screening</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge working">Working Paper</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors"><strong>Alcántara, A.</strong>, & Chatzivasileiadis, S.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">arXiv</span>
+                                    <span class="pub-year">2026</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://arxiv.org/abs/2602.07995" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> We propose a model-agnostic trustworthiness layer that equips any foundation model (FM) for power systems with statistically valid prediction intervals. The layer offers two calibration approaches: (i) stratified conformal prediction (SCP), which partitions residuals by contingency severity and grid element, and (ii) kernel-weighted conformal prediction (KCP), which localizes the calibration to each test scenario via scenario representations, yielding tighter, approximately conditional bounds. Using GridFM as a guiding example, we demonstrate the framework on N-k contingency screening for IEEE 24- and 118-bus systems. The trustworthiness layer ensures that over 90% of all critical violations are captured across N-k levels, minimizing missed detections while maintaining up to 5 times fewer false alarms than DC Power Flow. With negligible computational overhead over the underlying FM, this approach enables reliable large-scale security assessment beyond routine N-1 screening.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="journal" data-year="2025">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/expert-systems.webp" alt="Expert Systems with Applications" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">A quantile neural network framework for two-stage stochastic optimization</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge journal">Journal Article</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors"><strong>Alcántara, A.</strong>, Ruiz, C., & Tsay, C.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">Expert Systems with Applications</span>
+                                    <span class="pub-year">2025</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://doi.org/10.1016/j.eswa.2025.127876" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <a href="https://github.com/antonioalcantaramata/Quantile2SP" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-github"></use></svg> Code
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> Two-stage stochastic programming is a popular framework for optimization under uncertainty, where decision variables are split between first-stage decisions, and second-stage (or recourse) decisions, with the latter being adjusted after uncertainty is realized. These problems are often formulated using Sample Average Approximation (SAA), where uncertainty is modeled as a finite set of scenarios, resulting in a large “monolithic” problem, i.e., where the model is repeated for each scenario. The resulting models can be challenging to solve, and several problem-specific decomposition approaches have been proposed. An alternative approach is to approximate the expected second-stage objective value using a surrogate model, which can then be embedded in the first-stage problem to produce good heuristic solutions. In this work, we propose to instead model the distribution of the second-stage objective, specifically using a quantile neural network. Embedding this distributional approximation enables capturing uncertainty and is not limited to expected-value optimization, e.g., the proposed approach enables optimization of the Conditional Value at Risk (CVaR). We discuss optimization formulations for embedding the quantile neural network and demonstrate the effectiveness of the proposed framework using several computational case studies including a set of mixed-integer optimization problems.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="journal" data-year="2025">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/iec.webp" alt="Industrial &amp; Engineering Chemistry Research" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">Integrated Design and Scheduling of Hydrogen Processes under Uncertainty: A Quantile Neural Network Approach</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge journal">Journal Article</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors">Ghilardi, L. M., Patrón, G. D., <strong>Alcántara, A.</strong>, & Tsay, C.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">Industrial &amp; Engineering Chemistry Research</span>
+                                    <span class="pub-year">2025</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://doi.org/10.1021/acs.iecr.5c03288" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> The design and scheduling of electrolysis-based hydrogen production plants are subject to uncertainty in future electricity price predictions. Two-stage stochastic programming, which can model this uncertainty, often suffers from high computational costs. In this work, we propose the use of quantile neural networks as surrogates to model the so-called “second stage” for the integrated design and scheduling problem of a hydrogen process. Our surrogate model captures the distribution of the second-stage value function conditioned on electricity price-dependendent first-stage decisions. The neural network surrogate is then embedded into the two-stage stochastic program, enabling solutions to be found without computationally expensive sampling approaches. As the surrogate model outputs a distribution of the second-stage value function, we show this approach further enables joint optimization based on expectation and conditional value at risk, which is a measure of tail risk. Our results show that the inclusion of risk measures leads to higher investments in the electrolyzer and the storage to hedge against high electricity cost scenarios. The surrogate-based approach yields high-quality decisions and requires significantly less computational resources than the conventional sample average approximation.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="journal" data-year="2025">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/energy-ai.webp" alt="Energy and AI" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">Leveraging neural networks to optimize heliostat field aiming strategies in Concentrating Solar Power Tower plants</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge journal">Journal Article</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors"><strong>Alcántara, A.</strong>, Diaz-Cachinero, P., Sánchez-González, A., & Ruiz, C.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">Energy and AI</span>
+                                    <span class="pub-year">2025</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://doi.org/10.1016/j.egyai.2025.100520" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> Concentrating Solar Power Tower (CSPT) plants rely on heliostat fields to focus sunlight onto a central receiver. Although simple aiming strategies, such as directing all heliostats to the receiver’s equator, can maximize energy collection, they often result in uneven flux distributions that cause hotspots, thermal stresses, and reduced receiver lifetimes. This paper presents a novel, data-driven approach that combines constraint learning, neural network-based surrogates, and mathematical optimization to address these challenges. The methodology learns complex heliostat-to-receiver flux interactions from simulation data and embeds the resulting surrogate model in a tractable optimization framework. By maximizing a tailored quality score that balances energy collection with flux uniformity, the approach produces smoothly distributed flux profiles and mitigates excessive thermal peaks. An iterative refinement process, guided by a trust region strategy and progressive data sampling, ensures continual improvement of the surrogate model by exploring new solution spaces at each iteration. Results from a real CSPT case study show that the proposed approach outperforms conventional heuristic methods, delivering flatter flux distributions with nearly a 10% reduction in peak values and safer thermal conditions (reflected by up to a 50% decrease in deviations from safe concentration distributions), without significantly compromising overall energy capture.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="working" data-year="2025">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/working-paper.webp" alt="Working Paper" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">Optimal placement of wind farms via quantile constraint learning</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge working">Working Paper</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors">Feng, W., <strong>Alcántara, A.</strong>, & Ruiz, C.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">arXiv</span>
+                                    <span class="pub-year">2025</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://arxiv.org/abs/2510.01093" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> Wind farm placement arranges the size and the location of multiple wind farms within a given region. The power output is highly related to the wind speed on spatial and temporal levels, which can be modeled by advanced data-driven approaches. To this end, we use a probabilistic neural network as a surrogate that accounts for the spatiotemporal correlations of wind speed. This neural network uses ReLU activation functions so that it can be reformulated as mixed-integer linear set of constraints (constraint learning). We embed these constraints into the placement decision problem, formulated as a two-stage stochastic optimization problem. Specifically, conditional quantiles of the total electricity production are regarded as recursive decisions in the second stage. We use real high-resolution regional data from a northern region in Spain. We validate that the constraint learning approach outperforms the classical bilinear interpolation method. Numerical experiments are implemented on risk-averse investors. The results indicate that risk-averse investors concentrate on dominant sites with strong wind, while exhibiting spatial diversification and sensitive capacity spread in non-dominant sites. Furthermore, we show that if we introduce transmission line costs in the problem, risk-averse investors favor locations closer to the substations. On the contrary, risk-neutral investors are willing to move to further locations to achieve higher expected profits. Our results conclude that the proposed novel approach is able to tackle a portfolio of regional wind farm placements and further provide guidance for risk-averse investors.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="journal" data-year="2024">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/ejor.webp" alt="European Journal of Operational Research" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">Optimal day-ahead offering strategy for large producers based on market price response learning</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge journal">Journal Article</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors"><strong>Alcántara, A.</strong>, & Ruiz, C.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">European Journal of Operational Research</span>
+                                    <span class="pub-year">2024</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://doi.org/10.1016/j.ejor.2024.06.038" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> In day-ahead electricity markets based on uniform marginal pricing, small variations in the offering and bidding curves may substantially modify the resulting market outcomes. In this work, we deal with the problem of finding the optimal offering curve for a risk-averse profit-maximizing generating company (GENCO) in a data-driven context. In particular, a large GENCO’s market share may imply that its offering strategy can alter the marginal price formation, which can be used to increase profit. We tackle this problem from a novel perspective. First, we propose an optimization-based methodology to summarize each GENCO’s step-wise supply curves into a subset of representative price-energy blocks. Then, the relationship between the resulting market price and the energy block offering prices is modeled through a probabilistic forecasting tool: a Distributional Neural Network, which also allows us to generate stochastic scenarios for the sensibility of the market towards the GENCO strategy via a set of linear constraints. Finally, this predictive model is embedded in the stochastic optimization model employing a constraint learning approach. Results show how allowing the GENCO to deviate from its true marginal costs renders significant changes in its profits and the marginal price of the market. Additionally, these results have also been tested in an out-of-sample validation setting, showing how this optimal offering strategy can effective in a real-world market context.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="journal" data-year="2023">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/expert-systems.webp" alt="Expert Systems with Applications" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">A neural network-based distributional constraint learning methodology for mixed-integer stochastic optimization</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge journal">Journal Article</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors"><strong>Alcántara, A.</strong>, & Ruiz, C.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">Expert Systems with Applications</span>
+                                    <span class="pub-year">2023</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://doi.org/10.1016/j.eswa.2023.120895" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <a href="https://github.com/antonioalcantaramata/DistCL" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-github"></use></svg> Code
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> The use of machine-learning methods helps to improve decision-making in different fields. In particular, the idea of bridging predictions (predictive models) and prescriptions (optimization problems) is gaining attention within the scientific community. One of the main ideas to address this trade-off is the Constraint Learning (CL) methodology, where the structure of the machine learning model can be treated as a set of constraints to be embedded within the optimization problem, establishing the relationship between a direct decision variable x and a response variable y. However, most CL approaches have focused on making point predictions, not considering the statistical and external uncertainty faced in the modeling process. In this paper, we extend the CL methodology to deal with uncertainty in the response variable y. The novel Distributional Constraint Learning (DCL) methodology makes use of a piece-wise linearizable neural network-based model to estimate the parameters of the conditional distribution of y (dependent on decisions x and contextual information), which can be embedded within mixed-integer optimization problems. In particular, we formulate a stochastic optimization problem by sampling random values from the estimated distribution by using a linear set of constraints. In this sense, DCL combines both the predictive performance of the neural network method and the possibility of generating scenarios to account for uncertainty within a tractable optimization model. The behavior of the proposed methodology is tested in the context of electricity systems, where a Virtual Power Plant seeks to optimize its operation, subject to different forms of uncertainty, and with price-responsive consumers.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="journal" data-year="2023">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/applied-int.webp" alt="Applied Intelligence" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">Deep neural networks for the quantile estimation of regional renewable energy production</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge journal">Journal Article</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors"><strong>Alcántara, A.</strong>, Galvan, I. M., & Aler, R.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">Applied Intelligence</span>
+                                    <span class="pub-year">2023</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://link.springer.com/article/10.1007/s10489-022-03958-7" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> Wind and solar energy forecasting have become crucial for the inclusion of renewable energy in electrical power systems. Although most works have focused on point prediction, it is currently becoming important to also estimate the forecast uncertainty. With regard to forecasting methods, deep neural networks have shown good performance in many fields. However, the use of these networks for comparative studies of probabilistic forecasts of renewable energies, especially for regional forecasts, has not yet received much attention. The aim of this article is to study the performance of deep networks for estimating multiple conditional quantiles on regional renewable electricity production and compare them with widely used quantile regression methods such as the linear, support vector quantile regression, gradient boosting quantile regression, natural gradient boosting and quantile regression forest methods. A grid of numerical weather prediction variables covers the region of interest. These variables act as the predictors of the regional model. In addition to quantiles, prediction intervals are also constructed, and the models are evaluated using different metrics. These prediction intervals are further improved through an adapted conformalized quantile regression methodology. Overall, the results show that deep networks are the best performing method for both solar and wind energy regions, producing narrow prediction intervals with good coverage.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="journal" data-year="2023">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/applied-math-mod.webp" alt="Applied Mathematical Modelling" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">On data-driven chance constraint learning for mixed-integer optimization problems</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge journal">Journal Article</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors"><strong>Alcántara, A.</strong>, & Ruiz, C.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">Applied Mathematical Modelling</span>
+                                    <span class="pub-year">2023</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://doi.org/10.1016/j.apm.2023.04.032" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <a href="https://github.com/antonioalcantaramata/ccl_tool" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-github"></use></svg> Code
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> When dealing with optimization problems, decision-makers often face high levels of uncertainty associated with partial information, unknown parameters, or complex relationships between these and the problem decision variables. In this work, we develop a novel Chance Constraint Learning (CCL) methodology with a focus on mixed-integer linear optimization problems, which combines and extends ideas from the literature on chance constraint and constraint learning. While constraint learning aims to model the functional relationship between straight-forward and non-tractable decision variables through the embedding of predictive models within the optimization problem, chance constraints set a probabilistic confidence level for a single or a set of constraints to be fulfilled. One of the main issues when establishing a learned constraint arises when we need to set further bounds for its response variable: the fulfillment of these is directly related to the accuracy of the predictive model and its probabilistic behavior. Therefore, the proposed CCL makes use of piece-wise linearizable machine learning models to estimate conditional quantiles of learned variables, providing a data-driven solution for chance constraints and adding probabilistic guarantees over constraints for learned variables. Open access software has been developed for use by practitioners. Furthermore, the benefits of CCL have been tested in two real-world case studies, demonstrating how robustness is added to optimal solutions when probabilistic bounds are established for learned constraints.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="journal" data-year="2023">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/applied-soft-comp.webp" alt="Applied Soft Computing" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">Pareto optimal prediction intervals with hypernetworks</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge journal">Journal Article</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors"><strong>Alcántara, A.</strong>, Galván, I. M., & Aler, R.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">Applied Soft Computing</span>
+                                    <span class="pub-year">2023</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://doi.org/10.1016/j.asoc.2022.109930" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <a href="https://github.com/antonioalcantaramata/POPI-HN" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-github"></use></svg> Code
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> As the relevance of probabilistic forecasting grows, the need of estimating multiple high-quality prediction intervals (PI) also increases. In the current state of the art, most deep neural network gradient descent-based methods take into account interval width and coverage into a single loss function, focusing on a unique nominal coverage target, and adding additional parameters to control the coverage–width trade-off. The Pareto Optimal Prediction Interval Hypernetwork (POPI-HN) approach developed in this work has been derived to treat this coverage–width trade-off as a multi-objective problem, obtaining a complete set of Pareto Optimal solutions (Pareto front). POPI-HN are able to be trained through gradient descent with no need to add extra parameters to control the width–coverage trade-off of PIs. Once the Pareto set has been obtained, users can extract the PI with the required coverage. Comparative results with recently introduced Quality-Driven loss show similar behavior in coverage while improving interval width for the majority of the studied domains, making POPI-HN a competing alternative for estimating uncertainty in regression tasks where PIs with multiple coverages are needed.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="publication-item" data-type="journal" data-year="2022">
+                            <div class="pub-cover">
+                                <img src="images/journal-covers/eng-app-ai.webp" alt="Engineering Applications of Artificial Intelligence" class="journal-cover" width="200" height="267" loading="lazy" decoding="async" onerror="this.src='images/journal-covers/default-journal.webp'">
+                            </div>
+                            <div class="pub-content">
+                                <div class="pub-title-row">
+                                    <h3 class="pub-title">Direct estimation of prediction intervals for solar and wind regional energy forecasting with deep neural networks</h3>
+                                    <div class="pub-badges">
+                                        <span class="pub-type-badge journal">Journal Article</span>
+                                    </div>
+                                </div>
+                                <p class="pub-authors"><strong>Alcántara, A.</strong>, Galván, I. M., & Aler, R.</p>
+                                <div class="pub-venue-info">
+                                    <span class="pub-venue">Engineering Applications of Artificial Intelligence</span>
+                                    <span class="pub-year">2022</span>
+                                </div>
+                                <div class="pub-links">
+                                    <a href="https://doi.org/10.1016/j.engappai.2022.105128" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-external-link"></use></svg> View Article
+                                    </a>
+                                    <span class="pub-open-access-badge">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-unlock-alt"></use></svg> Open Access
+                                    </span>
+                                    <button class="expand-btn" type="button" onclick="toggleAbstract(this)" aria-expanded="false" aria-label="Show abstract">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+                                    </button>
+                                </div>
+                                <div class="pub-abstract" style="display: none;">
+                                    <p><strong>Abstract:</strong> Deep neural networks (DNN) are becoming increasingly relevant for probabilistic forecasting because of their ability to estimate prediction intervals (PIs). Two different ways for estimating PIs with neural networks stand out: quantile estimation for posterior PI construction and direct PI estimation. The former first estimates quantiles, which are then used to construct PIs, while the latter directly obtains the lower and upper PI bounds by optimizing some loss functions, with the advantage that PI width is directly considered in the optimization process and thus may result in narrower intervals. In this work, two different DNN-based models are studied for direct PI estimation, and compared with DNN for quantile estimation in the context of solar and wind regional energy forecasting. The first approach is based on the recent quality-driven loss and is formulated to estimate multiple PIs with a single model. The second is a novel approach that employs hypernetworks (HN), where direct PI estimation is formulated as a multi-objective problem, returning a Pareto front of solutions that contains all possible coverage-width optimal trade-offs. This formulation allows HN to obtain optimal PIs for all possible coverages without increasing the number of network outputs or adjusting additional hyperparameters, as opposed to the first direct model. Results show that prediction intervals from direct estimation are narrower (up to 20%) than those of quantile estimation, for target coverages 70%–80% for all regions, and also 85%, 90%, and 95% depending on the region, while HN always achieves the required coverage for the higher target coverages.</p>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- BUILD:publications-list end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Software -->
+    <section id="software" tabindex="-1" class="research-section">
+        <div class="container">
+            <div class="detail-item software-section">
+                <div>
+                    <h2>Software</h2>
+                    <!-- BUILD:software start -- generated by build_research.py from software.json -->
+                    <div class="software-list">
+                        <div class="software-item">
+                            <div class="software-logo">
+                                <img src="images/software/conductor.webp" alt="CONDUCTOR logo" class="software-logo-img" width="240" height="186" loading="lazy" decoding="async">
+                            </div>
+                            <div class="software-content">
+                                <div class="software-title-row">
+                                    <h3 class="software-name">CONDUCTOR</h3>
+                                    <div class="software-chips">
+                                        <span class="software-role">Main developer</span>
+                                        <span class="software-lang">Python</span>
+                                        <span class="software-license">Apache-2.0</span>
+                                    </div>
+                                </div>
+                                <p class="software-description">An LLM-orchestrated digital twin for uncertainty-aware power-system operations. A FastAPI backend exposes security assessment, N-1 contingency, probabilistic risk, robust corrective dispatch and flexibility studies as tools; a natural-language agent drives them from a chat interface, running on a hosted model or fully locally so that no grid data leaves the machine.</p>
+                                <div class="software-links">
+                                    <a href="https://github.com/antonioalcantaramata/CONDUCTOR" class="pub-link" target="_blank" rel="noopener">
+                                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-github"></use></svg> Repository
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- BUILD:software end -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="https://www.cunef.edu/" target="_blank" rel="noopener" aria-label="CUNEF Universidad">
+                        <img src="images/logos/cunef-logo.webp" width="260" height="91" alt="CUNEF Universidad" class="footer-logo">
+                    </a>
+                    <div class="footer-affiliation">
+                        Department of Quantitative Methods<br>
+                        <a href="https://www.cunef.edu/" target="_blank" rel="noopener">CUNEF Universidad</a>, Madrid
+                    </div>
+                </div>
+                <div class="footer-text">
+                    <p>&copy; 2026 Antonio Alcántara Mata. All rights reserved.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

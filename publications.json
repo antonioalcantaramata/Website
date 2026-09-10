@@ -1,0 +1,147 @@
+{
+  "_comment": "Source of truth for the publications list. Edit this file, then run `python3 build_publications.py` to regenerate the list inside publications.html. The HTML stays static so crawlers and Google Scholar still see every entry. Fields: title, authors (may contain <strong> around your own name), venue, year, type (journal|conference|working), url (the article), code_url (optional, adds a \"Code\" link), open_access (bool), cover (file in images/journal-covers/), cover_alt, abstract (optional; omit to hide the expand button).",
+  "last_updated": "June 2026",
+  "types": {
+    "journal": "Journal Articles",
+    "conference": "Conference Papers",
+    "working": "Working Papers"
+  },
+  "publications": [
+    {
+      "title": "Integrated Design and Scheduling of Hydrogen Processes under Uncertainty: A Quantile Neural Network Approach",
+      "authors": "Ghilardi, L. M., Patrón, G. D., <strong>Alcántara, A.</strong>, & Tsay, C.",
+      "venue": "Industrial & Engineering Chemistry Research",
+      "year": 2025,
+      "type": "journal",
+      "url": "https://doi.org/10.1021/acs.iecr.5c03288",
+      "open_access": true,
+      "cover": "iec.webp",
+      "cover_alt": "Industrial & Engineering Chemistry Research",
+      "abstract": "The design and scheduling of electrolysis-based hydrogen production plants are subject to uncertainty in future electricity price predictions. Two-stage stochastic programming, which can model this uncertainty, often suffers from high computational costs. In this work, we propose the use of quantile neural networks as surrogates to model the so-called “second stage” for the integrated design and scheduling problem of a hydrogen process. Our surrogate model captures the distribution of the second-stage value function conditioned on electricity price-dependendent first-stage decisions. The neural network surrogate is then embedded into the two-stage stochastic program, enabling solutions to be found without computationally expensive sampling approaches. As the surrogate model outputs a distribution of the second-stage value function, we show this approach further enables joint optimization based on expectation and conditional value at risk, which is a measure of tail risk. Our results show that the inclusion of risk measures leads to higher investments in the electrolyzer and the storage to hedge against high electricity cost scenarios. The surrogate-based approach yields high-quality decisions and requires significantly less computational resources than the conventional sample average approximation."
+    },
+    {
+      "title": "Trustworthiness Layer for Foundation Models in Power Systems: Application to N-k Contingency Screening",
+      "authors": "<strong>Alcántara, A.</strong>, & Chatzivasileiadis, S.",
+      "venue": "arXiv",
+      "year": 2026,
+      "type": "working",
+      "url": "https://arxiv.org/abs/2602.07995",
+      "open_access": true,
+      "cover": "working-paper.webp",
+      "cover_alt": "Working Paper",
+      "abstract": "We propose a model-agnostic trustworthiness layer that equips any foundation model (FM) for power systems with statistically valid prediction intervals. The layer offers two calibration approaches: (i) stratified conformal prediction (SCP), which partitions residuals by contingency severity and grid element, and (ii) kernel-weighted conformal prediction (KCP), which localizes the calibration to each test scenario via scenario representations, yielding tighter, approximately conditional bounds. Using GridFM as a guiding example, we demonstrate the framework on N-k contingency screening for IEEE 24- and 118-bus systems. The trustworthiness layer ensures that over 90% of all critical violations are captured across N-k levels, minimizing missed detections while maintaining up to 5 times fewer false alarms than DC Power Flow. With negligible computational overhead over the underlying FM, this approach enables reliable large-scale security assessment beyond routine N-1 screening."
+    },
+    {
+      "title": "Optimal placement of wind farms via quantile constraint learning",
+      "authors": "Feng, W., <strong>Alcántara, A.</strong>, & Ruiz, C.",
+      "venue": "arXiv",
+      "year": 2025,
+      "type": "working",
+      "url": "https://arxiv.org/abs/2510.01093",
+      "open_access": true,
+      "cover": "working-paper.webp",
+      "cover_alt": "Working Paper",
+      "abstract": "Wind farm placement arranges the size and the location of multiple wind farms within a given region. The power output is highly related to the wind speed on spatial and temporal levels, which can be modeled by advanced data-driven approaches. To this end, we use a probabilistic neural network as a surrogate that accounts for the spatiotemporal correlations of wind speed. This neural network uses ReLU activation functions so that it can be reformulated as mixed-integer linear set of constraints (constraint learning). We embed these constraints into the placement decision problem, formulated as a two-stage stochastic optimization problem. Specifically, conditional quantiles of the total electricity production are regarded as recursive decisions in the second stage. We use real high-resolution regional data from a northern region in Spain. We validate that the constraint learning approach outperforms the classical bilinear interpolation method. Numerical experiments are implemented on risk-averse investors. The results indicate that risk-averse investors concentrate on dominant sites with strong wind, while exhibiting spatial diversification and sensitive capacity spread in non-dominant sites. Furthermore, we show that if we introduce transmission line costs in the problem, risk-averse investors favor locations closer to the substations. On the contrary, risk-neutral investors are willing to move to further locations to achieve higher expected profits. Our results conclude that the proposed novel approach is able to tackle a portfolio of regional wind farm placements and further provide guidance for risk-averse investors."
+    },
+    {
+      "title": "Leveraging neural networks to optimize heliostat field aiming strategies in Concentrating Solar Power Tower plants",
+      "authors": "<strong>Alcántara, A.</strong>, Diaz-Cachinero, P., Sánchez-González, A., & Ruiz, C.",
+      "venue": "Energy and AI",
+      "year": 2025,
+      "type": "journal",
+      "url": "https://doi.org/10.1016/j.egyai.2025.100520",
+      "open_access": true,
+      "cover": "energy-ai.webp",
+      "cover_alt": "Energy and AI",
+      "abstract": "Concentrating Solar Power Tower (CSPT) plants rely on heliostat fields to focus sunlight onto a central receiver. Although simple aiming strategies, such as directing all heliostats to the receiver’s equator, can maximize energy collection, they often result in uneven flux distributions that cause hotspots, thermal stresses, and reduced receiver lifetimes. This paper presents a novel, data-driven approach that combines constraint learning, neural network-based surrogates, and mathematical optimization to address these challenges. The methodology learns complex heliostat-to-receiver flux interactions from simulation data and embeds the resulting surrogate model in a tractable optimization framework. By maximizing a tailored quality score that balances energy collection with flux uniformity, the approach produces smoothly distributed flux profiles and mitigates excessive thermal peaks. An iterative refinement process, guided by a trust region strategy and progressive data sampling, ensures continual improvement of the surrogate model by exploring new solution spaces at each iteration. Results from a real CSPT case study show that the proposed approach outperforms conventional heuristic methods, delivering flatter flux distributions with nearly a 10% reduction in peak values and safer thermal conditions (reflected by up to a 50% decrease in deviations from safe concentration distributions), without significantly compromising overall energy capture."
+    },
+    {
+      "title": "A quantile neural network framework for two-stage stochastic optimization",
+      "authors": "<strong>Alcántara, A.</strong>, Ruiz, C., & Tsay, C.",
+      "venue": "Expert Systems with Applications",
+      "year": 2025,
+      "type": "journal",
+      "url": "https://doi.org/10.1016/j.eswa.2025.127876",
+      "open_access": true,
+      "cover": "expert-systems.webp",
+      "cover_alt": "Expert Systems with Applications",
+      "abstract": "Two-stage stochastic programming is a popular framework for optimization under uncertainty, where decision variables are split between first-stage decisions, and second-stage (or recourse) decisions, with the latter being adjusted after uncertainty is realized. These problems are often formulated using Sample Average Approximation (SAA), where uncertainty is modeled as a finite set of scenarios, resulting in a large “monolithic” problem, i.e., where the model is repeated for each scenario. The resulting models can be challenging to solve, and several problem-specific decomposition approaches have been proposed. An alternative approach is to approximate the expected second-stage objective value using a surrogate model, which can then be embedded in the first-stage problem to produce good heuristic solutions. In this work, we propose to instead model the distribution of the second-stage objective, specifically using a quantile neural network. Embedding this distributional approximation enables capturing uncertainty and is not limited to expected-value optimization, e.g., the proposed approach enables optimization of the Conditional Value at Risk (CVaR). We discuss optimization formulations for embedding the quantile neural network and demonstrate the effectiveness of the proposed framework using several computational case studies including a set of mixed-integer optimization problems.",
+      "code_url": "https://github.com/antonioalcantaramata/Quantile2SP"
+    },
+    {
+      "title": "Optimal day-ahead offering strategy for large producers based on market price response learning",
+      "authors": "<strong>Alcántara, A.</strong>, & Ruiz, C.",
+      "venue": "European Journal of Operational Research",
+      "year": 2024,
+      "type": "journal",
+      "url": "https://doi.org/10.1016/j.ejor.2024.06.038",
+      "open_access": true,
+      "cover": "ejor.webp",
+      "cover_alt": "European Journal of Operational Research",
+      "abstract": "In day-ahead electricity markets based on uniform marginal pricing, small variations in the offering and bidding curves may substantially modify the resulting market outcomes. In this work, we deal with the problem of finding the optimal offering curve for a risk-averse profit-maximizing generating company (GENCO) in a data-driven context. In particular, a large GENCO’s market share may imply that its offering strategy can alter the marginal price formation, which can be used to increase profit. We tackle this problem from a novel perspective. First, we propose an optimization-based methodology to summarize each GENCO’s step-wise supply curves into a subset of representative price-energy blocks. Then, the relationship between the resulting market price and the energy block offering prices is modeled through a probabilistic forecasting tool: a Distributional Neural Network, which also allows us to generate stochastic scenarios for the sensibility of the market towards the GENCO strategy via a set of linear constraints. Finally, this predictive model is embedded in the stochastic optimization model employing a constraint learning approach. Results show how allowing the GENCO to deviate from its true marginal costs renders significant changes in its profits and the marginal price of the market. Additionally, these results have also been tested in an out-of-sample validation setting, showing how this optimal offering strategy can effective in a real-world market context."
+    },
+    {
+      "title": "A neural network-based distributional constraint learning methodology for mixed-integer stochastic optimization",
+      "authors": "<strong>Alcántara, A.</strong>, & Ruiz, C.",
+      "venue": "Expert Systems with Applications",
+      "year": 2023,
+      "type": "journal",
+      "url": "https://doi.org/10.1016/j.eswa.2023.120895",
+      "open_access": true,
+      "cover": "expert-systems.webp",
+      "cover_alt": "Expert Systems with Applications",
+      "abstract": "The use of machine-learning methods helps to improve decision-making in different fields. In particular, the idea of bridging predictions (predictive models) and prescriptions (optimization problems) is gaining attention within the scientific community. One of the main ideas to address this trade-off is the Constraint Learning (CL) methodology, where the structure of the machine learning model can be treated as a set of constraints to be embedded within the optimization problem, establishing the relationship between a direct decision variable x and a response variable y. However, most CL approaches have focused on making point predictions, not considering the statistical and external uncertainty faced in the modeling process. In this paper, we extend the CL methodology to deal with uncertainty in the response variable y. The novel Distributional Constraint Learning (DCL) methodology makes use of a piece-wise linearizable neural network-based model to estimate the parameters of the conditional distribution of y (dependent on decisions x and contextual information), which can be embedded within mixed-integer optimization problems. In particular, we formulate a stochastic optimization problem by sampling random values from the estimated distribution by using a linear set of constraints. In this sense, DCL combines both the predictive performance of the neural network method and the possibility of generating scenarios to account for uncertainty within a tractable optimization model. The behavior of the proposed methodology is tested in the context of electricity systems, where a Virtual Power Plant seeks to optimize its operation, subject to different forms of uncertainty, and with price-responsive consumers.",
+      "code_url": "https://github.com/antonioalcantaramata/DistCL"
+    },
+    {
+      "title": "On data-driven chance constraint learning for mixed-integer optimization problems",
+      "authors": "<strong>Alcántara, A.</strong>, & Ruiz, C.",
+      "venue": "Applied Mathematical Modelling",
+      "year": 2023,
+      "type": "journal",
+      "url": "https://doi.org/10.1016/j.apm.2023.04.032",
+      "open_access": true,
+      "cover": "applied-math-mod.webp",
+      "cover_alt": "Applied Mathematical Modelling",
+      "abstract": "When dealing with optimization problems, decision-makers often face high levels of uncertainty associated with partial information, unknown parameters, or complex relationships between these and the problem decision variables. In this work, we develop a novel Chance Constraint Learning (CCL) methodology with a focus on mixed-integer linear optimization problems, which combines and extends ideas from the literature on chance constraint and constraint learning. While constraint learning aims to model the functional relationship between straight-forward and non-tractable decision variables through the embedding of predictive models within the optimization problem, chance constraints set a probabilistic confidence level for a single or a set of constraints to be fulfilled. One of the main issues when establishing a learned constraint arises when we need to set further bounds for its response variable: the fulfillment of these is directly related to the accuracy of the predictive model and its probabilistic behavior. Therefore, the proposed CCL makes use of piece-wise linearizable machine learning models to estimate conditional quantiles of learned variables, providing a data-driven solution for chance constraints and adding probabilistic guarantees over constraints for learned variables. Open access software has been developed for use by practitioners. Furthermore, the benefits of CCL have been tested in two real-world case studies, demonstrating how robustness is added to optimal solutions when probabilistic bounds are established for learned constraints.",
+      "code_url": "https://github.com/antonioalcantaramata/ccl_tool"
+    },
+    {
+      "title": "Deep neural networks for the quantile estimation of regional renewable energy production",
+      "authors": "<strong>Alcántara, A.</strong>, Galvan, I. M., & Aler, R.",
+      "venue": "Applied Intelligence",
+      "year": 2023,
+      "type": "journal",
+      "url": "https://link.springer.com/article/10.1007/s10489-022-03958-7",
+      "open_access": true,
+      "cover": "applied-int.webp",
+      "cover_alt": "Applied Intelligence",
+      "abstract": "Wind and solar energy forecasting have become crucial for the inclusion of renewable energy in electrical power systems. Although most works have focused on point prediction, it is currently becoming important to also estimate the forecast uncertainty. With regard to forecasting methods, deep neural networks have shown good performance in many fields. However, the use of these networks for comparative studies of probabilistic forecasts of renewable energies, especially for regional forecasts, has not yet received much attention. The aim of this article is to study the performance of deep networks for estimating multiple conditional quantiles on regional renewable electricity production and compare them with widely used quantile regression methods such as the linear, support vector quantile regression, gradient boosting quantile regression, natural gradient boosting and quantile regression forest methods. A grid of numerical weather prediction variables covers the region of interest. These variables act as the predictors of the regional model. In addition to quantiles, prediction intervals are also constructed, and the models are evaluated using different metrics. These prediction intervals are further improved through an adapted conformalized quantile regression methodology. Overall, the results show that deep networks are the best performing method for both solar and wind energy regions, producing narrow prediction intervals with good coverage."
+    },
+    {
+      "title": "Pareto optimal prediction intervals with hypernetworks",
+      "authors": "<strong>Alcántara, A.</strong>, Galván, I. M., & Aler, R.",
+      "venue": "Applied Soft Computing",
+      "year": 2023,
+      "type": "journal",
+      "url": "https://doi.org/10.1016/j.asoc.2022.109930",
+      "open_access": true,
+      "cover": "applied-soft-comp.webp",
+      "cover_alt": "Applied Soft Computing",
+      "abstract": "As the relevance of probabilistic forecasting grows, the need of estimating multiple high-quality prediction intervals (PI) also increases. In the current state of the art, most deep neural network gradient descent-based methods take into account interval width and coverage into a single loss function, focusing on a unique nominal coverage target, and adding additional parameters to control the coverage–width trade-off. The Pareto Optimal Prediction Interval Hypernetwork (POPI-HN) approach developed in this work has been derived to treat this coverage–width trade-off as a multi-objective problem, obtaining a complete set of Pareto Optimal solutions (Pareto front). POPI-HN are able to be trained through gradient descent with no need to add extra parameters to control the width–coverage trade-off of PIs. Once the Pareto set has been obtained, users can extract the PI with the required coverage. Comparative results with recently introduced Quality-Driven loss show similar behavior in coverage while improving interval width for the majority of the studied domains, making POPI-HN a competing alternative for estimating uncertainty in regression tasks where PIs with multiple coverages are needed.",
+      "code_url": "https://github.com/antonioalcantaramata/POPI-HN"
+    },
+    {
+      "title": "Direct estimation of prediction intervals for solar and wind regional energy forecasting with deep neural networks",
+      "authors": "<strong>Alcántara, A.</strong>, Galván, I. M., & Aler, R.",
+      "venue": "Engineering Applications of Artificial Intelligence",
+      "year": 2022,
+      "type": "journal",
+      "url": "https://doi.org/10.1016/j.engappai.2022.105128",
+      "open_access": true,
+      "cover": "eng-app-ai.webp",
+      "cover_alt": "Engineering Applications of Artificial Intelligence",
+      "abstract": "Deep neural networks (DNN) are becoming increasingly relevant for probabilistic forecasting because of their ability to estimate prediction intervals (PIs). Two different ways for estimating PIs with neural networks stand out: quantile estimation for posterior PI construction and direct PI estimation. The former first estimates quantiles, which are then used to construct PIs, while the latter directly obtains the lower and upper PI bounds by optimizing some loss functions, with the advantage that PI width is directly considered in the optimization process and thus may result in narrower intervals. In this work, two different DNN-based models are studied for direct PI estimation, and compared with DNN for quantile estimation in the context of solar and wind regional energy forecasting. The first approach is based on the recent quality-driven loss and is formulated to estimate multiple PIs with a single model. The second is a novel approach that employs hypernetworks (HN), where direct PI estimation is formulated as a multi-objective problem, returning a Pareto front of solutions that contains all possible coverage-width optimal trade-offs. This formulation allows HN to obtain optimal PIs for all possible coverages without increasing the number of network outputs or adjusting additional hyperparameters, as opposed to the first direct model. Results show that prediction intervals from direct estimation are narrower (up to 20%) than those of quantile estimation, for target coverages 70%–80% for all regions, and also 85%, 90%, and 95% depending on the region, while HN always achieves the required coverage for the higher target coverages."
+    }
+  ]
+}

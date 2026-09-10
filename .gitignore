@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+
+# Master images. The site serves downscaled .webp renditions of these (see the
+# Images section of README.md). The full-resolution originals stay on disk as
+# the masters for future resizing, but are not tracked or deployed -- they were
+# ~6.7 MB of files no page ever loads. Recover any of them from git history.
+images/profile.JPG
+images/journal-covers/*.jpg
+images/journal-covers/*.png
+images/logos/*.png
+
+# LaTeX build artefacts from cv/cv26.tex
+cv/*.aux
+cv/*.log
+cv/*.out
+cv/*.fls
+cv/*.fdb_latexmk
+cv/*.synctex.gz
+cv/*.bbl
+cv/*.blg
