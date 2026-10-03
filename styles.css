@@ -99,10 +99,8 @@ strong, b {
 }
 
 /* 3.2.2 Secondary face -- supporting text and decorative titles. */
-.font-secondary,
 .hero-subtitle,
 .page-subtitle,
-.greeting,
 .comment-item {
     font-family: var(--font-secondary);
 }
@@ -334,14 +332,6 @@ strong, b {
     text-decoration: underline;
 }
 
-.cv-update {
-    font-size: 0.75rem;
-    color: #a8a29a;
-    font-style: italic;
-    margin-left: 0.3rem;
-    font-weight: 300;
-}
-
 /* Hero Section */
 .hero {
     /* Not 100vh: on a large display that leaves the fold nearly empty and
@@ -373,14 +363,6 @@ strong, b {
 
 .hero-text {
     max-width: 600px;
-}
-
-.greeting {
-    display: block;
-    font-size: 1.2rem;
-    color: #6b6760;
-    font-weight: 400;
-    margin-bottom: 0.5rem;
 }
 
 .name {
@@ -448,17 +430,6 @@ strong, b {
     transform: translateY(-2px);
 }
 
-.btn-outline {
-    background: transparent;
-    color: #1a1f6c;
-    border-color: #1a1f6c;
-}
-
-.btn-outline:hover {
-    background: #1a1f6c;
-    color: white;
-}
-
 .social-links {
     display: flex;
     gap: 1rem;
@@ -513,25 +484,6 @@ strong, b {
 /* Section Styles */
 section {
     padding: 80px 0;
-}
-
-.section-header {
-    text-align: center;
-    margin-bottom: 4rem;
-}
-
-.section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1a1f6c;
-    margin-bottom: 1rem;
-}
-
-.section-subtitle {
-    font-size: 1.2rem;
-    color: #6b6760;
-    max-width: 600px;
-    margin: 0 auto;
 }
 
 /* About Section */
@@ -774,7 +726,7 @@ section {
     gap: 0.3rem;
 }
 
-.position-description, .degree-description {
+.position-description {
     color: #4a463f;
     font-size: 0.9rem;
     line-height: 1.5;
@@ -928,27 +880,6 @@ section {
     align-self: flex-start;
 }
 
-.interests-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    justify-content: center;
-}
-
-.tag {
-    background: linear-gradient(135deg, #1a1f6c, #11144a);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: transform 0.3s ease;
-}
-
-.tag:hover {
-    transform: scale(1.05);
-}
-
 /* Publications Section */
 .publications {
     background: #f0ece8;
@@ -1086,35 +1017,11 @@ section {
     min-width: 0;
 }
 
-.publication-item.hidden {
-    display: none;
-}
-
-.publication-item.fade-out {
-    opacity: 0;
-    transform: scale(0.95);
-}
-
 .publication-item:hover {
     transform: translateX(3px);
     border-left-color: #1a1f6c;
     box-shadow: 0 4px 15px rgba(26, 31, 108, 0.15);
 }
-
-/* .pub-number {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1a1f6c;
-    min-width: 45px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 0.1rem;
-    background: #d2e0f3;
-    border-radius: 6px;
-    height: fit-content;
-    padding: 0.3rem 0.6rem;
-} */
 
 .pub-title {
     font-size: 1.05rem;
@@ -1296,51 +1203,62 @@ section {
     background: #d2e0f3;
 }
 
-.cv-section {
+/* BibTeX: a .pub-link-styled <button> that reveals the entry below the links */
+.bibtex-btn {
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.bibtex-btn.expanded {
+    background: #d2e0f3;
+}
+
+.pub-bibtex {
+    position: relative;
+    margin-top: 0.75rem;
+    background: #f0ece8;
+    border-radius: 6px;
+    border-left: 3px solid #1a1f6c;
+}
+
+.pub-bibtex pre {
+    margin: 0;
+    padding: 0.75rem;
+    padding-right: 5.5rem; /* room for the Copy button */
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: #4a463f;
+}
+
+.bibtex-copy {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid #ddd6c9;
+    border-radius: 4px;
     background: white;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    text-align: center;
-}
-
-.cv-section i {
-    font-size: 2.5rem;
     color: #1a1f6c;
-    margin-bottom: 1rem;
-    display: block;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
 }
 
-.cv-section h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1a1f6c;
-    margin-bottom: 1rem;
-}
-
-.cv-section p {
-    color: #6b6760;
-    margin-bottom: 1.5rem;
+.bibtex-copy:hover {
+    background: #eef2fa;
 }
 
 /* Teaching Section */
 .teaching {
     background: #f0ece8;
     padding: 3rem 0;
-}
-
-.teaching-content {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.teaching-summary {
-    color: #6b6760;
-    font-size: 1.1rem;
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
-    text-align: left;
-    max-width: 100%;
 }
 
 .courses-container {
@@ -1544,28 +1462,6 @@ section {
     font-weight: bold;
 }
 
-.detail-item .fa-chalkboard-teacher {
-    background: rgba(26, 31, 108, 0.1) !important;
-    border-radius: 50% !important;
-    padding: 12px !important;
-    width: 56px !important;
-    height: 56px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-.course-role-badge {
-    display: inline-block;
-    background: #d2e0f3;
-    color: #1a1f6c;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
-}
-
 /* Responsive Design for Teaching Section */
 @media (max-width: 768px) {
     .course-header {
@@ -1594,11 +1490,6 @@ section {
     
     .period-term {
         font-size: 1rem;
-    }
-    
-    .teaching-summary {
-        font-size: 1rem;
-        padding: 0 1rem;
     }
     
     .student-comments {
@@ -1821,28 +1712,6 @@ section {
 .contact-link:hover {
     color: #11144a !important;
     text-decoration: underline;
-}
-
-/* CV Section in About */
-.cv-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    text-align: center;
-    margin-top: 2rem;
-}
-
-.cv-section h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1a1f6c;
-    margin-bottom: 1rem;
-}
-
-.cv-section p {
-    color: #6b6760;
-    margin-bottom: 1.5rem;
 }
 
 /* Contact Section */
@@ -2279,28 +2148,6 @@ section {
         align-self: center;
         text-align: center;
     }    
-    .cv-section {
-        text-align: center;
-        background: white;
-        padding: 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        margin: 0;
-    }
-    
-    .cv-section .btn {
-        width: auto;
-        max-width: 200px;
-        margin: 1rem auto 0;
-        display: block;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-    
-    .skills-grid {
-        gap: 1.5rem;
-    }
-    
     /* Contact Section Mobile Styles */
     .contact-intro {
         padding: 1.5rem;
@@ -2377,39 +2224,8 @@ section {
         padding: 0.7rem 1.2rem;
         font-size: 0.9rem;
     }    
-    .skill-category {
-        padding: 1.5rem;
-        margin: 0 auto;
-        max-width: 100%;
-    }
-    
-    .cv-section {
-        text-align: center;
-        background: white;
-        padding: 2rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        margin: 2rem 0;
-    }
-    
-    .cv-section .btn {
-        width: auto;
-        max-width: 180px;
-        margin: 1rem auto 0;
-        display: block;
-        padding: 10px 16px;
-        font-size: 0.85rem;
-    }
-    
     /* Better mobile layout for cards */
-    .courses-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding: 0 10px;
-    }
-    
-    .course-card,
-    .skill-category {
+    .course-card {
         max-width: 100%;
         margin: 0 auto;
         padding: 1.5rem;
@@ -2531,16 +2347,6 @@ section {
         padding: 0.1rem 0.3rem;
     }
     
-    .interests-tags {
-        justify-content: center;
-        gap: 0.5rem;
-    }
-    
-    .tag {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
-    }
-    
     .hero-buttons {
         flex-direction: column;
         width: 100%;
@@ -2554,15 +2360,6 @@ section {
         justify-content: center;
         padding: 12px 20px;
         text-align: center;
-    }
-    
-    .cv-section .btn {
-        width: auto !important;
-        max-width: 180px !important;
-        margin: 1rem auto 0 !important;
-        display: block !important;
-        padding: 10px 16px !important;
-        font-size: 0.85rem !important;
     }
     
     /* Center social links on small mobile */
@@ -2604,26 +2401,8 @@ section {
         margin-top: 0;
     }
     
-    .cv-section {
-        padding: 1.5rem 1rem;
-        margin: 1.5rem 0;
-    }
-    
-    .cv-section h3 {
-        font-size: 1.2rem;
-    }    
     .course-header h3 {
         font-size: 1.1rem;
-    }
-    
-    .rating-stars {
-        font-size: 0.8rem;
-    }
-    
-    .rating-value {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #1a1f6c;
     }
     
     .course-details {
@@ -2704,14 +2483,7 @@ section {
     }
     
     /* Smaller cards on very small screens */
-    .courses-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 0 5px;
-    }
-    
     .course-card,
-    .skill-category,
     .contact-item {
         padding: 1.8rem 1.2rem;
         max-width: 100%;
@@ -2757,15 +2529,6 @@ section {
         gap: 0.6rem;
         padding: 0.6rem;
         margin: 0 5px 0.4rem;
-    }
-    
-    .pub-number {
-        position: absolute;
-        top: 0.8rem;
-        right: 0.8rem;
-        font-size: 0.8rem;
-        min-width: 30px;
-        padding: 0.15rem 0.3rem;
     }
     
     .pub-content {
@@ -2820,16 +2583,6 @@ section {
         padding: 0.1rem 0.3rem;
     }
     
-    .interests-tags {
-        justify-content: center;
-        gap: 0.5rem;
-    }
-    
-    .tag {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
-    }
-    
     .hero-buttons {
         flex-direction: column;
         width: 100%;
@@ -2843,15 +2596,6 @@ section {
         justify-content: center;
         padding: 12px 20px;
         text-align: center;
-    }
-    
-    .cv-section .btn {
-        width: auto !important;
-        max-width: 180px !important;
-        margin: 1rem auto 0 !important;
-        display: block !important;
-        padding: 10px 16px !important;
-        font-size: 0.85rem !important;
     }
     
     /* Center social links on small mobile */
@@ -2893,26 +2637,8 @@ section {
         margin-top: 0;
     }
     
-    .cv-section {
-        padding: 1.5rem 1rem;
-        margin: 1.5rem 0;
-    }
-    
-    .cv-section h3 {
-        font-size: 1.2rem;
-    }    
     .course-header h3 {
         font-size: 1.1rem;
-    }
-    
-    .rating-stars {
-        font-size: 0.8rem;
-    }
-    
-    .rating-value {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #1a1f6c;
     }
     
     .course-details {
@@ -2927,34 +2653,6 @@ section {
         line-height: 1.6;
         font-size: 0.95rem;
     }
-}
-
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fade-in-up {
-    animation: fadeInUp 0.6s ease forwards;
-}
-
-/* Scroll Animations */
-.scroll-animate {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s ease;
-}
-
-.scroll-animate.animate {
-    opacity: 1;
-    transform: translateY(0);
 }
 
 /* Recent News Section */
@@ -3094,70 +2792,6 @@ section {
     font-size: 0.95rem;
 }
 
-/* Recent Updates (About Page) */
-.recent-updates {
-    margin-top: 3rem;
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.recent-updates h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #1a1f6c;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-}
-
-.recent-updates h3 i {
-    color: #1a1f6c;
-    background: rgba(26, 31, 108, 0.1);
-    padding: 8px;
-    border-radius: 50%;
-    font-size: 1rem;
-}
-
-.updates-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.update-item {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    padding: 1rem;
-    background: #f0ece8;
-    border-radius: 8px;
-    border-left: 4px solid #1a1f6c;
-}
-
-.update-date {
-    background: #1a1f6c;
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    min-width: fit-content;
-}
-
-.update-text {
-    color: #6b6760;
-    line-height: 1.5;
-    flex: 1;
-}
-
-.update-text strong {
-    color: #1a1f6c;
-    font-weight: 600;
-}
-
 /* Responsive Design for News */
 @media (max-width: 768px) {
     /* Publication responsive layout for tablets */
@@ -3286,15 +2920,6 @@ section {
         padding: 0 1.5rem;
     }
     
-    .update-item {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .update-date {
-        align-self: flex-start;
-    }
-    
     /* Publication filters responsive */
     .pub-filters {
         flex-direction: column;
@@ -3313,18 +2938,6 @@ section {
     .filter-btn, .sort-btn {
         padding: 0.6rem 1rem;
         font-size: 0.8rem;
-    }
-}
-
-/* Loading Animation */
-.loading {
-    opacity: 0;
-    animation: fadeIn 1s ease forwards;
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
     }
 }
 
@@ -3670,8 +3283,7 @@ section {
     justify-content: center;
 }
 
-/* Honour the OS "reduce motion" setting: no transitions, no transforms,
-   no scroll animation. */
+/* Honour the OS "reduce motion" setting: no transitions, no transforms. */
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
@@ -3693,16 +3305,10 @@ section {
     .education-item:hover .university-logo,
     .btn:hover,
     .btn-primary:hover,
-    .btn-secondary:hover,
-    .btn-outline:hover {
+    .btn-secondary:hover {
         transform: none;
     }
 
-    .scroll-animate,
-    .fade-in-up {
-        opacity: 1 !important;
-        transform: none !important;
-    }
 }
 
 /* ==========================================================================
