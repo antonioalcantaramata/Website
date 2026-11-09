@@ -1,0 +1,105 @@
+{
+  "_comment": "Source of truth for the Dissemination section of research.html (talks). Edit this file, then run `python3 build.py`. Entries are grouped by `type` (labels in `types`, rendered in that order) and sorted newest first within each group. Fields per talk: date (YYYY-MM), type, venue and title are required; location and url (event or session page, rendered as a link) are optional -- leave them as \"\" and they are simply not rendered. Keep this list in step with the Selected Talks section of cv/cv26.tex.",
+  "types": {
+    "invited": "Invited Seminars",
+    "conference": "Conference Presentations"
+  },
+  "talks": [
+    {
+      "date": "2026-10",
+      "type": "invited",
+      "venue": "6th Conference on Foundation Models of the Electric Grid (GridFM), Trusted Grid AI session",
+      "location": "Porto, Portugal",
+      "title": "A Trustworthiness Layer for GridFM via Conformal Prediction Intervals: Implementation and Open Questions",
+      "url": "https://gridfm.org/porto/trustedgridai/"
+    },
+    {
+      "date": "2026-04",
+      "type": "invited",
+      "venue": "GridFM Working Group",
+      "location": "",
+      "title": "Trustworthiness Layer for Foundation Models in Power Systems",
+      "url": ""
+    },
+    {
+      "date": "2026-03",
+      "type": "invited",
+      "venue": "International System Operator Network (ISON)",
+      "location": "",
+      "title": "Trustworthiness Layer for Foundation Models in Power Systems",
+      "url": ""
+    },
+    {
+      "date": "2026-02",
+      "type": "invited",
+      "venue": "CUNEF Universidad, Quantitative Methods Department",
+      "location": "Madrid, Spain",
+      "title": "Embedding Machine Learning into Optimization: Strategic Decision-making in Energy Markets",
+      "url": ""
+    },
+    {
+      "date": "2024-10",
+      "type": "invited",
+      "venue": "Linköping University, Department of Mathematics",
+      "location": "Linköping, Sweden",
+      "title": "A Quantile Neural Network Framework for Two-stage Stochastic Optimization",
+      "url": ""
+    },
+    {
+      "date": "2024-09",
+      "type": "invited",
+      "venue": "KTH Royal Institute of Technology, Department of Mathematics",
+      "location": "Stockholm, Sweden",
+      "title": "A Quantile Neural Network Framework for Two-stage Stochastic Optimization",
+      "url": "https://www.kth.se/math/kalender/antonio-alcantara-mata-a-quantile-neural-network-framework-for-two-stage-stochastic-optimization-1.1356296"
+    },
+    {
+      "date": "2023-09",
+      "type": "invited",
+      "venue": "Imperial College London, Department of Computing",
+      "location": "London, United Kingdom",
+      "title": "Probabilistic Forecasting, Quantile Neural Networks, and Stochastic Optimization",
+      "url": ""
+    },
+    {
+      "date": "2026-07",
+      "type": "conference",
+      "venue": "24th Conference of the International Federation of Operational Research Societies (IFORS)",
+      "location": "Vienna, Austria",
+      "title": "Leveraging neural networks to optimize heliostat field aiming strategies in Concentrating Solar Power Tower plants",
+      "url": "https://ifors2026.at/"
+    },
+    {
+      "date": "2025-06",
+      "type": "conference",
+      "venue": "34th European Conference on Operational Research (EURO)",
+      "location": "Leeds, United Kingdom",
+      "title": "From Sample Average Approximation to Surrogate Models in Smart Grids Operation",
+      "url": "https://euro2025leeds.uk/"
+    },
+    {
+      "date": "2025-06",
+      "type": "conference",
+      "venue": "41st National Congress of Statistics and Operations Research (SEIO)",
+      "location": "Lleida, Spain",
+      "title": "A Quantile Neural Network Framework for Two-stage Stochastic Optimization",
+      "url": "https://seio2025.com/en/"
+    },
+    {
+      "date": "2024-07",
+      "type": "conference",
+      "venue": "33rd European Conference on Operational Research (EURO)",
+      "location": "Copenhagen, Denmark",
+      "title": "A Quantile Neural Network Framework for Two-stage Stochastic Optimization: Application to Power Systems Operation",
+      "url": "https://www.euro-online.org/conf/euro33/"
+    },
+    {
+      "date": "2023-06",
+      "type": "conference",
+      "venue": "20th International Conference on the Integration of Constraint Programming, Artificial Intelligence, and Operations Research (CPAIOR)",
+      "location": "Nice, France",
+      "title": "A Neural Network-Based Distributional Constraint Learning Methodology for Mixed-Integer Stochastic Optimization",
+      "url": "https://sites.google.com/view/cpaior2023"
+    }
+  ]
+}

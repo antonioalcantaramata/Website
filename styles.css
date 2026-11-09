@@ -3466,7 +3466,8 @@ section {
 /* Section heading chips, matching Positions / Education / Teaching. */
 .interests-section h2::before,
 .publications-section h2::before,
-.software-section h2::before {
+.software-section h2::before,
+.dissemination-section h2::before {
     content: "";
     margin-top: 0.2rem;
     background-color: rgba(26, 31, 108, 0.1);
@@ -3493,6 +3494,10 @@ section {
 
 .software-section h2::before {
     background-image: url("data:image/svg+xml,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20640%20512%22%20fill=%22%231a1f6c%22><path%20d=%22M392.8%201.2c-17-4.9-34.7%205-39.6%2022l-128%20448c-4.9%2017%205%2034.7%2022%2039.6s34.7-5%2039.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6%20120.1c-12.5%2012.5-12.5%2032.8%200%2045.3L562.7%20256l-89.4%2089.4c-12.5%2012.5-12.5%2032.8%200%2045.3s32.8%2012.5%2045.3%200l112-112c12.5-12.5%2012.5-32.8%200-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3%200zm-306.7%200c-12.5-12.5-32.8-12.5-45.3%200l-112%20112c-12.5%2012.5-12.5%2032.8%200%2045.3l112%20112c12.5%2012.5%2032.8%2012.5%2045.3%200s12.5-32.8%200-45.3L77.3%20256l89.4-89.4c12.5-12.5%2012.5-32.8%200-45.3z%22/></svg>");
+}
+
+.dissemination-section h2::before {
+    background-image: url("data:image/svg+xml,<svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20384%20512%22%20fill=%22%231a1f6c%22><path%20d=%22M192%200C139%200%2096%2043%2096%2096V256c0%2053%2043%2096%2096%2096s96-43%2096-96V96c0-53-43-96-96-96zM64%20216c0-13.3-10.7-24-24-24s-24%2010.7-24%2024v40c0%2089.1%2066.2%20162.7%20152%20174.4V464H120c-13.3%200-24%2010.7-24%2024s10.7%2024%2024%2024h72%2072c13.3%200%2024-10.7%2024-24s-10.7-24-24-24H216V430.4c85.8-11.7%20152-85.3%20152-174.4V216c0-13.3-10.7-24-24-24s-24%2010.7-24%2024v40c0%2070.7-57.3%20128-128%20128s-128-57.3-128-128V216z%22/></svg>");
 }
 
 /* The Publications section owns the filters, so give them a little room. */
@@ -3685,6 +3690,133 @@ section {
     }
 }
 
+/* --- Dissemination: talks, one list per type -----------------------------
+   The month/year block sits in the 80px slot the journal covers and software
+   logos use, so all three lists on the page share one left edge. Rows are
+   divided rather than carded: twelve-plus cards of two short lines each read
+   as noise next to the richer publication cards above. */
+.talk-group + .talk-group {
+    margin-top: 2rem;
+}
+
+.talk-group-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--cunef-azul);
+    margin: 0 0 0.4rem;
+}
+
+.talk-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--cunef-azul);
+    background: var(--cunef-azul-claro);
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+    line-height: 1.4;
+}
+
+.talk-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    /* .detail-item centres its text on small screens; a list of talks scans
+       far better ragged-right. */
+    text-align: left;
+}
+
+.talk-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1rem;
+    align-items: start;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.talk-item:last-child {
+    border-bottom: none;
+}
+
+.talk-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.45rem 0;
+    border-radius: 6px;
+    background: var(--cunef-azul);
+    color: var(--cunef-blanco);
+    line-height: 1;
+}
+
+.talk-date .month {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.talk-date .year {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.talk-body {
+    min-width: 0;
+}
+
+.talk-title {
+    font-family: var(--font-secondary);
+    font-style: italic;
+    font-size: 1.02rem;
+    font-weight: 500;
+    color: var(--text-color);
+    line-height: 1.45;
+    margin: 0 0 0.25rem;
+}
+
+.talk-venue {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--cunef-azul);
+    line-height: 1.45;
+    margin: 0;
+}
+
+/* Outranks the small-screen `.detail-item p { text-align: center }`. */
+.talk-item .talk-venue {
+    text-align: left;
+}
+
+.talk-location {
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+/* Sits inline after the location; nowrap keeps the icon and label together
+   when a long venue pushes it onto the next line. */
+.talk-venue .talk-link {
+    margin-left: 0.5rem;
+    white-space: nowrap;
+    vertical-align: 1px;
+}
+
+@media (max-width: 768px) {
+    .talk-item {
+        grid-template-columns: 56px 1fr;
+        gap: 0.8rem;
+    }
+
+    .talk-date .year {
+        font-size: 0.9rem;
+    }
+}
+
 /* --- Research interests: three side-by-side themes ----------------------
    Not .research-card: that class is byte-identical to .detail-item, which is
    the white panel these sit inside, so it would nest a card in itself. These
@@ -3757,5 +3889,1698 @@ section {
 @media (prefers-reduced-motion: reduce) {
     .interest-box:hover {
         transform: none;
+    }
+}
+
+/* ==========================================================================
+   2026 refresh
+   A flatter, more editorial layer over everything above: deep Azul headers
+   with white overlapping tiles, bordered (not shadowed) cards, plain
+   headings, pill buttons. Kept as one block at the end so it can be read --
+   or removed -- in one place. Colour coding used across the site:
+       interests / teaching  Azul           #1a1f6c
+       publications          Turquesa dark  #066f79
+       software              Granate        #ae3c7c
+       talks                 Naranja dark   #c74300
+   All four carry white text at >= 4.5:1.
+   ========================================================================== */
+
+:root {
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --line: #e4ded4;
+    --c-interests: var(--cunef-azul);
+    --c-publications: var(--cunef-turquesa-dark);
+    --c-software: var(--cunef-granate);
+    --c-talks: var(--cunef-naranja-dark);
+    --c-teaching: var(--cunef-azul);
+}
+
+/* --- One page background everywhere ---------------------------------- */
+/* Beige Claro behind every page, white for every card and tile on it. The
+   About, Teaching and Contact sections used to paint their own beige over a
+   white <body>, so Home and Research ended up white and the rest beige. */
+body {
+    background-color: var(--cunef-beige-claro);
+}
+
+.about,
+.teaching,
+.contact,
+.publications,
+.recent-news,
+.home-tiles,
+.research-section {
+    background: transparent;
+}
+
+/* --- Navigation: one active marker (the Naranja underline), CV as a button */
+/* The bars share the page's Beige Claro, fully opaque: the Azul headers run
+   up underneath the fixed navbar, and any translucency tints it grey. */
+.navbar,
+.navbar.scrolled,
+.section-nav {
+    background: var(--cunef-beige-claro);
+    border-bottom: 1px solid var(--line);
+    box-shadow: none;
+}
+
+.nav-brand a {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+@media (min-width: 769px) {
+    .nav-menu {
+        gap: 0.15rem;
+        align-items: center;
+    }
+
+    .nav-link,
+    .nav-link:hover:not(.active),
+    .nav-link.active {
+        padding: 8px 14px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+    }
+
+    .nav-link:hover:not(.active) {
+        background: rgba(26, 31, 108, 0.06);
+    }
+
+    .nav-link.active {
+        font-weight: 700;
+    }
+
+    .nav-link::after,
+    .nav-link:hover::after,
+    .nav-link.active::after {
+        left: 14px;
+        width: calc(100% - 28px);
+        bottom: 2px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--cunef-naranja);
+        transform: scaleX(0);
+        transition: transform 0.2s ease;
+    }
+
+    .nav-link.active::after {
+        transform: scaleX(1);
+    }
+
+    .nav-link.nav-link-cv,
+    .nav-link.nav-link-cv:hover:not(.active) {
+        margin-left: 0.6rem;
+        padding: 7px 18px;
+        border: 1.5px solid var(--cunef-azul);
+        color: var(--cunef-azul);
+        font-weight: 600;
+    }
+
+    .nav-link.nav-link-cv:hover:not(.active) {
+        background: var(--cunef-azul);
+        color: var(--cunef-blanco);
+    }
+
+    .nav-link-cv::after {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        background-color: var(--cunef-beige-claro);
+        border-bottom: 1px solid var(--line);
+        box-shadow: none;
+    }
+
+    .nav-link.active {
+        background: rgba(26, 31, 108, 0.08);
+        border-color: transparent;
+    }
+
+    .nav-link.nav-link-cv {
+        border: 1.5px solid var(--cunef-azul);
+        color: var(--cunef-azul);
+        font-weight: 600;
+    }
+}
+
+/* --- Buttons: pills, no hover lift ------------------------------------- */
+.btn {
+    border-radius: 999px;
+    padding: 12px 26px;
+    font-weight: 600;
+}
+
+.btn:hover,
+.btn-primary:hover,
+.btn-secondary:hover,
+.social-links a:hover,
+.filter-btn:hover,
+.sort-btn:hover {
+    transform: none;
+}
+
+.filter-btn.active,
+.sort-btn.active {
+    box-shadow: none;
+}
+
+/* --- Interior page headers: compact, left-aligned, Azul ----------------- */
+.page-header {
+    padding: 118px 0 64px;
+    text-align: left;
+    background: var(--cunef-azul);
+    color: var(--cunef-blanco);
+}
+
+/* Two soft glows -- Azul Claro top right, Naranja bottom left -- instead of
+   the old beige gradient. Decorative only. */
+.page-header::before,
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 60% 90% at 100% 0%, rgba(210, 224, 243, 0.16), transparent 70%),
+        radial-gradient(ellipse 45% 80% at 0% 100%, rgba(255, 87, 0, 0.16), transparent 70%);
+    pointer-events: none;
+}
+
+.page-header-content,
+.page-header-content-solo {
+    justify-content: flex-start;
+    max-width: none;
+    margin: 0;
+    gap: 32px;
+}
+
+.page-header-text,
+.page-header-content-solo .page-header-text {
+    text-align: left;
+    max-width: 720px;
+}
+
+.page-title {
+    color: var(--cunef-blanco);
+    font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+}
+
+/* Short Naranja bar above every page title. */
+.page-title::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--cunef-naranja);
+    margin-bottom: 1.1rem;
+}
+
+.page-subtitle {
+    color: var(--cunef-azul-claro);
+    font-family: var(--font-secondary);
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.page-profile-image {
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.08);
+}
+
+.page-profile-image:hover {
+    transform: none;
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.08);
+}
+
+/* Pages whose first block overlaps the header need it a little taller. */
+.page-header:has(+ .research-hub) {
+    padding-bottom: 104px;
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        padding: 100px 0 44px;
+    }
+
+    .page-header:has(+ .research-hub) {
+        padding-bottom: 84px;
+    }
+
+    .page-header-content {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        max-width: none;
+        gap: 18px;
+    }
+
+    .page-header-text {
+        text-align: left;
+    }
+
+    .page-profile-image {
+        width: 84px;
+        height: 84px;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .page-title::before {
+        margin-bottom: 0.8rem;
+    }
+
+    .page-subtitle {
+        font-size: 1rem;
+    }
+}
+
+/* --- Home hero: Azul, white type --------------------------------------- */
+.hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+    background: var(--cunef-azul);
+    padding: 150px 0 150px;
+}
+
+/* .hero is a flex row, so without an explicit width its container shrinks
+   to its content and centres -- leaving the hero text out of line with the
+   tiles and every other page's content edge. */
+.hero-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.name {
+    color: var(--cunef-blanco);
+    font-size: clamp(2.6rem, 5.2vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+}
+
+.hero-subtitle {
+    color: var(--cunef-azul-claro);
+}
+
+.hero-description {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.hero .btn-primary {
+    background: var(--cunef-blanco);
+    color: var(--cunef-azul);
+}
+
+.hero .btn-primary:hover {
+    background: var(--cunef-azul-claro);
+}
+
+.hero .btn-secondary {
+    color: var(--cunef-blanco);
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+.hero .btn-secondary:hover {
+    background: var(--cunef-blanco);
+    color: var(--cunef-azul);
+    border-color: var(--cunef-blanco);
+}
+
+.hero .social-links a {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.hero .social-links a:hover {
+    background: var(--cunef-blanco);
+    color: var(--cunef-azul);
+}
+
+.profile-image {
+    border: 4px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.07);
+}
+
+.image-container {
+    overflow: visible;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 104px 0 120px;
+    }
+
+    .profile-image {
+        box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.07);
+    }
+}
+
+/* --- Tiles (home highlights and Research overview) ---------------------- */
+.home-tiles,
+.research-hub {
+    position: relative;
+    z-index: 2;
+    padding: 0;
+    margin-top: -88px;
+}
+
+.research-hub {
+    margin-top: -64px;
+    /* Where the compact bar's links scroll back to: just under the navbar,
+       with the Azul header edge still showing above the tiles. */
+    scroll-margin-top: 96px;
+}
+
+.tile-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+}
+
+.tile,
+.hub-tile {
+    --tile-c: var(--cunef-azul);
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 0;
+    position: relative;
+    padding: 1.5rem 1.5rem 1.3rem;
+    background: var(--cunef-blanco);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.tile-paper    { --tile-c: var(--c-publications); grid-column: span 4; }
+.tile-talk     { --tile-c: var(--c-talks);        grid-column: span 2; }
+.tile-software { --tile-c: var(--c-software);     grid-column: span 2; }
+.tile-teaching { --tile-c: var(--c-teaching);     grid-column: span 2; }
+.tile-cv       { --tile-c: var(--cunef-naranja);  grid-column: span 2; }
+
+/* Colour tab at the top-left of every tile and coloured panel: a short bar
+   like the Naranja one over each heading. A full-width top border would curl
+   around the rounded corners. */
+.tile::before,
+.hub-tile::before,
+.research-section .detail-item::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 1.5rem;
+    width: 36px;
+    height: 4px;
+    border-radius: 0 0 3px 3px;
+    background: var(--tile-c);
+}
+
+.tile:hover {
+    border-color: var(--tile-c);
+}
+
+.tile-eyebrow,
+.hub-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tile-c);
+}
+
+.tile-cv .tile-eyebrow {
+    color: var(--cunef-naranja-dark);
+}
+
+.tile-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--cunef-azul);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tile-paper .tile-title {
+    font-size: 1.45rem;
+}
+
+.tile-meta {
+    font-family: var(--font-secondary);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.98rem;
+}
+
+.tile-cta {
+    margin-top: auto;
+    padding-top: 0.6rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--cunef-azul);
+}
+
+.tile-cta span {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.tile:hover .tile-cta span {
+    transform: translateX(4px);
+}
+
+@media (max-width: 960px) {
+    .tile-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tile-paper {
+        grid-column: span 2;
+    }
+
+    .tile-talk,
+    .tile-software,
+    .tile-teaching,
+    .tile-cv {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 560px) {
+    .tile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tile-paper,
+    .tile-talk,
+    .tile-software,
+    .tile-teaching,
+    .tile-cv {
+        grid-column: auto;
+    }
+
+    .tile-paper .tile-title {
+        font-size: 1.25rem;
+    }
+}
+
+/* Research overview: the selected tile fills with its colour. */
+.hub-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.hub-interests     { --tile-c: var(--c-interests); }
+.hub-publications  { --tile-c: var(--c-publications); }
+.hub-software      { --tile-c: var(--c-software); }
+.hub-dissemination { --tile-c: var(--c-talks); }
+
+/* No fade on the selected fill: it should read as chosen immediately. */
+.hub-tile {
+    position: relative;
+    transition: border-color 0.2s ease;
+}
+
+.hub-count {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.hub-count strong {
+    font-size: 2.3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--tile-c);
+    margin-right: 0.15rem;
+}
+
+.hub-latest {
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.hub-tile:hover {
+    border-color: var(--tile-c);
+    background: color-mix(in srgb, var(--tile-c) 5%, white);
+}
+
+/* Selected: a light tint of the tile's colour and a 2px outline (the inset
+   shadow adds the second pixel without shifting the layout). Not a solid
+   fill -- an Azul tile would vanish into the Azul header behind it. */
+.hub-tile.active {
+    background: color-mix(in srgb, var(--tile-c) 7%, white);
+    border-color: var(--tile-c);
+    box-shadow: inset 0 0 0 1px var(--tile-c);
+}
+
+.hub-tile.active::before {
+    width: 56px;
+}
+
+.hub-tile.active .hub-count {
+    color: var(--text-color);
+}
+
+/* Small pointer from the selected tile down to its content. */
+.hub-tile.active::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    width: 16px;
+    height: 16px;
+    background: var(--tile-c);
+    transform: translateX(-50%) rotate(45deg);
+    border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+    .hub-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .hub-tile {
+        padding: 1rem 1.1rem;
+    }
+
+    .hub-count strong {
+        font-size: 1.9rem;
+    }
+
+    .hub-tile.active::after {
+        display: none;
+    }
+}
+
+/* One section at a time once script.js is running (the `js` class is set in
+   <head> before first paint). Without JavaScript every section shows. */
+.js .research-section:not(.is-active) {
+    display: none;
+}
+
+.js .research-section {
+    padding-top: 2rem;
+}
+
+/* The compact bar: with JavaScript it is fixed under the navbar and slides
+   in only after the tiles scroll out of view. */
+.js .section-nav {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    transform: translateY(-110%);
+    visibility: hidden;
+    transition: transform 0.25s ease, visibility 0.25s;
+}
+
+.js .section-nav.is-visible {
+    transform: none;
+    visibility: visible;
+}
+
+@media (max-width: 768px) {
+    .js .section-nav {
+        top: 60px;
+    }
+}
+
+/* Each section's panel carries its tile's colour as the tab at top-left. */
+.research-section .detail-item {
+    position: relative;
+}
+
+#interests     { --tile-c: var(--c-interests); }
+#publications  { --tile-c: var(--c-publications); }
+#software      { --tile-c: var(--c-software); }
+#dissemination { --tile-c: var(--c-talks); }
+
+.research-section .detail-item::before {
+    left: 2.5rem;
+    width: 48px;
+}
+
+/* The old small-screen layout centres .detail-item text, headings (via a
+   column flexbox) and paragraphs; Research sections read better ragged-right. */
+.research-section .detail-item,
+.research-section .detail-item h2,
+.research-section .detail-item p {
+    text-align: left;
+}
+
+.research-section .detail-item h2 {
+    align-items: flex-start;
+}
+
+/* --- Cards: bordered, flat, no hover lift ------------------------------- */
+.detail-item,
+.awards-section,
+.course-card,
+.contact-item,
+.contact-item.primary,
+.contact-item.secondary,
+.contact-intro,
+.bio-box,
+.position-item,
+.education-item,
+.publication-item,
+.software-item,
+.news-item,
+.interest-box,
+.award-item {
+    box-shadow: none !important;
+}
+
+.detail-item,
+.awards-section,
+.course-card,
+.contact-item.primary,
+.contact-item.secondary,
+.contact-intro {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+}
+
+.detail-item:hover,
+.awards-section:hover,
+.course-card:hover,
+.contact-item:hover,
+.contact-item.primary:hover,
+.contact-item.secondary:hover,
+.contact-intro:hover,
+.bio-box:hover,
+.position-item:hover,
+.education-item:hover,
+.news-item:hover,
+.interest-box:hover {
+    transform: none;
+}
+
+.publication-item,
+.software-item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+}
+
+.publication-item:hover,
+.software-item:hover {
+    transform: none;
+    border-color: rgba(26, 31, 108, 0.35);
+}
+
+/* --- Section headings: plain type, short Naranja bar, no icon chips ----- */
+.detail-item h2,
+.awards-section h2 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    border-bottom: 0;
+    padding-bottom: 0.7rem;
+    margin-bottom: 1.4rem;
+}
+
+.detail-item h2::before,
+.awards-section h2::before {
+    content: none !important;
+    display: none !important;
+}
+
+.awards-section > h2::after,
+.detail-item > div > h2::after {
+    bottom: 0;
+    width: 32px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+    .detail-item h2,
+    .awards-section h2 {
+        font-size: 1.35rem;
+    }
+
+    /* Headings stay left-aligned on small screens too, on every page (the
+       old small-screen layout centred them in a column flexbox). */
+    .detail-item h2,
+    .awards-section h2 {
+        text-align: left;
+        align-items: flex-start;
+    }
+}
+
+/* --- Home: Recent News as one list ------------------------------------- */
+.recent-news {
+    background: transparent;
+    padding: 72px 0 80px;
+}
+
+.recent-news .news-header {
+    max-width: none;
+    margin: 0 auto 1.25rem;
+    text-align: left;
+}
+
+.recent-news .news-header h2 {
+    font-size: 1.8rem;
+    letter-spacing: -0.02em;
+}
+
+.recent-news .news-header h2::after {
+    left: 0;
+    transform: none;
+    width: 32px;
+}
+
+.news-grid {
+    max-width: none;
+    gap: 0;
+    background: var(--cunef-blanco);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 0.4rem 1.75rem;
+}
+
+.news-item {
+    background: transparent;
+    border-radius: 0;
+    padding: 1.4rem 0;
+    margin: 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.news-item:last-child {
+    border-bottom: 0;
+}
+
+.news-date {
+    background: var(--cunef-azul-claro);
+    color: var(--cunef-azul);
+    min-width: 64px;
+    padding: 0.65rem 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .recent-news {
+        padding: 56px 0 64px;
+    }
+
+    .news-grid {
+        padding: 0.2rem 1.1rem;
+    }
+
+    .news-item {
+        padding: 1.2rem 0;
+        margin: 0;
+    }
+}
+
+/* --- Contact: headings match the rest of the site ---------------------- */
+.contact-primary h2,
+.contact-secondary h2 {
+    text-align: left;
+    color: var(--cunef-azul);
+    font-size: 1.55rem;
+    letter-spacing: -0.02em;
+    border-bottom: 0;
+    padding-bottom: 0.7rem;
+}
+
+.contact-primary h2::after,
+.contact-secondary h2::after {
+    left: 0;
+    transform: none;
+    width: 32px;
+}
+
+.contact-item.secondary {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+}
+
+/* Printing the Research page prints every section, not just the open one. */
+@media print {
+    .js .research-section:not(.is-active) {
+        display: block;
+    }
+
+    .research-hub,
+    .home-tiles {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .research-section .detail-item::before {
+        left: 1.5rem;
+    }
+}
+
+/* --- Research Interests boxes: white, bordered, square icon ------------- */
+.interest-box {
+    background: var(--cunef-blanco);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.5rem 1.5rem 1.6rem;
+    transition: border-color 0.2s ease;
+}
+
+.interest-box:hover {
+    border-color: rgba(26, 31, 108, 0.35);
+}
+
+.interest-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background-color: var(--cunef-azul-claro);
+    background-size: 20px;
+    margin-bottom: 1.1rem;
+}
+
+.interest-box h3 {
+    font-size: 1.08rem;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+    margin-bottom: 0.55rem;
+}
+
+.interest-box p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+/* --- About ------------------------------------------------------------- */
+/* Bio and the at-a-glance card side by side. */
+.about-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 1.5rem;
+    align-items: stretch;
+    margin-bottom: 1.5rem;
+}
+
+.about-intro .bio-box {
+    margin: 0;
+    padding: 2.25rem 2.5rem;
+    border: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+}
+
+.about-intro .bio-box .lead {
+    font-size: 1.12rem;
+    line-height: 1.8;
+    color: #3d3a35;
+}
+
+/* First paragraph slightly larger: the one-line answer to "who is this". */
+.about-intro .bio-box .lead:first-child {
+    font-size: 1.22rem;
+    color: var(--text-color);
+}
+
+.about-glance {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    background: var(--cunef-azul);
+    color: var(--cunef-blanco);
+}
+
+.glance-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cunef-naranja);
+}
+
+.glance-list {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.glance-list dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cunef-azul-claro);
+    opacity: 0.85;
+}
+
+.glance-list dd {
+    margin: 0.15rem 0 0;
+    font-size: 0.98rem;
+    line-height: 1.45;
+    color: var(--cunef-blanco);
+}
+
+.glance-links {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding-top: 0.4rem;
+}
+
+.glance-links .btn {
+    padding: 10px 18px;
+    font-size: 0.92rem;
+}
+
+.about-glance .btn-primary {
+    background: var(--cunef-blanco);
+    color: var(--cunef-azul);
+}
+
+.about-glance .btn-primary:hover {
+    background: var(--cunef-azul-claro);
+}
+
+.about-glance .btn-secondary {
+    color: var(--cunef-blanco);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.about-glance .btn-secondary:hover {
+    background: var(--cunef-blanco);
+    color: var(--cunef-azul);
+}
+
+/* Positions and Education as timelines: a thin rule with a dot per entry,
+   instead of a stack of cards with thick Azul edges. */
+.about-details {
+    margin: 0 0 1.5rem;
+    gap: 1.5rem;
+    max-width: none;
+}
+
+.position-list,
+.education-list {
+    position: relative;
+    padding-left: 22px;
+}
+
+.position-list::before,
+.education-list::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    border-radius: 1px;
+    background: var(--line);
+}
+
+.position-item,
+.education-item {
+    position: relative;
+    padding: 0 0 1.6rem;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+}
+
+.position-item:last-child,
+.education-item:last-child {
+    padding-bottom: 0;
+}
+
+.position-item::before,
+.education-item::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--cunef-blanco);
+    border: 2px solid var(--cunef-azul);
+}
+
+/* The current position gets a filled Naranja dot. */
+.position-item:first-child::before {
+    background: var(--cunef-naranja);
+    border-color: var(--cunef-naranja);
+}
+
+.position-logo,
+.education-logo {
+    width: 48px;
+    height: 48px;
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    box-shadow: none;
+}
+
+.university-logo,
+.position-item:hover .university-logo,
+.education-item:hover .university-logo {
+    filter: none;
+    transform: none;
+}
+
+.position-title,
+.degree-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.position-org,
+.degree-org {
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+/* The date moves up next to the title's weight: small, Azul, no pill. */
+.position-date,
+.degree-date {
+    order: -1;
+    background: transparent;
+    padding: 0;
+    margin-bottom: 0.15rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--cunef-naranja-dark);
+}
+
+.position-description {
+    font-style: normal;
+    font-size: 0.92rem;
+    color: #4a463f;
+    border-top: 0;
+    padding-top: 0;
+    margin-top: 0.45rem;
+}
+
+/* Awards as a two-column grid of quiet rows, year first. */
+.awards-section {
+    padding: 2.5rem;
+    margin: 0;
+}
+
+.awards-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 2rem;
+}
+
+.award-item,
+.award-item:hover {
+    padding: 1rem 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    transform: none;
+}
+
+.award-content {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.award-year {
+    min-width: 76px;
+    padding: 0;
+    background: transparent;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--cunef-naranja-dark);
+}
+
+.award-title {
+    font-size: 0.97rem;
+    font-weight: 600;
+    color: var(--cunef-azul);
+}
+
+.award-description {
+    font-style: normal;
+    font-size: 0.88rem;
+}
+
+@media (max-width: 900px) {
+    .about-intro {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-intro .bio-box {
+        padding: 1.5rem;
+    }
+
+    .about-intro .bio-box .lead,
+    .about-intro .bio-box .lead:first-child {
+        font-size: 1.05rem;
+        text-align: left;
+    }
+
+    .about-glance {
+        padding: 1.5rem;
+    }
+
+    /* The old small-screen layout centres everything; timelines and lists
+       need a left edge. */
+    .about-details .detail-item,
+    .about-details .detail-item h2,
+    .awards-section,
+    .awards-section h2 {
+        text-align: left;
+        align-items: flex-start;
+    }
+
+    .about-details .detail-item > div > h2::after {
+        left: 0;
+        transform: none;
+    }
+
+    .position-content,
+    .education-content {
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .position-details,
+    .education-details {
+        align-items: flex-start;
+    }
+
+    .position-title,
+    .degree-title,
+    .position-org,
+    .degree-org {
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .position-date,
+    .degree-date {
+        align-self: flex-start;
+        text-align: left;
+    }
+
+    .position-item,
+    .education-item {
+        padding: 0 0 1.4rem;
+        margin: 0;
+    }
+
+    .awards-section {
+        padding: 1.5rem;
+    }
+
+    .awards-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Logo boxes in the About timeline: 52px, and less padding around the CUNEF
+   mark so it stays above its 40px digital minimum (manual sec. 1.2). */
+.position-logo,
+.education-logo {
+    width: 52px;
+    height: 52px;
+}
+
+.position-logo:has(.cunef-logo) {
+    padding: 3px;
+}
+
+/* --- Contact: compact two-card row, then profile links ----------------- */
+.contact {
+    padding: 3rem 0 4rem;
+}
+
+.contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 1.5rem;
+}
+
+.contact-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 2.25rem 2.5rem;
+    border-radius: var(--radius-lg);
+}
+
+.contact-main {
+    background: var(--cunef-blanco);
+    border: 1px solid var(--line);
+}
+
+.contact-office {
+    background: var(--cunef-azul);
+    color: var(--cunef-blanco);
+}
+
+.contact-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cunef-naranja-dark);
+}
+
+.contact-office .contact-eyebrow {
+    color: var(--cunef-naranja);
+}
+
+.contact-lead {
+    margin: 0;
+    font-size: 1.08rem;
+    line-height: 1.7;
+    color: #3d3a35;
+}
+
+.contact-email {
+    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--cunef-azul);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    border-bottom: 2px solid rgba(255, 87, 0, 0.45);
+    align-self: flex-start;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.contact-email:hover {
+    color: var(--cunef-naranja-dark);
+    border-bottom-color: var(--cunef-naranja);
+}
+
+.contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+}
+
+.contact-actions .btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+}
+
+.contact-address {
+    font-style: normal;
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.contact-map {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    align-self: flex-start;
+    padding: 9px 18px;
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
+    border-radius: 999px;
+    color: var(--cunef-blanco);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.contact-map:hover {
+    background: var(--cunef-blanco);
+    color: var(--cunef-azul);
+}
+
+.contact-subhead {
+    position: relative;
+    margin: 2.5rem 0 1.1rem;
+    padding-bottom: 0.7rem;
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--cunef-azul);
+}
+
+.contact-subhead::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 32px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--cunef-naranja);
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem 1.1rem;
+    background: var(--cunef-blanco);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--text-color);
+    transition: border-color 0.2s ease;
+}
+
+.profile-link:hover {
+    border-color: var(--cunef-azul);
+}
+
+.profile-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--cunef-azul-claro);
+    color: var(--cunef-azul);
+}
+
+.profile-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.profile-text strong {
+    font-size: 0.98rem;
+    color: var(--cunef-azul);
+}
+
+.profile-text small {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-arrow {
+    margin-left: auto;
+    color: var(--cunef-azul);
+    transition: transform 0.2s ease;
+}
+
+.profile-link:hover .profile-arrow {
+    transform: translateX(3px);
+}
+
+@media (max-width: 960px) {
+    .contact-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .contact {
+        padding: 2rem 0 3rem;
+    }
+
+    .contact-card {
+        padding: 1.5rem;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Teaching: courses as rows inside the panel ------------------------ */
+.teaching {
+    padding: 3rem 0 4rem;
+}
+
+.courses-container {
+    gap: 0;
+    margin-top: 0.5rem;
+}
+
+/* Rows divided by a rule, not cards inside the panel's card. */
+.course-card,
+.course-card:hover {
+    padding: 2rem 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    transform: none;
+}
+
+.course-card:first-child {
+    padding-top: 0.5rem;
+}
+
+.course-card:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.course-header {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Logo in a bordered rounded square, like the About timeline. */
+.course-logo {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    background: var(--cunef-blanco);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+}
+
+.course-logo .university-logo {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+
+/* CUNEF mark: thinner padding keeps it ~54px wide, above its 40px minimum. */
+.course-logo:has(.cunef-logo) {
+    padding: 4px;
+}
+
+.course-logo .university-logo.cunef-logo {
+    width: 100%;
+    height: auto;
+}
+
+.course-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin: 0.15rem 0 0;
+}
+
+.course-title-section .course-description {
+    font-size: 0.97rem;
+    line-height: 1.65;
+}
+
+/* Everything under the title lines up with the title, not the logo. */
+.course-details {
+    margin: 0 0 0 calc(64px + 1.25rem);
+}
+
+.course-periods {
+    margin-bottom: 0;
+}
+
+.period-item {
+    align-items: center;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 0.6rem;
+    background: var(--cunef-beige-claro);
+    border: 0;
+    border-radius: var(--radius-md);
+}
+
+.period-term {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+}
+
+.period-programs {
+    font-style: normal;
+    font-size: 0.92rem;
+    margin-bottom: 0;
+}
+
+.survey-score,
+.period-ongoing {
+    box-shadow: none;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.85rem;
+}
+
+.survey-score {
+    background: var(--cunef-blanco);
+    border-color: var(--line);
+    color: var(--cunef-azul);
+}
+
+.survey-score .icon {
+    color: var(--cunef-amarillo);
+}
+
+/* Student comments as quote cards in a row. */
+.student-comments {
+    margin-top: 1.1rem;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.comments-header {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cunef-naranja-dark);
+}
+
+.comments-header .icon {
+    color: var(--cunef-naranja);
+}
+
+.comments-list {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem;
+}
+
+.comment-item {
+    position: relative;
+    padding: 1rem 1.1rem 1rem 2.4rem;
+    background: var(--cunef-blanco);
+    border: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    font-family: var(--font-secondary);
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: #3d3a35;
+}
+
+.comment-item::before {
+    content: '\201C';
+    position: absolute;
+    left: 0.85rem;
+    top: 0.45rem;
+    font-family: var(--font-secondary);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--cunef-naranja);
+    font-weight: 400;
+}
+
+.comment-item::after {
+    content: none;
+}
+
+@media (max-width: 768px) {
+    .teaching-section,
+    .teaching-section h2 {
+        text-align: left;
+    }
+
+    .course-header {
+        grid-template-columns: 52px minmax(0, 1fr);
+        gap: 0.9rem;
+        text-align: left;
+    }
+
+    .course-logo {
+        width: 52px;
+        height: 52px;
+        padding: 6px;
+    }
+
+    .course-logo:has(.cunef-logo) {
+        padding: 3px;
+    }
+
+    .course-title {
+        font-size: 1.15rem;
+    }
+
+    /* Outranks the old small-screen `.detail-item p { text-align: center }`. */
+    .teaching-section .course-description,
+    .teaching-section p {
+        text-align: left;
+    }
+
+    .course-details {
+        margin-left: 0;
+    }
+
+    .period-item {
+        align-items: flex-start;
+    }
+
+    .comments-list {
+        grid-template-columns: 1fr;
     }
 }

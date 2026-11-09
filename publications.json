@@ -1,6 +1,6 @@
 {
   "_comment": "Source of truth for the publications list. Edit this file, then run `python3 build.py` to regenerate the list inside research.html. The HTML stays static so crawlers and Google Scholar still see every entry. Fields: title, authors (may contain <strong> around your own name), venue, year, type (journal|conference|working), url (the article), code_url (optional, adds a \"Code\" link), open_access (bool), cover (file in images/journal-covers/), cover_alt, abstract (optional; omit to hide the expand button), bibtex (optional; adds a \"BibTeX\" button that shows the entry and copies it).",
-  "last_updated": "June 2026",
+  "last_updated": "November 2026",
   "types": {
     "journal": "Journal Articles",
     "conference": "Conference Papers",
@@ -27,6 +27,7 @@
       "year": 2026,
       "type": "working",
       "url": "https://arxiv.org/abs/2602.07995",
+      "code_url": "https://github.com/gridfm/gridfm-trustlayer",
       "open_access": true,
       "cover": "working-paper.webp",
       "cover_alt": "Working Paper",
@@ -34,17 +35,17 @@
       "bibtex": "@misc{alcantara2026trustworthiness,\n  title         = {Trustworthiness Layer for Foundation Models in Power Systems: Application to N-k Contingency Screening},\n  author        = {Alcántara, Antonio and Chatzivasileiadis, Spyros},\n  year          = {2026},\n  eprint        = {2602.07995},\n  archivePrefix = {arXiv},\n  doi           = {10.48550/arXiv.2602.07995},\n  url           = {https://arxiv.org/abs/2602.07995}\n}"
     },
     {
-      "title": "Optimal placement of wind farms via quantile constraint learning",
+      "title": "Risk-averse wind farms placement via quantile constraint learning",
       "authors": "Feng, W., <strong>Alcántara, A.</strong>, & Ruiz, C.",
-      "venue": "arXiv",
-      "year": 2025,
-      "type": "working",
-      "url": "https://arxiv.org/abs/2510.01093",
+      "venue": "Computers & Operations Research",
+      "year": 2026,
+      "type": "journal",
+      "url": "https://doi.org/10.1016/j.cor.2026.107584",
       "open_access": true,
-      "cover": "working-paper.webp",
-      "cover_alt": "Working Paper",
-      "abstract": "Wind farm placement arranges the size and the location of multiple wind farms within a given region. The power output is highly related to the wind speed on spatial and temporal levels, which can be modeled by advanced data-driven approaches. To this end, we use a probabilistic neural network as a surrogate that accounts for the spatiotemporal correlations of wind speed. This neural network uses ReLU activation functions so that it can be reformulated as mixed-integer linear set of constraints (constraint learning). We embed these constraints into the placement decision problem, formulated as a two-stage stochastic optimization problem. Specifically, conditional quantiles of the total electricity production are regarded as recursive decisions in the second stage. We use real high-resolution regional data from a northern region in Spain. We validate that the constraint learning approach outperforms the classical bilinear interpolation method. Numerical experiments are implemented on risk-averse investors. The results indicate that risk-averse investors concentrate on dominant sites with strong wind, while exhibiting spatial diversification and sensitive capacity spread in non-dominant sites. Furthermore, we show that if we introduce transmission line costs in the problem, risk-averse investors favor locations closer to the substations. On the contrary, risk-neutral investors are willing to move to further locations to achieve higher expected profits. Our results conclude that the proposed novel approach is able to tackle a portfolio of regional wind farm placements and further provide guidance for risk-averse investors.",
-      "bibtex": "@misc{feng2025optimal,\n  title         = {Optimal placement of wind farms via quantile constraint learning},\n  author        = {Feng, Wenxiu and Alcántara, Antonio and Ruiz, Carlos},\n  year          = {2025},\n  eprint        = {2510.01093},\n  archivePrefix = {arXiv},\n  doi           = {10.48550/arXiv.2510.01093},\n  url           = {https://arxiv.org/abs/2510.01093}\n}"
+      "cover": "cor.webp",
+      "cover_alt": "Computers & Operations Research",
+      "abstract": "Wind farm placement arranges the size and the location of multiple wind farms within a given region. The power output is highly related to wind speed on spatial and temporal levels, which can be modeled by advanced data-driven approaches. To this end, we use a probabilistic neural network as a surrogate that accounts for the spatiotemporal correlations of wind speed. This neural network uses ReLU activation functions so that it can be reformulated as mixed-integer linear constraints (constraint learning). We embed these constraints into the risk-averse placement decision problem, formulated as a two-stage stochastic optimization problem. Specifically, the conditional quantiles of total electricity production are regarded as recursive decisions in the second stage. We use real high-resolution regional data from a northern region in Spain. We validate that the constraint learning approach outperforms the classical bilinear interpolation method. Numerical experiments are implemented on risk-averse investors. The results indicate that risk-averse investors concentrate on dominant sites with strong wind, while exhibiting spatial diversification and sensitive capacity spread in non-dominant sites. Furthermore, we show that when we introduce transmission line costs into the problem, risk-averse investors favor locations closer to substations. On the contrary, risk-neutral investors are willing to move to further locations to achieve higher expected profits. Our results conclude that the proposed novel approach can tackle a portfolio of regional wind farm placements and further provide guidance for risk-averse investors.",
+      "bibtex": "@article{feng2026riskaverse,\n  title   = {Risk-averse wind farms placement via quantile constraint learning},\n  author  = {Feng, Wenxiu and Alcántara, Antonio and Ruiz, Carlos},\n  journal = {Computers \\& Operations Research},\n  volume  = {194},\n  pages   = {107584},\n  year    = {2026},\n  doi     = {10.1016/j.cor.2026.107584}\n}"
     },
     {
       "title": "Leveraging neural networks to optimize heliostat field aiming strategies in Concentrating Solar Power Tower plants",

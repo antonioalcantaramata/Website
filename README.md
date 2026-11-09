@@ -10,6 +10,7 @@ dependencies beyond Python 3 for the build script.
 |---|---|---|
 | a publication | `publications.json` | `python3 build.py` |
 | a software entry | `software.json` | `python3 build.py` |
+| a talk | `dissemination.json` (and the Selected Talks section of `cv/cv26.tex`) | `python3 build.py` |
 | the menu, footer or icons | `partials/` | `python3 build.py` |
 | a page title, description or link preview | `PAGES` at the top of `build.py` | `python3 build.py` |
 | page text (bio, news, courses, ...) | the page's `.html` file directly | nothing |
@@ -24,7 +25,7 @@ them: the site is served exactly as committed.
 |---|---|
 | `index.html` | Home: summary and recent news |
 | `about.html` | Bio, positions, education, awards |
-| `research.html` | Research interests, publications (generated), software (generated) |
+| `research.html` | Research interests, publications (generated), software (generated), dissemination: talks (generated) |
 | `teaching.html` | Courses and student evaluations |
 | `contact.html` | Email, office and academic profiles |
 | `publications.html` | Redirect to `research.html#publications`, kept so old external links still work |
@@ -45,8 +46,15 @@ the next build overwrites it. The script writes:
   current page's menu link is marked active at build time; the footer year is
   the year of the build.
 - **`publications-list`**, **`publication-filters`**, **`last-updated`**,
-  **`software`** (`research.html`): from `publications.json` and
-  `software.json`.
+  **`software`**, **`dissemination`** (`research.html`): from
+  `publications.json`, `software.json` and `dissemination.json`.
+- **`research-hub`** (`research.html`): the four overview tiles at the top --
+  counts and latest item per section, from the same files plus the Research
+  Interests boxes' headings.
+- **`home-tiles`** (`index.html`): the Latest publication, Latest talk and
+  Software tiles under the hero. The Teaching and CV tiles after them are
+  hand-written in `index.html`; update the Teaching one when the current
+  course changes.
 - **`sitemap.xml`**: from `PAGES`.
 
 The output is static HTML, so crawlers, Google Scholar and visitors without
@@ -86,6 +94,19 @@ curl -sLH "Accept: application/x-bibtex" https://doi.org/<doi>
 
 While `software` is an empty list, the `placeholder` text is shown instead.
 
+### dissemination.json
+
+| field | notes |
+|---|---|
+| `date` | `YYYY-MM` (the build checks); shown as a month/year block |
+| `type` | a key of `types` (`invited`, `conference`); one list per type, in the order `types` lists them, newest first |
+| `venue`, `title` | required |
+| `location` | optional; shown after the venue |
+| `url` | optional; renders an "Event page" link |
+
+The talks are also in the Selected Talks section of `cv/cv26.tex`; add a
+new talk to both.
+
 ## Images
 
 Pages load WebP renditions sized for how they are displayed. Keep the
@@ -112,10 +133,19 @@ Manrope stands in for it, with Taviraj (the manual's secondary face) for
 supporting text. The CUNEF logo is never recoloured and never shown below 40px
 wide.
 
+The current look (Azul headers, white overlapping tiles, bordered cards, pill
+buttons) is the "2026 refresh" block at the end of `styles.css`, which
+overrides the older rules above it. It also fixes one colour per kind of
+content, used on tiles and section edges: Azul for interests and teaching,
+Turquesa dark for publications, Granate for software, Naranja dark for talks.
+
 ## Other files
 
 - `script.js`: mobile menu, smooth in-page scrolling, the Research page's
-  section nav, publication filter/sort, abstract and BibTeX toggles.
+  tiles (one section at a time, chosen by the URL hash, e.g.
+  `research.html#publications`, plus a compact bar once the tiles scroll
+  away), publication filter/sort, abstract and BibTeX toggles. Without
+  JavaScript every Research section is shown.
 - `robots.txt`: allows everything and points to `sitemap.xml`.
 - `CNAME`: the custom domain for GitHub Pages.
 

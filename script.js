@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
     initSmoothScrolling();
     initPublicationFilters();
-    initResearchNav();
+    initResearchTabs();
 });
 
 // Navigation functionality. The current page's link is marked active by
@@ -50,7 +50,9 @@ function initNavigation() {
 
 // Smooth scrolling for anchor links
 function initSmoothScrolling() {
-    const links = document.querySelectorAll('a[href^="#"]');
+    // Research section links are handled by initResearchTabs instead.
+    const links = document.querySelectorAll(
+        'a[href^="#"]:not(.hub-tile):not(.section-nav-link)');
 
     links.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -79,77 +81,65 @@ function initSmoothScrolling() {
     });
 }
 
-// In-page section nav (Research page). Keeps the active link in sync with
-// whichever section is currently in view.
-function initResearchNav() {
-    const links = Array.from(document.querySelectorAll('.section-nav-link'));
-    if (links.length === 0) return;
+// Research page: the overview tiles (and the compact bar that stands in for
+// them once they scroll away) show one section at a time. The URL hash names
+// the section, so research.html#publications -- including the old
+// publications.html redirect -- still opens straight on it. Without
+// JavaScript none of this runs and every section is shown, as before.
+function initResearchTabs() {
+    const hub = document.querySelector('.research-hub');
+    const bar = document.querySelector('.section-nav');
+    if (!hub) return;
 
-    const sections = links
-        .map(link => document.querySelector(link.getAttribute('href')))
-        .filter(Boolean);
-    if (sections.length === 0) return;
+    const panels = Array.from(document.querySelectorAll('.research-section'));
+    const ids = panels.map(p => p.id);
+    const links = Array.from(document.querySelectorAll('.hub-tile, .section-nav-link'));
 
-    function setActive(id) {
+    function show(id) {
+        if (!ids.includes(id)) id = ids[0];
+        panels.forEach(p => p.classList.toggle('is-active', p.id === id));
         links.forEach(link => {
             const on = link.getAttribute('href') === '#' + id;
             link.classList.toggle('active', on);
-            if (on) {
-                link.setAttribute('aria-current', 'true');
-            } else {
-                link.removeAttribute('aria-current');
-            }
+            if (on) link.setAttribute('aria-current', 'true');
+            else link.removeAttribute('aria-current');
         });
+        return panels[ids.indexOf(id)];
     }
 
-    // Clicking a link should light it up straight away rather than waiting for
-    // the scroll to settle -- and at the very bottom of the page the last
-    // section may never win the measurement below.
     links.forEach(link => {
-        link.addEventListener('click', function () {
-            setActive(link.getAttribute('href').slice(1));
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const id = link.getAttribute('href').slice(1);
+            const panel = show(id);
+            if (history.replaceState) history.replaceState(null, '', '#' + id);
+            // From the compact bar the reader is deep in the page: bring the
+            // tiles back into view, the new one highlighted and its section
+            // right under it. From the tiles themselves nothing needs to move.
+            // Instant, not smooth: the page height has just changed under the
+            // scroll, and a smooth scroll across that can stop short.
+            if (hub.getBoundingClientRect().top < 0) {
+                hub.scrollIntoView({ behavior: 'instant', block: 'start' });
+            }
+            // Keyboard and screen-reader users land in the content they chose.
+            panel.focus({ preventScroll: true });
         });
     });
 
-    if (!('IntersectionObserver' in window)) {
-        setActive(sections[0].id);
-        return;
+    window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+    show(location.hash.slice(1));
+
+    // The compact bar appears only once the tiles have scrolled up behind the
+    // fixed navbar. One getBoundingClientRect per scroll event is cheap, and
+    // checking directly (no IntersectionObserver, no rAF) behaves the same
+    // everywhere.
+    if (bar) {
+        const navbar = document.getElementById('navbar');
+        const update = () => bar.classList.toggle('is-visible',
+            hub.getBoundingClientRect().bottom < (navbar ? navbar.offsetHeight : 70));
+        window.addEventListener('scroll', update, { passive: true });
+        update();
     }
-
-    // Compare how many *viewport* pixels each section covers, not
-    // intersectionRatio: that is a fraction of the element, so a short section
-    // peeking in would always outscore the long publications list.
-    const covered = new Map();
-    const observer = new IntersectionObserver(function (entries) {
-        entries.forEach(entry => {
-            covered.set(entry.target.id,
-                entry.isIntersecting ? entry.intersectionRect.height : 0);
-        });
-
-        // At the bottom of the page the final section can never fill the
-        // reading area, so claim it explicitly.
-        const atBottom = window.innerHeight + window.scrollY >=
-            document.documentElement.scrollHeight - 4;
-        if (atBottom) {
-            setActive(sections[sections.length - 1].id);
-            return;
-        }
-
-        let best = null;
-        let bestPx = 0;
-        sections.forEach(section => {
-            const px = covered.get(section.id) || 0;
-            if (px > bestPx) { bestPx = px; best = section.id; }
-        });
-        if (best) setActive(best);
-    }, {
-        // Discount the fixed navbar plus the sticky section nav.
-        rootMargin: '-130px 0px -30% 0px',
-        threshold: [0, 0.01, 0.1, 0.25, 0.5, 0.75, 1]
-    });
-
-    sections.forEach(section => observer.observe(section));
-    setActive(sections[0].id);
 }
 
 // Publication Filters

@@ -12,6 +12,12 @@ Every page (see PAGES below):
 research.html only:
     publications.json -> the Publications list and its filter buttons
     software.json     -> the Software list (or its placeholder, while empty)
+    dissemination.json -> the Dissemination section (talks, grouped by type)
+    all three + the Research Interests boxes -> the overview tiles at the top
+
+index.html:
+    publications.json, dissemination.json, software.json -> the highlight
+    tiles under the hero (latest paper, latest talk, software)
 
 Also rewrites sitemap.xml from PAGES.
 
@@ -22,7 +28,8 @@ HTML -- crawlers, Google Scholar and no-JS visitors still see everything.
 
     python3 build.py
 
-Run it after editing a partial, PAGES, publications.json or software.json.
+Run it after editing a partial, PAGES, publications.json, software.json or
+dissemination.json.
 """
 
 import datetime
@@ -36,6 +43,7 @@ ROOT = Path(__file__).parent
 PARTIALS = ROOT / "partials"
 PUBS = ROOT / "publications.json"
 SOFT = ROOT / "software.json"
+DISS = ROOT / "dissemination.json"
 
 SITE = "https://www.antonioalcantara.com/"
 NAME = "Antonio Alcántara Mata"
@@ -64,7 +72,7 @@ PAGES = {
     "research.html": {
         "path": "research.html",
         "title": f"Research - {NAME}",
-        "description": f"Research interests, publications and software by {NAME} - machine "
+        "description": f"Research interests, publications, software and talks by {NAME} - machine "
                        "learning, probabilistic forecasting and data-driven optimization for "
                        "energy systems.",
     },
@@ -193,6 +201,9 @@ def render_head(filename, meta):
         f'<meta property="og:image:alt" content="{esc(NAME)}, Tenure-track Assistant Professor at CUNEF Universidad">',
         '<meta name="twitter:card" content="summary_large_image">',
         "",
+        # Set before first paint so CSS that depends on JavaScript (the Research
+        # page's one-section-at-a-time view) never flashes its no-JS layout.
+        "<script>document.documentElement.classList.add('js')</script>",
         '<link rel="stylesheet" href="styles.css">',
         '<link rel="preconnect" href="https://fonts.googleapis.com">',
         '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
@@ -358,7 +369,7 @@ def render_software(items, placeholder):
             out.append(
                 f'            <img src="images/software/{esc(sw["logo"])}"'
                 f' alt="{esc(sw["name"])} logo" class="software-logo-img"'
-                f' width="240" height="186" loading="lazy" decoding="async">'
+                f' width="240" height="240" loading="lazy" decoding="async">'
             )
             out.append('        </div>')
         out.append('        <div class="software-content">')
@@ -393,11 +404,172 @@ def render_software(items, placeholder):
     return "\n".join(out)
 
 
+MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+
+def render_dissemination(data):
+    """Talks, one list per type in the order `types` gives, newest first.
+
+    The date is a small month/year block in the slot the journal cover and the
+    software logo use, so the three lists on the page share one left edge.
+    """
+    labels = data.get("types", {})
+    talks = data.get("talks", [])
+    unknown = sorted({t["type"] for t in talks} - set(labels))
+    if unknown:
+        sys.exit(f"error: dissemination.json: talk type(s) not in `types`: {', '.join(unknown)}")
+    for t in talks:
+        if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", t["date"]):
+            sys.exit(f"error: dissemination.json: date must be YYYY-MM, got {t['date']!r}")
+
+    out = ['<div class="talk-groups">']
+    for key, label in labels.items():
+        # sorted() is stable: talks in the same month keep their file order
+        group = sorted((t for t in talks if t["type"] == key),
+                       key=lambda t: t["date"], reverse=True)
+        if not group:
+            continue
+        out.append('    <div class="talk-group">')
+        out.append(f'        <h3 class="talk-group-title">{esc(label)}'
+                   f' <span class="talk-count">{len(group)}</span></h3>')
+        out.append('        <ol class="talk-list" reversed>')
+        for t in group:
+            year, month = t["date"].split("-")
+            out.append('            <li class="talk-item">')
+            out.append(f'                <time class="talk-date" datetime="{year}-{month}">'
+                       f'<span class="month">{MONTHS[int(month) - 1]}</span>'
+                       f'<span class="year">{year}</span></time>')
+            out.append('                <div class="talk-body">')
+            out.append(f'                    <h4 class="talk-title">{esc(t["title"])}</h4>')
+            venue = esc(t["venue"])
+            if t.get("location"):
+                venue += f' <span class="talk-location">&middot; {esc(t["location"])}</span>'
+            # The event link rides at the end of the venue line rather than on a
+            # row of its own, so a linked talk is no taller than an unlinked one.
+            if t.get("url"):
+                venue += (f' <a href="{esc(t["url"])}" class="pub-link talk-link"'
+                          f' target="_blank" rel="noopener">{ICON % "external-link"} Event page</a>')
+            out.append(f'                    <p class="talk-venue">{venue}</p>')
+            out.append('                </div>')
+            out.append('            </li>')
+        out.append('        </ol>')
+        out.append('    </div>')
+    out.append('</div>')
+    return "\n".join(out)
+
+
+def short_venue(venue):
+    """`Computers & Operations Research` stays; a long conference name keeps
+    only its acronym in brackets, e.g. `(GridFM)`, when it has one."""
+    m = re.search(r"\(([^)]+)\)", venue)
+    return m.group(1) if m and len(venue) > 45 else venue
+
+
+def talk_when(talk):
+    year, month = talk["date"].split("-")
+    return f"{MONTHS[int(month) - 1]} {year}"
+
+
+def latest_talk(diss):
+    return max(diss.get("talks", []), key=lambda t: t["date"], default=None)
+
+
+def render_research_hub(pubs, soft, diss, interests):
+    """The four overview tiles at the top of research.html.
+
+    Each tile is a plain in-page link, so without JavaScript it simply jumps to
+    its section; script.js turns the row into a one-section-at-a-time switcher.
+    The counts and "latest" lines are derived here so they cannot go stale.
+    """
+    talk = latest_talk(diss)
+    tools = soft.get("software", [])
+    tiles = [
+        ("interests", "Research Interests", len(interests),
+         "theme" if len(interests) == 1 else "themes",
+         " · ".join(interests)),
+        ("publications", "Publications", len(pubs),
+         "paper" if len(pubs) == 1 else "papers",
+         f"Latest: {pubs[0]['title']} ({short_venue(pubs[0]['venue'])}, {pubs[0]['year']})"
+         if pubs else ""),
+        ("software", "Software", len(tools),
+         "tool" if len(tools) == 1 else "tools",
+         " · ".join(t["name"] for t in tools)),
+        ("dissemination", "Dissemination", len(diss.get("talks", [])),
+         "talk" if len(diss.get("talks", [])) == 1 else "talks",
+         f"Latest: {talk.get('location') or short_venue(talk['venue'])}, {talk_when(talk)}"
+         if talk else ""),
+    ]
+    out = ['<div class="hub-grid">']
+    for key, label, count, unit, latest in tiles:
+        out.append(f'    <a href="#{key}" class="hub-tile hub-{key}" data-panel="{key}">')
+        out.append(f'        <span class="hub-label">{esc(label)}</span>')
+        out.append(f'        <span class="hub-count"><strong>{count}</strong> {unit}</span>')
+        if latest:
+            out.append(f'        <span class="hub-latest">{esc(latest)}</span>')
+        out.append('    </a>')
+    out.append('</div>')
+    return "\n".join(out)
+
+
+def interest_titles(page):
+    """The <h3> of each Research Interests box, which stays hand-written."""
+    return [html.unescape(t) for t in
+            re.findall(r'<div class="interest-box">.*?<h3>(.*?)</h3>', page, re.S)]
+
+
+def render_home_tiles(pubs, soft, diss):
+    """The data-driven highlight tiles on the home page. The Teaching and CV
+    tiles after them are hand-written in index.html."""
+    out = []
+    if pubs:
+        p = pubs[0]
+        out += [
+            '<a href="research.html#publications" class="tile tile-paper">',
+            '    <span class="tile-eyebrow">Latest publication</span>',
+            f'    <span class="tile-title">{esc(p["title"])}</span>',
+            f'    <span class="tile-meta">{esc(p["venue"])} &middot; {p["year"]}</span>',
+            f'    <span class="tile-cta">All {len(pubs)} publications <span aria-hidden="true">&rarr;</span></span>',
+            '</a>',
+        ]
+    talk = latest_talk(diss)
+    if talk:
+        where = ", ".join(x for x in (short_venue(talk["venue"]), talk.get("location")) if x)
+        out += [
+            '<a href="research.html#dissemination" class="tile tile-talk">',
+            '    <span class="tile-eyebrow">Latest talk</span>',
+            f'    <span class="tile-title">{esc(talk["title"])}</span>',
+            f'    <span class="tile-meta">{esc(where)} &middot; {talk_when(talk)}</span>',
+            f'    <span class="tile-cta">All {len(diss["talks"])} talks <span aria-hidden="true">&rarr;</span></span>',
+            '</a>',
+        ]
+    tools = soft.get("software", [])
+    if tools:
+        out += [
+            '<a href="research.html#software" class="tile tile-software">',
+            '    <span class="tile-eyebrow">Software</span>',
+            f'    <span class="tile-title">{esc(" · ".join(t["name"] for t in tools))}</span>',
+            '    <span class="tile-meta">Open-source tools from my research</span>',
+            '    <span class="tile-cta">See the code <span aria-hidden="true">&rarr;</span></span>',
+            '</a>',
+        ]
+    return "\n".join(out)
+
+
+def build_index(page):
+    pubs = sorted(json.loads(PUBS.read_text(encoding="utf-8"))["publications"],
+                  key=lambda p: (-p["year"], p["title"]))
+    soft = json.loads(SOFT.read_text(encoding="utf-8"))
+    diss = json.loads(DISS.read_text(encoding="utf-8"))
+    return splice(page, "home-tiles", render_home_tiles(pubs, soft, diss), "index.html")
+
+
 def build_research(page):
     data = json.loads(PUBS.read_text(encoding="utf-8"))
     pubs = data["publications"]
     labels = data.get("types", {})
     soft = json.loads(SOFT.read_text(encoding="utf-8"))
+    diss = json.loads(DISS.read_text(encoding="utf-8"))
 
     keys = [bibtex_key(p["bibtex"]) for p in pubs if p.get("bibtex")]
     dupes = {k for k in keys if keys.count(k) > 1}
@@ -414,6 +586,9 @@ def build_research(page):
     page = splice(page, "software",
                   render_software(soft.get("software", []), soft.get("placeholder", "")),
                   "research.html")
+    page = splice(page, "dissemination", render_dissemination(diss), "research.html")
+    page = splice(page, "research-hub",
+                  render_research_hub(pubs, soft, diss, interest_titles(page)), "research.html")
     # "Last updated" comes from the data file, so it reflects the last real
     # change to the list rather than the last time this script happened to run.
     page = splice_inline(page, "last-updated", esc(data.get("last_updated", "")), "research.html")
@@ -426,6 +601,11 @@ def build_research(page):
           + ", ".join(f"{k}: {v}" for k, v in sorted(by_type.items()))
           + f"), {len(keys)} with BibTeX; last updated {data.get('last_updated')!r}")
     print(f"  software entries: {n_soft}" + ("  (placeholder rendered)" if not n_soft else ""))
+    by_kind = {}
+    for t in diss.get("talks", []):
+        by_kind[t["type"]] = by_kind.get(t["type"], 0) + 1
+    print(f"  talks: {len(diss.get('talks', []))} ("
+          + ", ".join(f"{k}: {v}" for k, v in sorted(by_kind.items())) + ")")
     return page
 
 
@@ -443,6 +623,8 @@ def main():
         print(f"wrote {filename}")
         if filename == "research.html":
             page = build_research(page)
+        if filename == "index.html":
+            page = build_index(page)
         path.write_text(page, encoding="utf-8")
 
     (ROOT / "sitemap.xml").write_text(render_sitemap(), encoding="utf-8")

@@ -1,10 +1,10 @@
 {
-  "_comment": "Source of truth for the Software section of research.html. Edit this file, then run `python3 build_research.py`. While the list is empty the section renders the placeholder below instead of cards. Fields per entry: name, description and url (repo link) are required; role (your involvement, e.g. \"Main developer\", \"Contributor\", \"Maintainer\"), logo (a file in images/software/), language, license, and paper_title + paper_url are optional -- leave a field as \"\" and it is simply not rendered.",
+  "_comment": "Source of truth for the Software section of research.html. Edit this file, then run `python3 build.py`. While the list is empty the section renders the placeholder below instead of cards. Fields per entry: name, description and url (repo link) are required; role (your involvement, e.g. \"Main developer\", \"Contributor\", \"Maintainer\"), logo (a square 240x240 WebP in images/software/), language, license, and paper_title + paper_url are optional -- leave a field as \"\" and it is simply not rendered.",
   "placeholder": "Code accompanying my papers is linked from each publication above. A curated list of tools and packages will appear here.",
   "software": [
     {
       "name": "CONDUCTOR",
-      "description": "An LLM-orchestrated digital twin for uncertainty-aware power-system operations. A FastAPI backend exposes security assessment, N-1 contingency, probabilistic risk, robust corrective dispatch and flexibility studies as tools; a natural-language agent drives them from a chat interface, running on a hosted model or fully locally so that no grid data leaves the machine.",
+      "description": "Ask, test and decide: a solver-grounded AI assistant for distribution grids. A natural-language agent drives a power-systems analysis backend (security assessment, N-1 contingencies, probabilistic risk, robust corrective dispatch, flexibility and hosting-capacity studies) from a chat interface. Grid changes are tested as proposals, every figure is traced to the solver that produced it, corrective actions come as options for the operator to choose from, and root causes are investigated with Shapley values over AC power flows. Runs on a hosted model or fully locally via Ollama, so no grid data has to leave the machine.",
       "url": "https://github.com/antonioalcantaramata/CONDUCTOR",
       "logo": "conductor.webp",
       "role": "Main developer",
@@ -12,6 +12,17 @@
       "license": "Apache-2.0",
       "paper_title": "",
       "paper_url": ""
+    },
+    {
+      "name": "gridfm-trustlayer",
+      "description": "Statistically valid error bars on grid-state predictions, without retraining the model. A conformal trustworthiness layer that wraps the point predictions of power-system foundation models such as GridFM in intervals that contain the true AC bus voltages and line loadings with a chosen probability, including contingencies the model never saw in training. Offers stratified split-conformal and kernel-weighted conformal prediction, and screens N-k contingencies so that only flagged cases need a full AC power flow. Works with any model's predictions, CPU only; install with pip install gridfm-trustlayer.",
+      "url": "https://github.com/gridfm/gridfm-trustlayer",
+      "logo": "gridfm-trustlayer.webp",
+      "role": "Main developer",
+      "language": "Python",
+      "license": "Apache-2.0",
+      "paper_title": "Paper (arXiv)",
+      "paper_url": "https://arxiv.org/abs/2602.07995"
     }
   ]
 }

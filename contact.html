@@ -24,6 +24,7 @@
     <meta property="og:image:alt" content="Antonio Alcántara Mata, Tenure-track Assistant Professor at CUNEF Universidad">
     <meta name="twitter:card" content="summary_large_image">
 
+    <script>document.documentElement.classList.add('js')</script>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,8 +74,8 @@
                 <a href="about.html" class="nav-link">About</a>
                 <a href="research.html" class="nav-link">Research</a>
                 <a href="teaching.html" class="nav-link">Teaching</a>
-                <a href="cv/antonio_alcantara_cv.pdf" class="nav-link" target="_blank" rel="noopener">CV</a>
                 <a href="contact.html" class="nav-link active" aria-current="page">Contact</a>
+                <a href="cv/antonio_alcantara_cv.pdf" class="nav-link nav-link-cv" target="_blank" rel="noopener">CV</a>
             </div>
             <button class="hamburger" id="hamburger" type="button"
                     aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
@@ -98,92 +99,53 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- Contact: one row with the two things people come for (email,
+         office), then the profiles as a compact row of links. -->
     <section class="contact">
         <div class="container">
-            <div class="contact-content">
-                <div class="contact-intro">
-                    <p>I welcome enquiries about research collaborations, academic opportunities and questions about my work on machine learning and data-driven optimization. Email is the best way to reach me.</p>
-                </div>
-                
-                <!-- Primary Contact Methods -->
-                <div class="contact-primary">
-                    <h2>Primary Contact</h2>
-                    <div class="primary-contact-grid">
-                        <div class="contact-item primary">
-                            <div class="contact-icon">
-                                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-envelope"></use></svg>
-                            </div>
-                            <div class="contact-details">
-                                <h3>Email</h3>
-                                <p>Best way to reach me</p>
-                                <span class="contact-info">antonio.alcantara@cunef.edu</span>
-                                <a href="mailto:antonio.alcantara@cunef.edu" class="contact-btn">Send Email</a>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item primary">
-                            <div class="contact-icon">
-                                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map-marker"></use></svg>
-                            </div>
-                            <div class="contact-details">
-                                <h3>Location</h3>
-                                <p>Currently based at</p>
-                                <span class="contact-info">CUNEF Universidad<br>Department of Quantitative Methods<br>Campus Almansa &mdash; Building D, Room 4.29<br>Calle Almansa 101, 28040 Madrid, Spain</span>
-                            </div>
-                        </div>
+            <div class="contact-layout">
+                <div class="contact-card contact-main">
+                    <span class="contact-eyebrow">Email</span>
+                    <p class="contact-lead">I welcome enquiries about research collaborations, academic opportunities and questions about my work on machine learning and data-driven optimization. Email is the best way to reach me.</p>
+                    <a href="mailto:antonio.alcantara@cunef.edu" class="contact-email">antonio.alcantara@cunef.edu</a>
+                    <div class="contact-actions">
+                        <a href="mailto:antonio.alcantara@cunef.edu" class="btn btn-primary">
+                            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-envelope"></use></svg> Send an email
+                        </a>
+                        <a href="cv/antonio_alcantara_cv.pdf" class="btn btn-secondary" target="_blank" rel="noopener">Download CV</a>
                     </div>
                 </div>
-                
-                <!-- Academic & Professional Profiles -->
-                <div class="contact-secondary">
-                    <h2>Academic & Professional Profiles</h2>
-                    <div class="secondary-contact-grid">
-                        <div class="contact-item secondary">
-                            <div class="contact-icon">
-                                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-google"></use></svg>
-                            </div>
-                            <div class="contact-details">
-                                <h3>Google Scholar</h3>
-                                <p>Research publications</p>
-                                <a href="https://scholar.google.es/citations?user=xMW2VDgAAAAJ" target="_blank" rel="noopener" class="contact-link">View Profile</a>
-                            </div>
-                        </div>
-                        <div class="contact-item secondary">
-                            <div class="contact-icon">
-                                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-github"></use></svg>
-                            </div>
-                            <div class="contact-details">
-                                <h3>GitHub</h3>
-                                <p>Code repositories</p>
-                                <a href="https://github.com/antonioalcantaramata" target="_blank" rel="noopener" class="contact-link">View Profile</a>
-                            </div>
-                        </div>
-                        <div class="contact-item secondary">
-                            <div class="contact-icon">
-                                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-orcid"></use></svg>
-                            </div>
-                            <div class="contact-details">
-                                <h3>ORCID</h3>
-                                <p>Academic identifier</p>
-                                <a href="https://orcid.org/0000-0002-3306-2246" target="_blank" rel="noopener" class="contact-link">View ORCID</a>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item secondary">
-                            <div class="contact-icon">
-                                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-linkedin"></use></svg>
-                            </div>
-                            <div class="contact-details">
-                                <h3>LinkedIn</h3>
-                                <p>Professional network</p>
-                                <a href="https://www.linkedin.com/in/antonio-alcantara" target="_blank" rel="noopener" class="contact-link">Connect</a>
-                            </div>
-                        </div>
-                        
-                        
-                    </div>
+                <div class="contact-card contact-office">
+                    <span class="contact-eyebrow">Office</span>
+                    <address class="contact-address">CUNEF Universidad<br>Department of Quantitative Methods<br>Campus Almansa &mdash; Building D, Room 4.29<br>Calle Almansa 101, 28040 Madrid, Spain</address>
+                    <a href="https://www.google.com/maps/search/?api=1&amp;query=CUNEF+Universidad+Calle+Almansa+101+Madrid" class="contact-map" target="_blank" rel="noopener">
+                        <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-map-marker"></use></svg> Open in Google Maps
+                    </a>
                 </div>
+            </div>
+
+            <h2 class="contact-subhead">Profiles</h2>
+            <div class="profile-grid">
+                <a href="https://scholar.google.es/citations?user=xMW2VDgAAAAJ" class="profile-link" target="_blank" rel="noopener">
+                    <span class="profile-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-google"></use></svg></span>
+                    <span class="profile-text"><strong>Google Scholar</strong><small>Publications</small></span>
+                    <span class="profile-arrow" aria-hidden="true">&rarr;</span>
+                </a>
+                <a href="https://github.com/antonioalcantaramata" class="profile-link" target="_blank" rel="noopener">
+                    <span class="profile-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-github"></use></svg></span>
+                    <span class="profile-text"><strong>GitHub</strong><small>Code repositories</small></span>
+                    <span class="profile-arrow" aria-hidden="true">&rarr;</span>
+                </a>
+                <a href="https://orcid.org/0000-0002-3306-2246" class="profile-link" target="_blank" rel="noopener">
+                    <span class="profile-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-orcid"></use></svg></span>
+                    <span class="profile-text"><strong>ORCID</strong><small>0000-0002-3306-2246</small></span>
+                    <span class="profile-arrow" aria-hidden="true">&rarr;</span>
+                </a>
+                <a href="https://www.linkedin.com/in/antonio-alcantara" class="profile-link" target="_blank" rel="noopener">
+                    <span class="profile-icon"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-linkedin"></use></svg></span>
+                    <span class="profile-text"><strong>LinkedIn</strong><small>Professional network</small></span>
+                    <span class="profile-arrow" aria-hidden="true">&rarr;</span>
+                </a>
             </div>
         </div>
     </section>

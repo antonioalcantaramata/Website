@@ -24,6 +24,7 @@
     <meta property="og:image:alt" content="Antonio Alcántara Mata, Tenure-track Assistant Professor at CUNEF Universidad">
     <meta name="twitter:card" content="summary_large_image">
 
+    <script>document.documentElement.classList.add('js')</script>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,8 +74,8 @@
                 <a href="about.html" class="nav-link active" aria-current="page">About</a>
                 <a href="research.html" class="nav-link">Research</a>
                 <a href="teaching.html" class="nav-link">Teaching</a>
-                <a href="cv/antonio_alcantara_cv.pdf" class="nav-link" target="_blank" rel="noopener">CV</a>
                 <a href="contact.html" class="nav-link">Contact</a>
+                <a href="cv/antonio_alcantara_cv.pdf" class="nav-link nav-link-cv" target="_blank" rel="noopener">CV</a>
             </div>
             <button class="hamburger" id="hamburger" type="button"
                     aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
@@ -110,23 +111,52 @@
         <div class="container">
             <div class="about-content">
                 <div class="about-text">
-                    <div class="bio-box">
-                        <p class="lead">
-                            I am a Tenure-track Assistant Professor in the Department of Quantitative Methods at <a href="https://www.cunef.edu/" target="_blank" rel="noopener" class="inline-link">CUNEF Universidad</a> (Madrid, Spain).
-                            Before joining CUNEF, I was a postdoctoral researcher at <a href="https://www.dtu.dk/" target="_blank" rel="noopener" class="inline-link">DTU Wind and Energy Systems</a> (Denmark),
-                            working with <a href="http://www.chatziva.com/" target="_blank" rel="noopener">Prof. Spyros Chatzivasileiadis</a>.
-                            I obtained my Ph.D. in Mathematical Engineering from <a href="https://www.uc3m.es/" target="_blank" rel="noopener" class="inline-link">Universidad Carlos III de Madrid</a>,
-                            where I was supervised by <a href="https://carlosruizmora.github.io/" target="_blank" rel="noopener">Prof. Carlos Ruiz Mora</a>.
-                            My doctoral research focused on machine learning and surrogate modeling for optimization.
-                        </p>
+                    <!-- Bio beside an at-a-glance card: the facts a visitor
+                         usually wants first, one look away from the narrative. -->
+                    <div class="about-intro">
+                        <div class="bio-box">
+                            <p class="lead">
+                                I am a Tenure-track Assistant Professor in the Department of Quantitative Methods at <a href="https://www.cunef.edu/" target="_blank" rel="noopener" class="inline-link">CUNEF Universidad</a> (Madrid, Spain).
+                                Before joining CUNEF, I was a postdoctoral researcher at <a href="https://www.dtu.dk/" target="_blank" rel="noopener" class="inline-link">DTU Wind and Energy Systems</a> (Denmark),
+                                working with <a href="http://www.chatziva.com/" target="_blank" rel="noopener">Prof. Spyros Chatzivasileiadis</a>.
+                                I obtained my Ph.D. in Mathematical Engineering from <a href="https://www.uc3m.es/" target="_blank" rel="noopener" class="inline-link">Universidad Carlos III de Madrid</a>,
+                                where I was supervised by <a href="https://carlosruizmora.github.io/" target="_blank" rel="noopener">Prof. Carlos Ruiz Mora</a>.
+                                My doctoral research focused on machine learning and surrogate modeling for optimization.
+                            </p>
                         
-                        <p class="lead">
-                            My research interests include machine learning, probabilistic forecasting, data-driven optimization, and surrogate modeling, with a particular focus on applications in sustainable energy systems. 
-                            Further details are available in my list of <a href="research.html#publications" class="inline-link">publications</a>
-                            and my <a href="cv/antonio_alcantara_cv.pdf" class="inline-link" target="_blank" rel="noopener">curriculum vitae</a>.
-                        </p>
-                    </div>
+                            <p class="lead">
+                                My research interests include machine learning, probabilistic forecasting, data-driven optimization, and surrogate modeling, with a particular focus on applications in sustainable energy systems. 
+                                Further details are available in my list of <a href="research.html#publications" class="inline-link">publications</a>
+                                and my <a href="cv/antonio_alcantara_cv.pdf" class="inline-link" target="_blank" rel="noopener">curriculum vitae</a>.
+                            </p>
+                        </div>
                     
+                        <aside class="about-glance" aria-label="At a glance">
+                            <span class="glance-eyebrow">At a glance</span>
+                            <dl class="glance-list">
+                                <div>
+                                    <dt>Now</dt>
+                                    <dd>Tenure-track Assistant Professor, CUNEF Universidad, Madrid</dd>
+                                </div>
+                                <div>
+                                    <dt>Before</dt>
+                                    <dd>Postdoc, DTU Wind and Energy Systems, Copenhagen</dd>
+                                </div>
+                                <div>
+                                    <dt>Ph.D.</dt>
+                                    <dd>Mathematical Engineering, UC3M, 2025</dd>
+                                </div>
+                                <div>
+                                    <dt>Focus</dt>
+                                    <dd>Machine learning, probabilistic forecasting and data-driven optimization for energy systems</dd>
+                                </div>
+                            </dl>
+                            <div class="glance-links">
+                                <a href="cv/antonio_alcantara_cv.pdf" class="btn btn-primary" target="_blank" rel="noopener">Download CV</a>
+                                <a href="research.html#publications" class="btn btn-secondary">Publications</a>
+                            </div>
+                        </aside>
+                    </div>
                     <div class="about-details">
                         <div class="detail-item positions-section">
                             <div>
