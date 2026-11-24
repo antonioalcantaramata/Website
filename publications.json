@@ -1,5 +1,5 @@
 {
-  "_comment": "Source of truth for the publications list. Edit this file, then run `python3 build.py` to regenerate the list inside research.html. The HTML stays static so crawlers and Google Scholar still see every entry. Fields: title, authors (may contain <strong> around your own name), venue, year, month (1-12; orders papers within a year, not displayed), type (journal|conference|working), url (the article), code_url (optional, adds a \"Code\" link), explainer_url (optional, adds an \"Interactive explainer\" link to a blog post, e.g. blog/<slug>.html), open_access (bool), cover (file in images/journal-covers/), cover_alt, abstract (optional; omit to hide the expand button), bibtex (optional; adds a \"BibTeX\" button that shows the entry and copies it).",
+  "_comment": "Source of truth for the publications list. Edit this file, then run `python3 build.py` to regenerate the list inside research.html. The HTML stays static so crawlers and Google Scholar still see every entry. Fields: title, slug (the paper's own page is papers/<slug>.html; keep it stable once published, external links point at it), authors (may contain <strong> around your own name), venue, year, month (1-12; orders papers within a year, not displayed), type (journal|conference|working), url (the article), code_url (optional, adds a \"Code\" link), explainer_url (optional, adds an \"Interactive explainer\" link to a blog post, e.g. blog/<slug>.html), open_access (bool), cover (file in images/journal-covers/), cover_alt, abstract (optional; omit to hide the expand button), bibtex (optional; adds a \"BibTeX\" button that shows the entry and copies it).",
   "last_updated": "November 2026",
   "types": {
     "journal": "Journal Articles",
@@ -9,6 +9,7 @@
   "publications": [
     {
       "title": "Integrated Design and Scheduling of Hydrogen Processes under Uncertainty: A Quantile Neural Network Approach",
+      "slug": "hydrogen-design-scheduling-under-uncertainty",
       "authors": "Ghilardi, L. M., Patrón, G. D., <strong>Alcántara, A.</strong>, & Tsay, C.",
       "venue": "Industrial & Engineering Chemistry Research",
       "year": 2025,
@@ -23,6 +24,7 @@
     },
     {
       "title": "The Grid's Own Language: A Common Information Model Layer for LLM Grid Assistants",
+      "slug": "grids-own-language",
       "authors": "<strong>Alcántara, A.</strong>, Karampinis, I., & Chatzivasileiadis, S.",
       "venue": "arXiv",
       "year": 2026,
@@ -39,6 +41,7 @@
     },
     {
       "title": "Trustworthiness Layer for Foundation Models in Power Systems: Application to N-k Contingency Screening",
+      "slug": "trustworthiness-layer-foundation-models",
       "authors": "<strong>Alcántara, A.</strong>, & Chatzivasileiadis, S.",
       "venue": "arXiv",
       "year": 2026,
@@ -54,6 +57,7 @@
     },
     {
       "title": "Risk-averse wind farms placement via quantile constraint learning",
+      "slug": "risk-averse-wind-farm-placement",
       "authors": "Feng, W., <strong>Alcántara, A.</strong>, & Ruiz, C.",
       "venue": "Computers & Operations Research",
       "year": 2026,
@@ -68,6 +72,7 @@
     },
     {
       "title": "Leveraging neural networks to optimize heliostat field aiming strategies in Concentrating Solar Power Tower plants",
+      "slug": "heliostat-aiming-neural-networks",
       "authors": "<strong>Alcántara, A.</strong>, Diaz-Cachinero, P., Sánchez-González, A., & Ruiz, C.",
       "venue": "Energy and AI",
       "year": 2025,
@@ -82,6 +87,7 @@
     },
     {
       "title": "A quantile neural network framework for two-stage stochastic optimization",
+      "slug": "quantile-neural-network-two-stage-optimization",
       "authors": "<strong>Alcántara, A.</strong>, Ruiz, C., & Tsay, C.",
       "venue": "Expert Systems with Applications",
       "year": 2025,
@@ -97,6 +103,7 @@
     },
     {
       "title": "Optimal day-ahead offering strategy for large producers based on market price response learning",
+      "slug": "day-ahead-offering-price-response-learning",
       "authors": "<strong>Alcántara, A.</strong>, & Ruiz, C.",
       "venue": "European Journal of Operational Research",
       "year": 2024,
@@ -111,6 +118,7 @@
     },
     {
       "title": "A neural network-based distributional constraint learning methodology for mixed-integer stochastic optimization",
+      "slug": "distributional-constraint-learning",
       "authors": "<strong>Alcántara, A.</strong>, & Ruiz, C.",
       "venue": "Expert Systems with Applications",
       "year": 2023,
@@ -126,6 +134,7 @@
     },
     {
       "title": "On data-driven chance constraint learning for mixed-integer optimization problems",
+      "slug": "chance-constraint-learning",
       "authors": "<strong>Alcántara, A.</strong>, & Ruiz, C.",
       "venue": "Applied Mathematical Modelling",
       "year": 2023,
@@ -141,7 +150,8 @@
     },
     {
       "title": "Deep neural networks for the quantile estimation of regional renewable energy production",
-      "authors": "<strong>Alcántara, A.</strong>, Galvan, I. M., & Aler, R.",
+      "slug": "quantile-regional-renewable-production",
+      "authors": "<strong>Alcántara, A.</strong>, Galván, I. M., & Aler, R.",
       "venue": "Applied Intelligence",
       "year": 2023,
       "month": 4,
@@ -155,6 +165,7 @@
     },
     {
       "title": "Pareto optimal prediction intervals with hypernetworks",
+      "slug": "pareto-prediction-intervals-hypernetworks",
       "authors": "<strong>Alcántara, A.</strong>, Galván, I. M., & Aler, R.",
       "venue": "Applied Soft Computing",
       "year": 2023,
@@ -170,6 +181,7 @@
     },
     {
       "title": "Direct estimation of prediction intervals for solar and wind regional energy forecasting with deep neural networks",
+      "slug": "prediction-intervals-solar-wind",
       "authors": "<strong>Alcántara, A.</strong>, Galván, I. M., & Aler, R.",
       "venue": "Engineering Applications of Artificial Intelligence",
       "year": 2022,
