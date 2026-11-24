@@ -4877,23 +4877,33 @@ body {
     font-size: 0.92rem;
 }
 
-.about-glance .btn-primary {
+.about-glance .btn-primary,
+.not-found-links .btn-primary {
     background: var(--cunef-blanco);
     color: var(--cunef-azul);
 }
 
-.about-glance .btn-primary:hover {
+.about-glance .btn-primary:hover,
+.not-found-links .btn-primary:hover {
     background: var(--cunef-azul-claro);
 }
 
-.about-glance .btn-secondary {
+.about-glance .btn-secondary,
+.not-found-links .btn-secondary {
     color: var(--cunef-blanco);
     border-color: rgba(255, 255, 255, 0.5);
 }
 
-.about-glance .btn-secondary:hover {
+.about-glance .btn-secondary:hover,
+.not-found-links .btn-secondary:hover {
     background: var(--cunef-blanco);
     color: var(--cunef-azul);
+}
+
+/* 404 page: the buttons sit under the subtitle on the Azul page header. */
+.not-found-links {
+    margin: 1.5rem 0 0;
+    flex-wrap: wrap;
 }
 
 /* Positions and Education as timelines: a thin rule with a dot per entry,

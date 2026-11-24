@@ -37,48 +37,75 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "@id": "https://www.antonioalcantara.com/#person",
-        "name": "Antonio Alcántara Mata",
-        "alternateName": [
-            "Antonio Alcántara",
-            "A. Alcántara"
-        ],
-        "givenName": "Antonio",
-        "familyName": "Alcántara Mata",
-        "url": "https://www.antonioalcantara.com/",
-        "image": "https://www.antonioalcantara.com/images/profile-600.webp",
-        "email": "mailto:antonio.alcantara@cunef.edu",
-        "jobTitle": "Tenure-track Assistant Professor",
-        "worksFor": {
-            "@type": "CollegeOrUniversity",
-            "name": "CUNEF Universidad",
-            "url": "https://www.cunef.edu/"
-        },
-        "alumniOf": [
+        "@graph": [
             {
-                "@type": "CollegeOrUniversity",
-                "name": "Universidad Carlos III de Madrid",
-                "url": "https://www.uc3m.es/"
+                "@type": "ProfilePage",
+                "@id": "https://www.antonioalcantara.com/#profile",
+                "url": "https://www.antonioalcantara.com/",
+                "name": "Antonio Alcántara Mata - Assistant Professor at CUNEF Universidad",
+                "mainEntity": {
+                    "@id": "https://www.antonioalcantara.com/#person"
+                },
+                "isPartOf": {
+                    "@id": "https://www.antonioalcantara.com/#website"
+                }
             },
             {
-                "@type": "CollegeOrUniversity",
-                "name": "Universidad de Granada",
-                "url": "https://www.ugr.es/"
+                "@type": "WebSite",
+                "@id": "https://www.antonioalcantara.com/#website",
+                "url": "https://www.antonioalcantara.com/",
+                "name": "Antonio Alcántara Mata",
+                "alternateName": "Antonio Alcántara",
+                "inLanguage": "en",
+                "author": {
+                    "@id": "https://www.antonioalcantara.com/#person"
+                }
+            },
+            {
+                "@type": "Person",
+                "@id": "https://www.antonioalcantara.com/#person",
+                "name": "Antonio Alcántara Mata",
+                "alternateName": [
+                    "Antonio Alcántara",
+                    "A. Alcántara"
+                ],
+                "givenName": "Antonio",
+                "familyName": "Alcántara Mata",
+                "url": "https://www.antonioalcantara.com/",
+                "image": "https://www.antonioalcantara.com/images/profile-600.webp",
+                "email": "mailto:antonio.alcantara@cunef.edu",
+                "jobTitle": "Tenure-track Assistant Professor",
+                "worksFor": {
+                    "@type": "CollegeOrUniversity",
+                    "name": "CUNEF Universidad",
+                    "url": "https://www.cunef.edu/"
+                },
+                "alumniOf": [
+                    {
+                        "@type": "CollegeOrUniversity",
+                        "name": "Universidad Carlos III de Madrid",
+                        "url": "https://www.uc3m.es/"
+                    },
+                    {
+                        "@type": "CollegeOrUniversity",
+                        "name": "Universidad de Granada",
+                        "url": "https://www.ugr.es/"
+                    }
+                ],
+                "knowsAbout": [
+                    "Machine learning",
+                    "Probabilistic forecasting",
+                    "Data-driven optimization",
+                    "Surrogate modeling",
+                    "Energy systems"
+                ],
+                "sameAs": [
+                    "https://orcid.org/0000-0002-3306-2246",
+                    "https://scholar.google.es/citations?user=xMW2VDgAAAAJ",
+                    "https://github.com/antonioalcantaramata",
+                    "https://www.linkedin.com/in/antonio-alcantara"
+                ]
             }
-        ],
-        "knowsAbout": [
-            "Machine learning",
-            "Probabilistic forecasting",
-            "Data-driven optimization",
-            "Surrogate modeling",
-            "Energy systems"
-        ],
-        "sameAs": [
-            "https://orcid.org/0000-0002-3306-2246",
-            "https://scholar.google.es/citations?user=xMW2VDgAAAAJ",
-            "https://github.com/antonioalcantaramata",
-            "https://www.linkedin.com/in/antonio-alcantara"
         ]
     }
     </script>

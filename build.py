@@ -99,6 +99,14 @@ PAGES = {
         "description": f"Contact details and academic profiles of {NAME}, Department of "
                        "Quantitative Methods, CUNEF Universidad, Madrid.",
     },
+    # Served by GitHub Pages for any missing URL, at that URL's path: kept out
+    # of search results and the sitemap, with every link made root-relative.
+    "404.html": {
+        "path": "404.html",
+        "title": f"Page not found - {NAME}",
+        "description": f"This page does not exist. Find the publications, blog and profile of {NAME} here.",
+        "not_found": True,
+    },
 }
 
 # schema.org Person, embedded in the home page. This is what lets a search
@@ -196,7 +204,8 @@ def render_head(filename, meta):
     out = [
         f'<title>{esc(meta["title"])}</title>',
         f'<meta name="description" content="{esc(meta["description"])}">',
-        f'<link rel="canonical" href="{url}">',
+        '<meta name="robots" content="noindex">' if meta.get("not_found")
+        else f'<link rel="canonical" href="{url}">',
         '<link rel="icon" href="favicon.ico" sizes="32x32">',
         '<link rel="icon" href="images/icon-192.png" type="image/png" sizes="192x192">',
         '<link rel="apple-touch-icon" href="apple-touch-icon.png">',
@@ -227,15 +236,77 @@ def render_head(filename, meta):
         '<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800'
         '&family=Taviraj:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">',
     ]
-    if filename == "index.html":
-        data = json.dumps(PERSON, ensure_ascii=False, indent=4)
+    data = structured_data(filename, meta)
+    if data:
+        # "<\/" keeps text such as an abstract from closing the <script> early
+        data = json.dumps(data, ensure_ascii=False, indent=4).replace("</", "<\\/")
         out += ["", '<script type="application/ld+json">', data, "</script>"]
     return "\n".join(out)
+
+
+def structured_data(filename, meta):
+    """schema.org data for search engines, or None. The home page says whose
+    site this is (ProfilePage, WebSite, Person); the Research page lists the
+    publications as ScholarlyArticles authored by that same Person."""
+    person = {k: v for k, v in PERSON.items() if k != "@context"}
+    if filename == "index.html":
+        return {"@context": "https://schema.org", "@graph": [
+            {"@type": "ProfilePage", "@id": SITE + "#profile", "url": SITE,
+             "name": meta["title"], "mainEntity": {"@id": PERSON["@id"]},
+             "isPartOf": {"@id": SITE + "#website"}},
+            # The site name Google shows above results, instead of the domain.
+            {"@type": "WebSite", "@id": SITE + "#website", "url": SITE, "name": NAME,
+             "alternateName": PERSON["alternateName"][0], "inLanguage": "en",
+             "author": {"@id": PERSON["@id"]}},
+            person,
+        ]}
+    if filename == "research.html":
+        pubs = sorted_pubs(json.loads(PUBS.read_text(encoding="utf-8"))["publications"])
+        return {"@context": "https://schema.org",
+                "@graph": [scholarly_article(p) for p in pubs]}
+    return None
+
+
+def pub_authors(pub):
+    """`authors` ("Last, I. I., <strong>Me, A.</strong>, & Last, I.") as
+    schema.org persons; the <strong> one is the site's Person."""
+    found = re.findall(r"\s*(<strong>)?([^,<]+?),\s*((?:[A-ZÁÉÍÓÚÑ][a-z]?\.\s*(?:-\s*)?)+)",
+                       pub["authors"].replace("&amp;", "").replace("&", ""))
+    if not found or not any(me for me, _, _ in found):
+        sys.exit(f"error: publications.json: cannot read authors of {pub['title']!r}")
+    return [{"@id": PERSON["@id"]} if me else
+            {"@type": "Person", "name": f"{initials.strip()} {last.strip()}"}
+            for me, last, initials in found]
+
+
+def scholarly_article(pub):
+    item = {"@type": "ScholarlyArticle", "name": pub["title"], "url": pub["url"],
+            "author": pub_authors(pub),
+            "datePublished": f'{pub["year"]}-{pub["month"]:02d}'}
+    if pub["type"] == "working":
+        item["publisher"] = {"@type": "Organization", "name": pub["venue"]}
+    else:
+        item["isPartOf"] = {"@type": "Periodical", "name": pub["venue"]}
+    if pub.get("abstract"):
+        item["abstract"] = pub["abstract"]
+    if pub.get("open_access"):
+        item["isAccessibleForFree"] = True
+    if pub.get("code_url"):
+        item["subjectOf"] = {"@type": "SoftwareSourceCode", "codeRepository": pub["code_url"]}
+    return item
+
+
+def root_relative(page):
+    """Point every relative href/src at the site root ("about.html" ->
+    "/about.html"), for a page served at whatever path was requested."""
+    return re.sub(r'\b(href|src)="(?![a-z]+:|/|#)', r'\1="/', page)
 
 
 def render_nav(filename):
     nav = (PARTIALS / "nav.html").read_text(encoding="utf-8").rstrip("\n")
     link = f'<a href="{filename}" class="nav-link">'
+    if PAGES[filename].get("not_found"):
+        return nav  # no menu entry to mark
     if link not in nav:
         sys.exit(f"error: partials/nav.html has no nav-link for {filename}")
     return nav.replace(link, f'<a href="{filename}" class="nav-link active" aria-current="page">')
@@ -250,6 +321,8 @@ def render_sitemap(posts):
     out = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for meta in PAGES.values():
+        if meta.get("not_found"):
+            continue
         out.append(f"  <url><loc>{SITE}{meta['path']}</loc></url>")
     for p in posts:
         out.append(f"  <url><loc>{SITE}{post_href(p)}</loc><lastmod>{p['date']}</lastmod></url>")
@@ -765,10 +838,12 @@ def main():
             page = build_index(page)
         if filename == "blog.html":
             page = build_blog(page, blog_data, posts)
+        if meta.get("not_found"):
+            page = root_relative(page)
         path.write_text(page, encoding="utf-8")
 
     (ROOT / "sitemap.xml").write_text(render_sitemap(posts), encoding="utf-8")
-    print(f"wrote sitemap.xml ({len(PAGES)} pages, {len(posts)} posts)")
+    print(f"wrote sitemap.xml ({sum(not m.get('not_found') for m in PAGES.values())} pages, {len(posts)} posts)")
     (ROOT / "feed.xml").write_text(render_feed(posts), encoding="utf-8")
     print(f"wrote feed.xml ({len(posts)} posts)")
 

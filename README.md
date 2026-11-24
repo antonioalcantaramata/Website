@@ -32,6 +32,7 @@ them: the site is served exactly as committed.
 | `blog.html` | Blog: the list of posts (generated from `blog.json`) |
 | `blog/<slug>.html` | A post: a standalone page with its own head and styles, not touched by `build.py` |
 | `publications.html` | Redirect to `research.html#publications`, kept so old external links still work |
+| `404.html` | Served by GitHub Pages for any missing URL. Built like the other pages but `noindex`, left out of the sitemap, and with every link root-relative (`/about.html`), since it can appear at any path |
 
 ## build.py
 
@@ -42,9 +43,13 @@ the next build overwrites it. The script writes:
 
 - **`head`** (every page): title, description, canonical URL, favicon,
   link-preview (Open Graph) tags, stylesheet and fonts, all from `PAGES` in
-  `build.py`. The home page also gets schema.org `Person` structured data
-  (`PERSON` in `build.py`), which links the site to the ORCID, Scholar,
-  GitHub and LinkedIn profiles for search engines.
+  `build.py`. Two pages also get schema.org structured data for search
+  engines (`structured_data` in `build.py`): the home page a `ProfilePage`,
+  a `WebSite` (the site name Google shows above results) and the `Person`
+  (`PERSON`), which links the site to the ORCID, Scholar, GitHub and
+  LinkedIn profiles; `research.html` one `ScholarlyArticle` per publication,
+  authored by that `Person`. The authors string must keep the
+  `Last, I.` form with `<strong>` around your own name, or the build fails.
 - **`sprite`**, **`nav`**, **`footer`** (every page): from `partials/`. The
   current page's menu link is marked active at build time; the footer year is
   the year of the build.
