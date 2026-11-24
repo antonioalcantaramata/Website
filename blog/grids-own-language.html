@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Grid's Own Language - Antonio Alcántara Mata</title>
+<meta name="description" content="An interactive explainer: LLM grid assistants still read the network through names. A Common Information Model layer tells them what each element is, and how each fact is known.">
+<!-- Standalone post: this head is hand-written (build.py does not touch blog/). -->
+<link rel="canonical" href="https://www.antonioalcantara.com/blog/grids-own-language.html">
+<link rel="icon" href="../favicon.ico" sizes="32x32">
+<link rel="icon" href="../images/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#1a1f6c">
+<meta name="author" content="Antonio Alcántara Mata">
+
+<!-- Link previews (LinkedIn, Slack, WhatsApp, X, ...) -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Antonio Alcántara Mata">
+<meta property="og:title" content="The Grid's Own Language">
+<meta property="og:description" content="An interactive explainer: LLM grid assistants still read the network through names. A Common Information Model layer tells them what each element is, and how each fact is known.">
+<meta property="og:url" content="https://www.antonioalcantara.com/blog/grids-own-language.html">
+<meta property="og:image" content="https://www.antonioalcantara.com/images/blog/grids-own-language.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The explainer's network figure after Line 2-3 trips: closing the normally open tie S1 re-supplies buses 3 to 11, beside what the CIM layer says about S1 and how each fact is known.">
+<meta property="article:published_time" content="2026-11">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Taviraj:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --azul: #1a1f6c; --azul-dark: #11144a; --azul-claro: #d2e0f3;
+  --naranja: #ff5700; --naranja-dark: #c74300;
+  --cream: #f0ece8; --paper: #faf8f6; --card: #ffffff;
+  --ink: #1a1a1a; --muted: #6b6760; --line: #e2dcd1;
+  --turq: #0796a3; --turq-dark: #066f79; --granate: #ae3c7c; --amarillo: #fe961f;
+  --red: #c62828; --green: #2e7d32;
+  --c-solar: #e08700; --c-wind: #0796a3; --c-thermal: #ae3c7c; --c-battery: #6b6760;
+  --p-stated: #1a1f6c; --p-named: #6b6760; --p-inferred: #066f79; --p-declared: #c74300; --p-unknown: #8f897f;
+  --sans: 'Manrope', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --serif: 'Taviraj', Georgia, 'Times New Roman', serif;
+  --radius: 16px;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--sans); font-size: 17.5px; line-height: 1.7; }
+a { color: var(--naranja-dark); }
+button { font: inherit; }
+
+/* ---------- hero ---------- */
+.hero { background: linear-gradient(135deg, #faf8f6 0%, #e4ddd2 55%, #d6d1c4 100%); padding: 72px 16px 56px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 25% 15%, rgba(26,31,108,.09) 0%, transparent 55%); pointer-events: none; }
+.hero-inner { max-width: 720px; margin: 0 auto; position: relative; }
+.kicker { font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--naranja-dark); margin: 0 0 14px; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.07; letter-spacing: -.025em; font-weight: 800; color: var(--azul); margin: 0 0 18px; }
+.dek { font-family: var(--serif); font-size: clamp(1.15rem, 2.6vw, 1.4rem); line-height: 1.5; color: #3d3a35; margin: 0 0 22px; font-weight: 300; }
+.byline { font-size: .9rem; color: var(--muted); margin: 0; }
+.byline strong { color: var(--ink); font-weight: 600; }
+.hero-links { display: flex; flex-wrap: wrap; gap: 10px 12px; margin-top: 20px; }
+.paper-link { display: inline-flex; align-items: center; gap: 9px; padding: 9px 18px; border-radius: 999px; background: var(--naranja-dark); color: #fff; text-decoration: none; font-weight: 700; font-size: .92rem; box-shadow: 0 4px 14px rgba(199,67,0,.2); transition: background .15s, transform .15s; }
+.paper-link:hover { background: #a83900; transform: translateY(-1px); }
+.paper-link:focus-visible { outline: 3px solid var(--azul); outline-offset: 3px; }
+.repo-link { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 9px 18px; border-radius: 999px; background: var(--azul); color: #fff; text-decoration: none; font-weight: 700; font-size: .92rem; box-shadow: 0 4px 14px rgba(26,31,108,.18); transition: background .15s, transform .15s; }
+.repo-link:hover { background: var(--azul-dark); transform: translateY(-1px); }
+.repo-link:focus-visible { outline: 3px solid var(--naranja); outline-offset: 3px; }
+.repo-link .repo-url { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-weight: 500; font-size: .78rem; opacity: .75; }
+@media (max-width: 480px) { .repo-link .repo-url { display: none; } }
+.rule { width: 56px; height: 3px; background: var(--naranja); border: 0; margin: 0 0 22px; }
+
+/* ---------- article ---------- */
+main { padding: 8px 16px 64px; }
+.prose { max-width: 720px; margin: 0 auto; }
+.prose p { margin: 0 0 1.15em; }
+h2 { font-size: clamp(1.45rem, 3.4vw, 1.85rem); line-height: 1.2; letter-spacing: -.015em; color: var(--azul); margin: 2.4em 0 .6em; font-weight: 800; }
+h2 .num { color: var(--naranja); font-weight: 800; margin-right: .35em; }
+h3 { font-size: 1.05rem; color: var(--azul); margin: 1.6em 0 .4em; }
+.lede { font-family: var(--serif); font-size: 1.22rem; line-height: 1.6; font-weight: 300; }
+.pull { border-left: 3px solid var(--naranja); padding: .1em 0 .1em 1em; margin: 1.6em 0; font-family: var(--serif); font-size: 1.25rem; line-height: 1.5; color: var(--azul); font-style: italic; }
+code, .mono { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: .86em; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; line-height: 1.55; }
+
+/* ---------- figures ---------- */
+.fig { max-width: 1080px; margin: 2em auto 2.4em; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: 0 1px 2px rgba(0,0,0,.03); }
+.fig.narrow { max-width: 760px; }
+.fig-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; margin-bottom: 14px; }
+.fig-title { font-weight: 700; color: var(--azul); font-size: 1rem; margin: 0; }
+.fig-hint { font-size: .82rem; color: var(--muted); margin: 0; }
+.fig-caption { font-size: .84rem; line-height: 1.55; color: var(--muted); margin: 14px 0 0; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 1.5px solid var(--azul); color: var(--azul); background: #fff; border-radius: 999px; padding: 6px 15px; font-size: .86rem; font-weight: 600; cursor: pointer; line-height: 1.4; transition: background .15s, color .15s; }
+.btn:hover { background: rgba(26,31,108,.06); }
+.btn.primary { background: var(--azul); color: #fff; }
+.btn.primary:hover { background: var(--azul-dark); }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn:focus-visible, .seg button:focus-visible, .toggle:focus-visible, [data-el]:focus-visible { outline: 3px solid var(--naranja); outline-offset: 2px; }
+.seg { display: inline-flex; border: 1.5px solid var(--azul); border-radius: 999px; overflow: hidden; }
+.seg button { border: 0; background: #fff; color: var(--azul); padding: 6px 14px; font-size: .84rem; font-weight: 600; cursor: pointer; }
+.seg button + button { border-left: 1.5px solid var(--azul); }
+.seg button[aria-pressed="true"] { background: var(--azul); color: #fff; }
+.toggle { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 5px 13px 5px 6px; font-size: .84rem; font-weight: 600; color: var(--ink); cursor: pointer; }
+.toggle .knob { width: 30px; height: 18px; border-radius: 9px; background: #cfc8bc; position: relative; transition: background .15s; flex: none; }
+.toggle .knob::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: left .15s; }
+.toggle[aria-pressed="true"] .knob { background: var(--azul); }
+.toggle[aria-pressed="true"] .knob::after { left: 14px; }
+
+/* provenance tags */
+.tag { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .02em; border: 1.5px solid currentColor; border-radius: 6px; padding: 0 6px; line-height: 1.55; white-space: nowrap; vertical-align: 1px; }
+.tag.stated { color: var(--p-stated); background: rgba(26,31,108,.07); }
+.tag.named { color: var(--p-named); background: rgba(107,103,96,.08); }
+.tag.inferred { color: var(--p-inferred); background: rgba(6,111,121,.08); }
+.tag.declared { color: var(--p-declared); background: rgba(199,67,0,.08); }
+.tag.unknown { color: var(--p-unknown); border-style: dashed; }
+.tag.measured, .tag.derived { color: var(--ink); border-color: #b9b2a6; font-weight: 600; }
+.tags-legend { display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; align-items: baseline; margin: 1em 0 1.4em; font-size: .95rem; }
+
+/* ---------- 1. names widget ---------- */
+.chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 6px 0 14px; }
+.chip { border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 8px 7px; text-align: center; background: var(--paper); transition: border-color .25s, background .25s, transform .25s; min-height: 58px; }
+.chip .nm { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: .8rem; font-weight: 600; line-height: 1.3; }
+.chip .ty { font-size: .72rem; color: var(--muted); margin-top: 3px; opacity: 0; transition: opacity .3s; }
+.chip.picked { border-color: var(--amarillo); background: #fff6e8; }
+.chip.wrong { border-color: var(--red); background: #fdecea; }
+.chip.wrong .nm { text-decoration: line-through; text-decoration-color: var(--red); }
+.chip.reveal .ty { opacity: 1; }
+.chip.wrong .ty { color: var(--red); font-weight: 700; }
+.dialog { display: grid; gap: 6px; margin: 4px 0 14px; font-size: .95rem; }
+.dialog .who { font-weight: 700; margin-right: .5em; }
+.dialog .op .who { color: var(--naranja-dark); }
+.dialog .ag .who { color: var(--granate); }
+.dialog .ag { min-height: 1.7em; }
+.verdict { font-weight: 700; }
+
+/* ---------- 2. CIM cards ---------- */
+.cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.ccard { border: 1px solid var(--line); border-radius: 12px; padding: 14px 14px 12px; background: var(--paper); }
+.ccard h4 { margin: 0 0 8px; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--turq-dark); }
+.cls { display: inline-block; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: .78rem; border: 1.5px solid var(--azul); color: var(--azul); border-radius: 7px; padding: 2px 7px; background: #fff; margin: 2px 0; }
+.ccard p { margin: 8px 0 0; font-size: .86rem; line-height: 1.5; color: var(--muted); }
+
+/* ---------- architecture ---------- */
+.arch svg { width: 100%; height: auto; display: block; }
+
+/* ---------- 3. network explorer ---------- */
+.net-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+.net-svg { width: 100%; height: auto; display: block; touch-action: manipulation; }
+.net-wrap > * { min-width: 0; }
+.net-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.net-svg text { font-family: var(--sans); }
+[data-el] { cursor: pointer; }
+.panel { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 14px 16px; min-height: 260px; font-size: .9rem; line-height: 1.5; }
+.panel h4 { margin: 0 0 2px; font-size: 1.05rem; color: var(--azul); }
+.panel .sub { font-size: .78rem; color: var(--muted); margin: 0 0 10px; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }
+.facts { list-style: none; padding: 0; margin: 0 0 10px; display: grid; gap: 7px; }
+.facts li { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: baseline; border-bottom: 1px dashed var(--line); padding-bottom: 6px; }
+.facts .k { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 700; }
+.panel .actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.panel .empty { color: var(--muted); }
+.panel .note { font-size: .8rem; color: var(--muted); margin: 8px 0 0; }
+.status { margin-top: 14px; border-radius: 12px; padding: 12px 14px; background: #f6f3ef; border: 1px solid var(--line); font-size: .9rem; line-height: 1.55; min-height: 48px; }
+.status b.red { color: var(--red); } .status b.green { color: var(--green); }
+.warn { display: inline-flex; gap: 6px; align-items: baseline; color: #8a5a00; background: #fff4dc; border: 1px solid #f1d49a; border-radius: 8px; padding: 2px 8px; font-size: .82rem; margin-top: 6px; }
+.net-swipe { display: none; }
+@media (max-width: 640px) { .net-swipe { display: block; } .net-toolbar .sep { display: none; } }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .8rem; color: var(--muted); margin-top: 10px; align-items: center; }
+.legend .dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid; vertical-align: -2px; margin-right: 5px; }
+.legend .dash { display: inline-block; width: 22px; border-top: 2px dashed #8f897f; vertical-align: 4px; margin-right: 5px; }
+.net-toolbar { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; margin-bottom: 12px; }
+.net-toolbar .sep { width: 1px; height: 24px; background: var(--line); margin: 0 2px; }
+
+/* ---------- 4. checks ---------- */
+.answer { font-family: var(--serif); font-size: 1.18rem; line-height: 1.65; background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--granate); border-radius: 10px; padding: 14px 18px; margin: 4px 0 14px; }
+.answer .who { font-family: var(--sans); font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--granate); display: block; margin-bottom: 4px; }
+.answer mark { background: transparent; color: inherit; border-bottom: 2px solid transparent; padding: 0 1px; transition: background .2s; }
+.answer mark.bad { background: #fde0dc; border-bottom-color: var(--red); }
+.answer mark.warned { background: #fff1cc; border-bottom-color: #d39b00; }
+.answer mark.new { font-style: italic; }
+.errpick { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.errpick .btn { font-size: .8rem; padding: 4px 12px; }
+.errpick .btn[aria-pressed="true"] { background: var(--azul); color: #fff; }
+.checkrows { display: grid; gap: 8px; }
+.checkrow { display: grid; grid-template-columns: 28px 160px 1fr; gap: 10px; align-items: start; border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; background: #fff; font-size: .9rem; line-height: 1.5; }
+.checkrow .ic { font-weight: 800; font-size: 1.05rem; text-align: center; }
+.checkrow .ic.ok { color: var(--green); } .checkrow .ic.bad { color: var(--red); } .checkrow .ic.warn { color: #b77d00; }
+.checkrow .nm { font-weight: 700; color: var(--azul); }
+.paperstat { margin-top: 12px; font-size: .88rem; background: #f6f3ef; border-radius: 10px; padding: 10px 14px; }
+.paperstat b { color: var(--azul); }
+table.t5 { width: 100%; border-collapse: collapse; font-size: .84rem; margin-top: 8px; }
+table.t5 th, table.t5 td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); }
+table.t5 td.n { text-align: right; font-variant-numeric: tabular-nums; }
+table.t5 tr.hl td { background: #fff4dc; }
+details summary { cursor: pointer; font-size: .86rem; font-weight: 600; color: var(--azul); margin-top: 12px; }
+
+.pf-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 18px; align-items: center; }
+.pf-svg { width: 100%; height: auto; display: block; }
+.pf-side { display: grid; gap: 10px; }
+input[type=range] { width: 100%; accent-color: var(--azul); }
+.pfval { font-size: 1.6rem; font-weight: 800; color: var(--azul); font-variant-numeric: tabular-nums; }
+.verdict-box { border-radius: 10px; padding: 10px 12px; font-weight: 700; font-size: 1rem; }
+.verdict-box.insecure { background: #fde0dc; color: var(--red); }
+.verdict-box.secure { background: #e3f1e4; color: var(--green); }
+.verdict-box small { display: block; font-weight: 500; font-size: .82rem; color: var(--ink); margin-top: 2px; }
+
+/* ---------- 5. results ---------- */
+.bars { display: grid; gap: 10px; }
+.barrow { display: grid; grid-template-columns: 230px minmax(0, 1fr) 54px; gap: 12px; align-items: center; font-size: .9rem; }
+.barrow .lbl { text-align: right; line-height: 1.3; }
+.barrow .track { height: 24px; background: #f1ede7; border-radius: 6px; overflow: hidden; position: relative; }
+.barrow .fill { height: 100%; width: 0; border-radius: 6px; transition: width .9s cubic-bezier(.2,.7,.2,1); }
+.barrow .val { font-weight: 800; font-variant-numeric: tabular-nums; }
+.barrow.hl .lbl { font-weight: 700; color: var(--azul); }
+.fam { display: grid; gap: 4px; }
+.famrow { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 12px; align-items: center; font-size: .86rem; }
+.famrow .lbl { text-align: right; line-height: 1.3; }
+.famrow .mini { display: grid; gap: 3px; }
+.famrow .mini div { height: 8px; border-radius: 4px; width: 0; transition: width .9s cubic-bezier(.2,.7,.2,1); }
+.famrow + .famrow { border-top: 1px dashed var(--line); padding-top: 5px; }
+.keyrow { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .82rem; color: var(--muted); margin: 10px 0 4px; }
+.keyrow i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+.stats3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+.stat { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.stat .big { font-size: 1.6rem; font-weight: 800; color: var(--azul); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat .cap { font-size: .8rem; color: var(--muted); line-height: 1.4; margin-top: 4px; }
+
+/* ---------- 6. scale ---------- */
+.scale-read { display: flex; flex-wrap: wrap; gap: 8px 28px; align-items: baseline; margin: 6px 0 12px; }
+.scale-read .big { font-size: 1.9rem; font-weight: 800; color: var(--azul); font-variant-numeric: tabular-nums; }
+.scale-read .big.red { color: var(--red); }
+.scale-read .cap { font-size: .8rem; color: var(--muted); display: block; font-weight: 500; }
+.scale-svg { width: 100%; height: auto; display: block; }
+.nets { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
+.nets .stat .big { font-size: 1.15rem; }
+
+/* ---------- footer ---------- */
+.endnote { max-width: 720px; margin: 3em auto 0; padding-top: 1.4em; border-top: 1px solid var(--line); font-size: .86rem; color: var(--muted); line-height: 1.6; }
+.endnote p { margin: 0 0 .8em; }
+
+.reveal-on-scroll { opacity: 0; transform: translateY(14px); transition: opacity .7s, transform .7s; }
+.reveal-on-scroll.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } .reveal-on-scroll { opacity: 1; transform: none; } }
+
+@media (max-width: 900px) {
+  .net-wrap, .pf-wrap { grid-template-columns: minmax(0, 1fr); }
+  .panel { min-height: 0; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16.5px; }
+  .hero { padding: 48px 16px 40px; }
+  .fig { padding: 16px 14px; border-radius: 14px; margin-left: -4px; margin-right: -4px; }
+  .chips { grid-template-columns: repeat(3, 1fr); gap: 7px; }
+  .cards3, .stats3 { grid-template-columns: 1fr; }
+  .barrow { grid-template-columns: 1fr 46px; gap: 4px 10px; }
+  .barrow .lbl { grid-column: 1 / -1; text-align: left; font-size: .84rem; }
+  .famrow { grid-template-columns: 1fr; gap: 3px; }
+  .famrow .lbl { text-align: left; }
+  .net-svg { min-width: 600px; }
+  .net-scroll { margin: 0 -14px; padding: 0 14px; }
+  .checkrow { grid-template-columns: 24px 1fr; }
+  .checkrow .det { grid-column: 2; }
+  .tags-legend { grid-template-columns: 1fr; gap: 2px 0; }
+  .tags-legend dd { margin: 0 0 8px; }
+}
+dd { margin: 0; }
+
+/* ---------- site bar: the way back to the rest of the site ---------- */
+.sitebar { background: rgba(255,255,255,.96); border-bottom: 1px solid rgba(0,0,0,.08); }
+.sitebar-inner { max-width: 1080px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+.sitebar a { text-decoration: none; }
+.sitebar .sb-home { color: var(--azul); font-weight: 800; font-size: 1rem; letter-spacing: -.01em; }
+.sitebar .sb-links { display: flex; gap: 18px; font-size: .9rem; font-weight: 600; }
+.sitebar .sb-links a { color: var(--ink); }
+.sitebar .sb-links a:hover, .sitebar .sb-home:hover { color: var(--naranja-dark); }
+.sitebar a:focus-visible { outline: 3px solid var(--naranja); outline-offset: 3px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<nav class="sitebar" aria-label="Site">
+  <div class="sitebar-inner">
+    <a class="sb-home" href="../index.html">Antonio Alcántara Mata</a>
+    <div class="sb-links">
+      <a href="../research.html">Research</a>
+      <a href="../blog.html">&larr; All posts</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="kicker">Research explainer &middot; Interactive</p>
+    <h1>The Grid's Own Language</h1>
+    <hr class="rule">
+    <p class="dek">AI assistants for power-system operators compute with validated solvers, yet still read the network through names. The industry already has a language that says what every element is. What happens when the assistant reads it?</p>
+    <p class="byline"><strong>Antonio Alc&aacute;ntara</strong>, Ioannis Karampinis and Spyros Chatzivasileiadis &middot; CUNEF Universidad and DTU</p>
+    <div class="hero-links">
+    <a class="paper-link" href="https://arxiv.org/abs/2611.20026" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M3.5 0h6.3L14 4.2V14.5c0 .8-.7 1.5-1.5 1.5h-9C2.7 16 2 15.3 2 14.5v-13C2 .7 2.7 0 3.5 0zm6 1.4V4c0 .5.4.9.9.9h2.6L9.5 1.4zM4.8 8.2h6.4v1.2H4.8V8.2zm0 2.6h6.4V12H4.8v-1.2zm0-5.2h3v1.2h-3V5.6z"/></svg>
+      <span class="paper-label">Read the full paper</span>
+    </a>
+    <a class="repo-link" href="https://github.com/antonioalcantaramata/CONDUCTOR" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>CONDUCTOR on GitHub</span>
+      <span class="repo-url">github.com/antonioalcantaramata/CONDUCTOR</span>
+    </a>
+    </div>
+  </div>
+</header>
+
+<main>
+<article>
+<div class="prose">
+  <p class="lede" style="margin-top:2em">Assistants built on large language models (LLMs) are entering power-system operation. An operator asks in plain language for a security assessment, a contingency screen or a corrective dispatch, and the assistant sets up the study, runs it and explains the result.</p>
+  <p>The prevailing design keeps the LLM away from the arithmetic: every number comes from a validated power-system solver. That makes the numbers right. But a correct number is only half of an answer. The other half is what the number is <em>about</em>.</p>
+
+  <h2><span class="num">1</span>Which units are solar?</h2>
+  <p>Here is a small test. Below are the fifteen generating and storage units of a benchmark distribution grid, the way an assistant usually meets them: by name. Ask it the question an operator might ask before a cloudy afternoon.</p>
+</div>
+
+<figure class="fig narrow" id="names">
+  <div class="fig-head">
+    <p class="fig-title">An assistant that reads names</p>
+    <div class="controls">
+      <button class="btn primary" id="n-ask">Ask the agent</button>
+      <button class="btn" id="n-check" disabled>Check the data</button>
+      <button class="btn" id="n-reset">Reset</button>
+    </div>
+  </div>
+  <div class="dialog">
+    <div class="op"><span class="who">Operator</span>&ldquo;Which units are solar?&rdquo;</div>
+    <div class="ag" id="n-answer" aria-live="polite"></div>
+  </div>
+  <div class="chips" id="n-chips"></div>
+  <p class="fig-caption" id="n-cap">Unit names from a copy of the CIGRE medium-voltage benchmark in which two units were renamed. In the paper's runs without the CIM layer, the agent's first answer was exactly this count of 10.</p>
+</figure>
+
+<div class="prose">
+  <p>&ldquo;Solar Farm North&rdquo; is a diesel combined heat and power unit. &ldquo;PV Park East&rdquo; is a fuel cell. Both facts are in the data, in a type field of the tool's own tables, but the assistant never read that field. It read the names.</p>
+  <p>This is not a contrived failure. Names are weak evidence even within a single utility, and an assistant that counts a diesel unit among the solar units, or takes a normally open tie to be in service, fails at the first step of situational awareness: perceiving the elements of the system. Every study built on that perception inherits the error. A study that &ldquo;halves the solar output&rdquo; will cut the diesel unit too.</p>
+
+  <h2><span class="num">2</span>The industry already has a language</h2>
+  <p>Utilities describe their networks in the <strong>Common Information Model</strong> (CIM), an IEC standard. European system operators exchange their grid models in it, following the Common Grid Model Exchange Standard (CGMES). CIM defines what each element is, what properties it has, and how it relates to the others, so that any two tools that read CIM understand a network the same way.</p>
+</div>
+
+<figure class="fig narrow">
+  <div class="cards3">
+    <div class="ccard">
+      <h4>What it is</h4>
+      <span class="cls">PowerElectronicsConnection</span><br>
+      <span class="cls">PhotovoltaicUnit</span>
+      <p>A PV plant is an inverter-connected unit with a photovoltaic unit, regardless of its name.</p>
+    </div>
+    <div class="ccard">
+      <h4>Its normal state</h4>
+      <span class="cls">LoadBreakSwitch</span><br>
+      <span class="cls">normalOpen = true</span>
+      <p>A switch carries its normal state, so a normally open tie is never mistaken for one in service.</p>
+    </div>
+    <div class="ccard">
+      <h4>Where it sits</h4>
+      <span class="cls">Substation</span> &rsaquo; <span class="cls">VoltageLevel</span><br>
+      <span class="cls">mRID</span>
+      <p>A bus belongs to a voltage level in a substation, or to a feeder. Every element has a unique, persistent identifier.</p>
+    </div>
+  </div>
+</figure>
+
+<div class="prose">
+  <p>These are exactly the facts an assistant needs, and exactly the ones it gets wrong without them. But CIM leaves one thing out. It does not record <em>how</em> each fact is known: whether it is stated in the data, only suggested by a name, or inferred.</p>
+  <p class="pull">A unit's type field is evidence. Its name is not.</p>
+
+  <h2><span class="num">3</span>A CIM layer for the assistant</h2>
+  <p>The paper proposes a <strong>CIM layer</strong>: a description of the network in CIM, built from the network's own data, that both the assistant and the studies it runs read. It is implemented in CONDUCTOR, an open-source assistant for grid monitoring and corrective decision support. The layer describes each element through <em>facts</em>, such as &ldquo;PV 9 is solar&rdquo;, of three types:</p>
+  <p><strong>(i) Attributes</strong> that are in the data, but in fields of each tool's own tables that the agent never reads: a unit's energy source, a switch's normal state, a bus's voltage.<br>
+  <strong>(ii) Relations</strong> that no table stores, derived from the topology: what an outage disconnects, which feeder supplies a load, which normally open switch ties two feeders.<br>
+  <strong>(iii) Provenance</strong>: how each fact is known.</p>
+  <dl class="tags-legend">
+    <dt><span class="tag stated">stated</span></dt><dd>in the data, such as a unit's type field</dd>
+    <dt><span class="tag named">named</span></dt><dd>only the element's name suggests it</dd>
+    <dt><span class="tag inferred">inferred</span></dt><dd>derived from the topology</dd>
+    <dt><span class="tag declared">declared</span></dt><dd>added by the operator, such as &ldquo;unit 12 is a wind farm&rdquo;</dd>
+    <dt><span class="tag unknown">unknown</span></dt><dd>the network does not say, and the assistant must not guess</dd>
+  </dl>
+  <p>Numerical values carry their origin too: a load's reactive power is either <span class="tag measured">measured</span> or <span class="tag derived">derived</span> from an assumed power factor. The layer is read in three ways: the agent queries it, the studies query it, and the answer checks compare every answer with it.</p>
+</div>
+
+<figure class="fig narrow arch" aria-label="Architecture of CONDUCTOR">
+  <svg viewBox="0 0 720 300" role="img" aria-labelledby="arch-t">
+    <title id="arch-t">The operator asks the AI agent; the agent sets up solvers; the CIM layer tells the agent, the solvers and the checks what each element is.</title>
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b6760"/></marker>
+      <marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a1f6c"/></marker>
+    </defs>
+    <g font-family="Manrope, sans-serif" font-size="14" text-anchor="middle">
+      <rect x="10" y="40" width="130" height="58" rx="12" fill="#fff4ec" stroke="#c74300" stroke-width="2"/>
+      <text x="75" y="66" font-weight="700" fill="#c74300">Operator</text>
+      <text x="75" y="84" font-size="11.5" fill="#6b6760">asks, decides, declares</text>
+      <rect x="250" y="40" width="200" height="58" rx="12" fill="#f8eef4" stroke="#ae3c7c" stroke-width="2"/>
+      <text x="350" y="66" font-weight="700" fill="#ae3c7c">AI agent (LLM)</text>
+      <text x="350" y="84" font-size="11.5" fill="#6b6760">chooses studies, explains</text>
+      <rect x="560" y="40" width="150" height="58" rx="12" fill="#f6f3ef" stroke="#6b6760" stroke-width="2"/>
+      <text x="635" y="66" font-weight="700" fill="#1a1a1a">Solvers</text>
+      <text x="635" y="84" font-size="11.5" fill="#6b6760">power flow, N&#8722;1, OPF</text>
+      <rect x="230" y="210" width="240" height="66" rx="12" fill="#eef1f9" stroke="#1a1f6c" stroke-width="2.5"/>
+      <text x="350" y="238" font-weight="800" fill="#1a1f6c">CIM layer</text>
+      <text x="350" y="258" font-size="11.5" fill="#1a1f6c">what each element is, and how it is known</text>
+      <rect x="10" y="210" width="150" height="66" rx="12" fill="#eef7f0" stroke="#2e7d32" stroke-width="2"/>
+      <text x="85" y="238" font-weight="700" fill="#2e7d32">Answer checks</text>
+      <text x="85" y="258" font-size="11.5" fill="#6b6760">fixed rules, no 2nd model</text>
+      <text x="625" y="236" font-size="11.5" fill="#6b6760">network model, data,</text>
+      <text x="625" y="252" font-size="11.5" fill="#6b6760">CGMES files, declarations</text>
+    </g>
+    <g fill="none" stroke-width="2">
+      <path d="M140 62 L246 62" stroke="#6b6760" marker-end="url(#ah)"/>
+      <path d="M250 80 L144 80" stroke="#6b6760" marker-end="url(#ah)"/>
+      <path d="M450 62 L556 62" stroke="#6b6760" marker-end="url(#ah)"/>
+      <path d="M560 80 L454 80" stroke="#6b6760" marker-end="url(#ah)"/>
+      <path d="M330 206 L330 102" stroke="#1a1f6c" marker-end="url(#ahb)"/>
+      <path d="M440 206 L600 102" stroke="#1a1f6c" marker-end="url(#ahb)"/>
+      <path d="M230 243 L164 243" stroke="#1a1f6c" marker-end="url(#ahb)"/>
+      <path d="M555 244 L474 244" stroke="#6b6760" marker-end="url(#ah)"/>
+    </g>
+    <g font-family="Manrope, sans-serif" font-size="11.5" fill="#6b6760" text-anchor="middle">
+      <text x="195" y="55">question</text><text x="195" y="96">answer + findings</text>
+      <text x="505" y="55">sets up</text><text x="505" y="96">results</text>
+      <text x="292" y="160" text-anchor="end">1 &middot; the agent queries it</text>
+      <text x="530" y="160" text-anchor="start">2 &middot; studies change exactly</text>
+      <text x="530" y="175" text-anchor="start">the units it names</text>
+      <text x="197" y="232">3 &middot; checks</text>
+    </g>
+  </svg>
+</figure>
+
+<div class="prose">
+  <h2><span class="num">4</span>Explore the network</h2>
+  <p>Below is the CIGRE medium-voltage benchmark used in the paper: a 110/20&nbsp;kV substation feeding two radial feeders, with 15 buses, 18 loads, eight PV units, a wind turbine, a diesel CHP unit, fuel cells, two batteries, and three normally open switches. Everything in the figure is drawn from the layer's facts.</p>
+  <p><strong>Tap any bus, line, unit or switch</strong> to see what the layer says about it, and how each fact is known. Then trip a line: the layer works out, from the topology alone, which buses lose supply and which normally open tie could restore them. This calculation runs live in your browser.</p>
+</div>
+
+<figure class="fig" id="net">
+  <div class="net-toolbar">
+    <button class="btn primary" id="t-trip23">Trip Line 2&ndash;3</button>
+    <button class="toggle" id="t-scen" aria-pressed="false"><span class="knob"></span>Halve wind &amp; solar</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="toggle" id="t-layer" aria-pressed="true"><span class="knob"></span>CIM layer</button>
+    <button class="toggle" id="t-names" aria-pressed="false"><span class="knob"></span>Misleading names</button>
+    <button class="btn" id="t-reset">Reset</button>
+  </div>
+  <div class="net-wrap">
+    <div>
+      <p class="fig-caption net-swipe" style="margin:0 0 6px">Swipe the network sideways to see all of it.</p>
+      <div class="net-scroll"><svg class="net-svg" id="net-svg" viewBox="0 0 820 455" role="group" aria-label="CIGRE medium-voltage network"></svg></div>
+      <div class="legend">
+        <span><span class="dot" style="border-color:var(--c-solar)"></span>solar</span>
+        <span><span class="dot" style="border-color:var(--c-wind)"></span>wind</span>
+        <span><span class="dot" style="border-color:var(--c-thermal)"></span>thermal</span>
+        <span><span class="dot" style="border-color:var(--c-battery)"></span>battery</span>
+        <span><span class="dash"></span>normally open</span>
+      </div>
+    </div>
+    <aside class="panel" id="net-panel" aria-live="polite"></aside>
+  </div>
+  <div class="status" id="net-status" aria-live="polite"></div>
+</figure>
+
+<div class="prose">
+  <p>Try the paper's two scenarios. <strong>Trip Line 2&ndash;3</strong>: buses 3 to 11 lose supply (11 loads, 4.3&nbsp;MW nominal), and the layer finds that the normally open tie S1 on Line 14&ndash;8 could restore them. Because that is inferred from the topology without a power flow, the answer warns that closing S1 is not a verified switching plan.</p>
+  <p>Then <strong>halve wind and solar</strong>. With the layer, the study changes exactly the eight PV units and the wind turbine. Turn the layer off and the study cannot tell what a unit is, so it cuts every generating unit, the diesel CHP unit and the fuel cells included. With the layer on, tap <em>Fuel cell 1</em> at bus 9 and declare it a wind turbine: the same study now changes 10 units. Without the layer, the declaration changes nothing.</p>
+
+  <h2><span class="num">5</span>Checking every answer</h2>
+  <p>Before an answer reaches the operator, three checks compare it with what is known. They are fixed rules, not a second AI model, and what they flag is shown below the answer.</p>
+  <p><strong>Numbers</strong> are matched against the solver results, the study parameters and the question, at the precision they are written. <strong>Statements about elements</strong> are compared with the CIM layer: a statement the layer contradicts is a failure; one it does not support, a warning. Earlier assistants could check only the numbers. With the layer, the checks also verify what the answer says about the network. <strong>Conclusions</strong> are re-run under the readings the question left open.</p>
+  <p>Plant an error in the answer below and see which check catches it. Beside it is how often that kind of error was caught when the authors planted it in the 2,717 answers recorded in their experiments.</p>
+</div>
+
+<figure class="fig narrow" id="checks">
+  <div class="fig-head">
+    <p class="fig-title">Plant an error</p>
+    <p class="fig-hint">Question: &ldquo;Is the grid secure at the evening peak on 3 January?&rdquo;</p>
+  </div>
+  <div class="errpick" id="c-pick" role="group" aria-label="Error to plant"></div>
+  <div class="answer" id="c-answer" aria-live="polite"></div>
+  <div class="checkrows" id="c-rows"></div>
+  <div class="paperstat" id="c-stat"></div>
+  <details>
+    <summary>All error types in the paper (Table V)</summary>
+    <table class="t5" id="c-table"></table>
+  </details>
+</figure>
+
+<div class="prose">
+  <h3>Does the conclusion survive another reading?</h3>
+  <p>The question above never states a load power factor, so the study used the default, 0.97. The third check re-runs the study under other values the question left open and compares the verdicts. Move the slider.</p>
+</div>
+
+<figure class="fig narrow" id="pf">
+  <div class="pf-wrap">
+    <svg class="pf-svg" id="pf-svg" viewBox="0 0 520 270" role="img" aria-label="Bus voltages at the evening peak"></svg>
+    <div class="pf-side">
+      <label for="pf-range" class="small muted">Load power factor</label>
+      <div class="pfval" id="pf-val">0.97</div>
+      <input type="range" id="pf-range" min="0.94" max="1.00" step="0.01" value="0.97">
+      <div class="verdict-box" id="pf-verdict" aria-live="polite"></div>
+    </div>
+  </div>
+  <p class="fig-caption">Illustrative voltage profile, shaped like the paper's case: at the default 0.97, nine buses are below 0.95&nbsp;p.u. and the lowest is Bus 11 at 0.942; at 1.00 there is no violation, so the answer gives both results and asks which was meant. Across the paper's runs, a different value of a parameter the question left open changed the conclusion in 21 of the 103 answers checked: one in five.</p>
+</figure>
+
+<div class="prose">
+  <h2><span class="num">6</span>What the layer adds</h2>
+  <p>The authors wrote 88 tasks, each with grading criteria the agent never sees, checked automatically against the network or the study's own record, never by a model. 37 of them ask about the network. Each was run 5 times in three variants, with the same LLM and the same instructions: the full system, the layer hidden from the agent but still read by the studies, and no layer at all. A further experiment let the agent read the network's raw data tables instead of the layer.</p>
+</div>
+
+<figure class="fig narrow" id="res1">
+  <div class="fig-head">
+    <p class="fig-title">Grading criteria met on the 37 network questions</p>
+    <div class="seg" id="r1-seg" role="group" aria-label="View">
+      <button aria-pressed="true" data-v="all">Overall</button>
+      <button aria-pressed="false" data-v="fam">By question type</button>
+    </div>
+  </div>
+  <div id="r1-body"></div>
+</figure>
+
+<div class="prose">
+  <p>The agent misses exactly the facts it cannot see. It trusts names, so it counts the diesel unit as solar. It cannot name the normally open switches or the tie between the feeders, nor tell a measured value from one derived from a power factor, so it declines or guesses. Raw tables fix the names, because they hold the attributes, but they hold neither relations nor provenance. In no run did the agent reading raw tables name the feeder that supplies a load, or the tie that restores supply after an outage.</p>
+  <p class="pull">The agent does not reason better; it reasons from better facts.</p>
+  <p>A second experiment ran all 88 tasks three times in eight variants (2,112 runs), each removing one part of CONDUCTOR. &ldquo;Solvers only&rdquo; is an agent with every solver tool but no layer and no re-run, the way earlier assistants are built.</p>
+</div>
+
+<figure class="fig narrow" id="res2">
+  <div class="fig-head">
+    <p class="fig-title">Criteria met with one part removed</p>
+    <div class="seg" id="r2-seg" role="group" aria-label="Task set">
+      <button aria-pressed="true" data-v="0">All 88</button>
+      <button aria-pressed="false" data-v="1">Network 37</button>
+      <button aria-pressed="false" data-v="2">Studies 51</button>
+    </div>
+  </div>
+  <div class="bars" id="r2-body"></div>
+  <p class="fig-caption">Switch to <em>Network</em>: the solvers-only agent falls from 99&nbsp;% to 54&nbsp;%; all of its loss is on questions about the network. Switch to <em>Studies</em>: on the 51 study tasks it scores as high as the full system, so the layer's gain is in knowing what the network's elements are. Removing the investigation tools lowers the score by design, since most criteria of the investigation tasks ask whether the agent investigated.</p>
+</figure>
+
+<div class="prose">
+  <h2><span class="num">7</span>Why not paste the tables in?</h2>
+  <p>If raw tables already hold the attributes, why not hand them to the LLM? Because they do not scale. Written out as text, they take about 200 tokens, some 800 characters, per bus. Drag the slider from a benchmark feeder to a transmission system.</p>
+</div>
+
+<figure class="fig narrow" id="scale">
+  <label for="sc-range" class="small muted">Network size (buses)</label>
+  <input type="range" id="sc-range" min="1" max="4.2" step="0.01" value="1.18">
+  <div class="scale-read">
+    <div><span class="big" id="sc-buses">15</span><span class="cap">buses</span></div>
+    <div><span class="big" id="sc-tok"></span><span class="cap">tokens as raw tables</span></div>
+    <div><span class="big" id="sc-pages"></span><span class="cap">pages of text (about 3,000 characters each)</span></div>
+  </div>
+  <svg class="scale-svg" id="sc-svg" viewBox="0 0 640 96" role="img" aria-label="Networks on a logarithmic size scale"></svg>
+  <div class="nets">
+    <div class="stat"><div class="big">MV Oberrhein</div><div class="cap">179 buses, 322 switches: the layer builds in 0.03&nbsp;s, finds its 4 feeders and classifies its 6 normally open switches.</div></div>
+    <div class="stat"><div class="big">ENTSO-E SmallGrid</div><div class="cap">A CGMES test model, 1,225 buses and 1,107 switches: every identifier, voltage and type read as stated, in under 1&nbsp;s.</div></div>
+    <div class="stat"><div class="big">PEGASE 9,241</div><div class="cap">The layer builds in at most 1&nbsp;s, and an answer is checked in under 10&nbsp;ms. As raw tables: about 1.9 million tokens.</div></div>
+  </div>
+</figure>
+
+<div class="prose">
+  <h2><span class="num">8</span>The grid's own language</h2>
+  <p>AI grid assistants compute with solvers but still read the network through names. CIM tells them what each element is; the CIM layer adds how each fact is known. With it, the agent met at least 97&nbsp;% of the grading criteria on questions about the network, against 84&nbsp;% with raw data tables and at most 65&nbsp;% without it. Re-running the studies under the parameters a question left open changed one conclusion in five. And because operators already keep their networks in CIM, the layer loads their CGMES models directly.</p>
+  <p>The study has limits the authors spell out: the networks are benchmarks with synthetic data, chosen because their facts are known; real models bring incomplete data; and every run used one LLM. The next steps are other LLMs, system operators' own models, and studies with control-room operators on whether CIM-based answers improve their situational awareness and trust.</p>
+  <p class="pull">Grid assistants should read the grid's CIM by default.</p>
+</div>
+
+<footer class="endnote">
+  <p>Based on: A. Alc&aacute;ntara, I. Karampinis and S. Chatzivasileiadis, &ldquo;<a href="https://arxiv.org/abs/2611.20026" target="_blank" rel="noopener">The Grid's Own Language: A Common Information Model Layer for LLM Grid Assistants</a>,&rdquo; arXiv:2611.20026, 2026. CUNEF Universidad and Technical University of Denmark (DTU).</p>
+  <p>CONDUCTOR is open source: <a href="https://github.com/antonioalcantaramata/CONDUCTOR" target="_blank" rel="noopener">github.com/antonioalcantaramata/CONDUCTOR</a>. All tasks and run records are released.</p>
+  <p>The network explorer recomputes outages and ties from the CIGRE MV topology in your browser. The voltage profile in Section 5 is illustrative; every other number on this page is from the paper.</p>
+  <p><a href="../blog.html">&larr; More on the blog</a></p>
+</footer>
+</article>
+</main>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const fmt = n => n.toLocaleString('en-US');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const tag = (k, label) => `<span class="tag ${k}">${label || k}</span>`;
+
+/* =========================================================== data: CIGRE MV */
+const BUSXY = {1: [-4.6, 2.4], 2: [-3.3, 2.4], 3: [-2, 2.4], 4: [0, 2.4], 5: [2, 2.4], 6: [4, 2.4],
+  7: [4, -0.9], 8: [-2, -0.9], 9: [-1, 0], 10: [0, 0], 11: [0, 1.2], 12: [-4.6, -2.3], 13: [-3.3, -2.3], 14: [-2, -2.3]};
+const X = x => 30 + (x + 6.2) * 70, Y = y => 95 + (2.4 - y) * 70;
+const P = k => [X(BUSXY[k][0]), Y(BUSXY[k][1])];
+const BUSES = Object.keys(BUSXY).map(Number);
+const LOADS = {1: 2, 2: 0, 3: 2, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1, 10: 2, 11: 1, 12: 2, 13: 1, 14: 2};
+const EDGES = [
+  {id: 'T1', a: 0, b: 1, kind: 'trafo'}, {id: 'T2', a: 0, b: 12, kind: 'trafo'},
+  ...[[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [3, 8], [8, 7], [8, 9], [9, 10], [10, 11], [12, 13], [13, 14]]
+    .map(([a, b]) => ({id: `L${a}-${b}`, a, b, kind: 'line'})),
+  {id: 'L6-7', a: 6, b: 7, kind: 'line', sw: 'S2'},
+  {id: 'L11-4', a: 11, b: 4, kind: 'line', sw: 'S3'},
+  {id: 'L14-8', a: 14, b: 8, kind: 'line', sw: 'S1'},
+];
+const EDGE = Object.fromEntries(EDGES.map(e => [e.id, e]));
+const CLS = {solar: 'PowerElectronicsConnection · PhotovoltaicUnit', wind: 'PowerElectronicsConnection · PowerElectronicsWindUnit',
+  battery: 'PowerElectronicsConnection · BatteryUnit'};
+const UNITS = [
+  {id: 'pv3', bus: 3, type: 'solar', data: 'PV', name: 'PV 3'},
+  {id: 'pv4', bus: 4, type: 'solar', data: 'PV', name: 'PV 4'},
+  {id: 'bat1', bus: 5, type: 'battery', data: 'battery', name: 'Battery 1'},
+  {id: 'pv5', bus: 5, type: 'solar', data: 'PV', name: 'PV 5'},
+  {id: 'rfc1', bus: 5, type: 'thermal', data: 'residential fuel cell', name: 'Residential fuel cell 1'},
+  {id: 'pv6', bus: 6, type: 'solar', data: 'PV', name: 'PV 6'},
+  {id: 'wka7', bus: 7, type: 'wind', data: 'wind turbine', name: 'WKA 7'},
+  {id: 'pv8', bus: 8, type: 'solar', data: 'PV', name: 'PV 8'},
+  {id: 'pv9', bus: 9, type: 'solar', data: 'PV', name: 'PV 9'},
+  {id: 'chp', bus: 9, type: 'thermal', data: 'CHP diesel', name: 'CHP diesel 1', mis: 'Solar Farm North', cls: 'SynchronousMachine · ThermalGeneratingUnit'},
+  {id: 'fc1', bus: 9, type: 'thermal', data: 'fuel cell', name: 'Fuel cell 1'},
+  {id: 'bat2', bus: 10, type: 'battery', data: 'battery', name: 'Battery 2'},
+  {id: 'pv10', bus: 10, type: 'solar', data: 'PV', name: 'PV 10'},
+  {id: 'rfc2', bus: 10, type: 'thermal', data: 'residential fuel cell', name: 'Residential fuel cell 2', mis: 'PV Park East'},
+  {id: 'pv11', bus: 11, type: 'solar', data: 'PV', name: 'PV 11'},
+];
+const UNIT = Object.fromEntries(UNITS.map(u => [u.id, u]));
+const KCOL = {solar: 'var(--c-solar)', wind: 'var(--c-wind)', thermal: 'var(--c-thermal)', battery: 'var(--c-battery)'};
+const KLET = {solar: 'S', wind: 'W', thermal: 'T', battery: 'B'};
+const SIDE = {3: 'up', 4: 'up', 5: 'up', 6: 'up', 9: 'up', 7: 'right', 8: 'left', 10: 'right', 11: 'right'};
+(() => { // unit icon positions
+  const per = {};
+  UNITS.forEach(u => (per[u.bus] = per[u.bus] || []).push(u));
+  for (const [bus, list] of Object.entries(per)) {
+    const [bx, by] = P(+bus), n = list.length;
+    list.forEach((u, i) => {
+      const off = (i - (n - 1) / 2) * 29;
+      if (SIDE[bus] === 'up') { u.x = bx + off; u.y = by - 42; }
+      else if (SIDE[bus] === 'right') { u.x = bx + 42; u.y = by + off; }
+      else { u.x = bx - 42; u.y = by + off; }
+    });
+  }
+})();
+
+/* =========================================================== section 1: names */
+(() => {
+  const order = ['pv3', 'wka7', 'pv4', 'bat1', 'pv5', 'rfc1', 'pv6', 'chp', 'pv8', 'pv9', 'rfc2', 'bat2', 'pv10', 'fc1', 'pv11'];
+  const box = $('#n-chips'), ans = $('#n-answer'), bAsk = $('#n-ask'), bCheck = $('#n-check');
+  const nm = u => u.mis || u.name;
+  box.innerHTML = order.map(id => {
+    const u = UNIT[id];
+    return `<div class="chip" data-id="${id}"><div class="nm">${esc(nm(u))}</div><div class="ty">type: ${esc(u.data)}</div></div>`;
+  }).join('');
+  const chips = [...box.children];
+  const byName = id => /^(PV|Solar)/.test(nm(UNIT[id]));
+  function reset() {
+    chips.forEach(c => c.className = 'chip');
+    ans.innerHTML = '';
+    bAsk.disabled = false; bCheck.disabled = true;
+  }
+  bAsk.onclick = () => {
+    let i = 0;
+    const picks = chips.filter(c => byName(c.dataset.id));
+    bAsk.disabled = true;
+    picks.forEach((c, k) => setTimeout(() => c.classList.add('picked'), 90 * k));
+    setTimeout(() => {
+      ans.innerHTML = `<span class="who">AI agent</span>&ldquo;There are <span class="verdict">${picks.length} solar units</span>: ${picks.map(c => esc(nm(UNIT[c.dataset.id]))).join(', ')}.&rdquo;`;
+      bCheck.disabled = false;
+    }, 90 * picks.length + 150);
+  };
+  bCheck.onclick = () => {
+    bCheck.disabled = true;
+    chips.forEach((c, k) => setTimeout(() => {
+      c.classList.add('reveal');
+      if (c.classList.contains('picked') && UNIT[c.dataset.id].type !== 'solar') c.classList.add('wrong');
+    }, 45 * k));
+    setTimeout(() => {
+      const right = UNITS.filter(u => u.type === 'solar').length;
+      ans.innerHTML += `<div style="margin-top:6px"><span class="who" style="color:var(--red)">The data</span><span class="verdict" style="color:var(--red)">${right} solar units.</span> Two of the ten burn fuel: their type field says so, their names do not.</div>`;
+    }, 45 * chips.length + 200);
+  };
+  $('#n-reset').onclick = reset;
+})();
+
+/* =========================================================== section 4: network explorer */
+const net = (() => {
+  const svg = $('#net-svg'), panel = $('#net-panel'), status = $('#net-status');
+  const st = {tripped: new Set(), closed: {}, declared: {}, layer: true, names: false, scen: false, sel: null};
+
+  const inService = (e, s = st) => !s.tripped.has(e.id) && (!e.sw || !!s.closed[e.sw]);
+  function reach(from, ok) {
+    const seen = new Set([from]), q = [from];
+    while (q.length) {
+      const k = q.shift();
+      for (const e of EDGES) {
+        if (!ok(e)) continue;
+        const o = e.a === k ? e.b : e.b === k ? e.a : null;
+        if (o !== null && !seen.has(o)) { seen.add(o); q.push(o); }
+      }
+    }
+    return seen;
+  }
+  const supplied = s => reach(0, e => inService(e, s));
+  // feeder inference on the normal topology (no trips, normally open switches open)
+  const F1 = reach(1, e => e.kind === 'line' && !e.sw), F2 = reach(12, e => e.kind === 'line' && !e.sw);
+  const feederOf = k => k === 0 ? null : F1.has(k) ? 1 : F2.has(k) ? 2 : null;
+  const feederName = f => f === 1 ? 'Feeder 1 (from Line 1–2)' : 'Feeder 2 (from Line 12–13)';
+  function swRole(e) {
+    const fa = feederOf(e.a), fb = feederOf(e.b);
+    return fa !== fb ? 'the tie between Feeder 1 and Feeder 2' : `closes a loop within Feeder ${fa}`;
+  }
+  function analyse(s = st) {
+    const sup = supplied(s);
+    const lost = BUSES.filter(k => !sup.has(k));
+    const lostSet = new Set(lost);
+    const ties = EDGES.filter(e => e.sw && !s.closed[e.sw] && !s.tripped.has(e.id) &&
+      ((lostSet.has(e.a) && sup.has(e.b)) || (lostSet.has(e.b) && sup.has(e.a))));
+    const base = supplied({...s, closed: {}});
+    const restored = BUSES.filter(k => sup.has(k) && !base.has(k));
+    const loads = lost.reduce((a, k) => a + LOADS[k], 0);
+    return {sup, lost, lostSet, ties, restored: new Set(restored), loads};
+  }
+  const range = ks => {
+    ks = [...ks].sort((a, b) => a - b);
+    const out = []; let i = 0;
+    while (i < ks.length) { let j = i; while (j + 1 < ks.length && ks[j + 1] === ks[j] + 1) j++;
+      out.push(j > i + 1 ? `${ks[i]}–${ks[j]}` : j === i + 1 ? `${ks[i]}, ${ks[j]}` : `${ks[i]}`); i = j + 1; }
+    return out.join(', ');
+  };
+  const effType = u => (st.layer && st.declared[u.id]) || u.type;
+  const uname = u => (st.names && u.mis) || u.name;
+  function changedUnits() {
+    if (!st.scen) return new Set();
+    return new Set(UNITS.filter(u => st.layer ? ['solar', 'wind'].includes(effType(u)) : u.type !== 'battery').map(u => u.id));
+  }
+  const edgeLabel = e => e.kind === 'trafo' ? `Transformer ${e.id === 'T1' ? '0–1' : '0–12'}` : `Line ${e.a}–${e.b}`;
+  function edgeEnds(e) {
+    if (e.kind === 'trafo') { const [x, y] = P(e.b); return [30, y, x, y]; }
+    return [...P(e.a), ...P(e.b)];
+  }
+
+  function render() {
+    const A = analyse(), ch = changedUnits(), sel = st.sel;
+    const isSel = (kind, id) => sel && sel.kind === kind && sel.id === id;
+    let h = '';
+    // busbar
+    h += `<line x1="30" y1="${Y(2.4)}" x2="30" y2="${Y(-2.3)}" stroke="#1a1f6c" stroke-width="7" stroke-linecap="round"/>`;
+    h += `<text x="30" y="${Y(2.4) - 18}" text-anchor="middle" font-size="12" fill="#6b6760">110 kV grid</text>`;
+    // edges
+    for (const e of EDGES) {
+      const [x1, y1, x2, y2] = edgeEnds(e);
+      const trip = st.tripped.has(e.id), on = inService(e);
+      const live = on && A.sup.has(e.a) && A.sup.has(e.b);
+      const resto = live && (A.restored.has(e.a) || A.restored.has(e.b) || (e.sw && st.closed[e.sw]));
+      let col = '#8f897f', dash = '', w = 3;
+      if (e.sw && !st.closed[e.sw]) dash = '7 6';
+      if (!trip && !e.sw && (A.lostSet.has(e.a) || A.lostSet.has(e.b)) && e.kind === 'line') col = '#e8a3a3';
+      if (resto) { col = 'var(--green)'; w = 3.5; }
+      if (trip) { col = 'var(--red)'; dash = '3 5'; }
+      if (isSel('edge', e.id)) h += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--naranja)" stroke-opacity=".35" stroke-width="12" stroke-linecap="round"/>`;
+      h += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" ${dash ? `stroke-dasharray="${dash}"` : ''}/>`;
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+      if (e.kind === 'trafo') {
+        h += `<circle cx="${X(-5.48)}" cy="${y1}" r="10" fill="#fff" stroke="#1a1a1a" stroke-width="2"/><circle cx="${X(-5.25)}" cy="${y1}" r="10" fill="none" stroke="#1a1a1a" stroke-width="2"/>`;
+      }
+      if (e.sw) {
+        const closed = !!st.closed[e.sw];
+        h += `<rect x="${mx - 8}" y="${my - 8}" width="16" height="16" rx="2" fill="${closed ? 'var(--green)' : '#fff'}" stroke="${closed ? 'var(--green)' : '#1a1a1a'}" stroke-width="2"/>`;
+        h += `<text x="${mx + 14}" y="${my + 4}" font-size="13" font-weight="700" fill="#1a1a1a">${e.sw}</text>`;
+      }
+      if (trip) h += `<g stroke="var(--red)" stroke-width="3.5" stroke-linecap="round"><line x1="${mx - 8}" y1="${my - 8}" x2="${mx + 8}" y2="${my + 8}"/><line x1="${mx - 8}" y1="${my + 8}" x2="${mx + 8}" y2="${my - 8}"/></g>`;
+      h += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="transparent" stroke-width="18" data-el="edge:${e.id}" tabindex="0" role="button" aria-label="${edgeLabel(e)}${e.sw ? ', switch ' + e.sw : ''}"/>`;
+    }
+    // units (stubs then icons)
+    for (const u of UNITS) {
+      const [bx, by] = P(u.bus);
+      h += `<line x1="${bx}" y1="${by}" x2="${u.x}" y2="${u.y}" stroke="#cfc8bc" stroke-width="1.5"/>`;
+    }
+    for (const u of UNITS) {
+      const t = effType(u), c = KCOL[t], s = isSel('unit', u.id);
+      if (ch.has(u.id)) h += `<circle cx="${u.x}" cy="${u.y}" r="17.5" fill="none" stroke="var(--naranja)" stroke-width="3"/>`;
+      if (s) h += `<circle cx="${u.x}" cy="${u.y}" r="19" fill="var(--naranja)" fill-opacity=".25"/>`;
+      h += `<g data-el="unit:${u.id}" tabindex="0" role="button" aria-label="${esc(uname(u))}">
+        <circle cx="${u.x}" cy="${u.y}" r="12.5" fill="#fff" stroke="${c}" stroke-width="2.5"/>
+        <text x="${u.x}" y="${u.y + 4.5}" text-anchor="middle" font-size="12.5" font-weight="800" fill="${c}">${KLET[t]}</text>
+        ${st.layer && st.declared[u.id] ? `<circle cx="${u.x + 10}" cy="${u.y - 10}" r="4.5" fill="var(--p-declared)"/>` : ''}
+        <circle cx="${u.x}" cy="${u.y}" r="16" fill="transparent"/></g>`;
+    }
+    // buses
+    for (const k of BUSES) {
+      const [x, y] = P(k);
+      const col = A.lostSet.has(k) ? 'var(--red)' : A.restored.has(k) ? 'var(--green)' : '#1a1f6c';
+      if (isSel('bus', k)) h += `<circle cx="${x}" cy="${y}" r="15" fill="var(--naranja)" fill-opacity=".3"/>`;
+      h += `<g data-el="bus:${k}" tabindex="0" role="button" aria-label="Bus ${k}"><circle cx="${x}" cy="${y}" r="7.5" fill="${col}"/><circle cx="${x}" cy="${y}" r="14" fill="transparent"/></g>`;
+      const lx = {11: -16, 6: 12, 7: 12, 14: 12}[k] ?? -12, ly = {11: 5}[k] ?? 20;
+      h += `<text x="${x + lx}" y="${y + ly}" text-anchor="middle" font-size="12" fill="#6b6760" pointer-events="none">${k}</text>`;
+    }
+    svg.innerHTML = h;
+    renderPanel(A);
+    renderStatus(A, ch);
+  }
+
+  function factRow(k, v, t) { return `<li><span><span class="k">${k}</span>${v}</span>${t || ''}</li>`; }
+  function renderPanel(A) {
+    const s = st.sel;
+    if (!s) {
+      panel.innerHTML = `<h4>What the layer says</h4><p class="empty">Tap a bus, line, unit or switch in the network.</p>
+        <p class="note">Each fact comes with how it is known: ${tag('stated')} ${tag('named')} ${tag('inferred')} ${tag('declared')} ${tag('unknown')}</p>`;
+      return;
+    }
+    if (!st.layer) {
+      const what = s.kind === 'bus' ? `Bus ${s.id}` : s.kind === 'unit' ? uname(UNIT[s.id]) : edgeLabel(EDGE[s.id]);
+      let rows = factRow('Name', esc(what), tag('named'));
+      if (s.kind === 'unit') rows += factRow('Connected at', `Bus ${UNIT[s.id].bus}`) + factRow('Energy source', 'not visible to the agent', tag('unknown'));
+      if (s.kind === 'edge') { const e = EDGE[s.id]; rows += factRow('Connects', `Bus ${e.a} – Bus ${e.b}`); if (e.sw) rows += factRow('Normal state', 'not visible to the agent', tag('unknown')); }
+      if (s.kind === 'bus') rows += factRow('Feeder', 'not visible to the agent', tag('unknown'));
+      panel.innerHTML = `<h4>${esc(what)}</h4><p class="sub">CIM layer off</p><ul class="facts">${rows}</ul>
+        <p class="note">Without the layer the agent sees names, connections and study results, but not types, switch states or where values come from.</p>`;
+      return;
+    }
+    if (s.kind === 'bus') {
+      const k = s.id, f = feederOf(k);
+      let rows = factRow('CIM class', '<span class="mono">TopologicalNode</span>', tag('stated'));
+      rows += factRow('Nominal voltage', '20 kV', tag('stated'));
+      rows += factRow('Supplied by', k === 1 ? 'head of Feeder 1' : k === 12 ? 'head of Feeder 2' : feederName(f), tag('inferred'));
+      rows += factRow('Loads', LOADS[k] ? `${LOADS[k]}` : 'none', tag('stated'));
+      if (LOADS[k]) {
+        rows += factRow('Load active power', 'from the measurement series', tag('measured'));
+        rows += factRow('Load reactive power', 'from an assumed 0.97 power factor', tag('derived'));
+      }
+      const now = A.lostSet.has(k) ? '<b style="color:var(--red)">loses supply</b>' : A.restored.has(k) ? '<b style="color:var(--green)">re-supplied through a closed tie</b>' : 'supplied';
+      rows += factRow('Now', now, tag('inferred'));
+      panel.innerHTML = `<h4>Bus ${k}</h4><p class="sub">id: _bus_${k}</p><ul class="facts">${rows}</ul>`;
+    } else if (s.kind === 'unit') {
+      const u = UNIT[s.id], t = effType(u), decl = st.declared[u.id];
+      let rows = '';
+      const cls = decl ? null : (u.cls || CLS[u.type]);
+      if (cls) rows += factRow('CIM class', `<span class="mono">${cls}</span>`, tag('stated'));
+      rows += decl ? factRow('Energy source', `<b>${decl}</b> (data said: ${esc(u.data)})`, tag('declared'))
+                   : factRow('Energy source', `<b>${u.type}</b> (type in the data: ${esc(u.data)})`, tag('stated'));
+      const nm = uname(u);
+      const hint = /^(PV|Solar)/.test(nm) ? 'suggests solar' : /WKA/.test(nm) ? 'suggests wind' : 'no source suggested';
+      const misl = st.names && u.mis;
+      rows += factRow('Name', `&ldquo;${esc(nm)}&rdquo; ${misl ? `<b style="color:var(--red)">${hint} &mdash; not evidence</b>` : `<span class="muted">${hint}; not used as evidence</span>`}`, tag('named'));
+      rows += factRow('Connected at', `Bus ${u.bus}`, tag('stated'));
+      rows += factRow('Feeder', feederName(feederOf(u.bus)), tag('inferred'));
+      const canDecl = u.type !== 'battery';
+      const acts = canDecl ? `<div class="actions"><span class="small muted" style="width:100%">Declare its source:</span>${['solar', 'wind', 'thermal'].map(x =>
+        `<button class="btn" data-act="decl:${u.id}:${x}" ${t === x ? 'disabled' : ''}>${x}</button>`).join('')}${decl ? `<button class="btn" data-act="undecl:${u.id}">undo</button>` : ''}</div>` : '';
+      panel.innerHTML = `<h4>${esc(nm)}</h4><p class="sub">id: _${u.id}</p><ul class="facts">${rows}</ul>${acts}`;
+    } else {
+      const e = EDGE[s.id];
+      let rows = factRow('CIM class', `<span class="mono">${e.kind === 'trafo' ? 'PowerTransformer' : e.sw ? 'ACLineSegment + LoadBreakSwitch' : 'ACLineSegment'}</span>`, tag('stated'));
+      rows += factRow('Connects', e.kind === 'trafo' ? `110 kV grid – Bus ${e.b}` : `Bus ${e.a} – Bus ${e.b}`, tag('stated'));
+      if (e.sw) {
+        rows += factRow(`Switch ${e.sw}`, 'normally open', tag('stated'));
+        rows += factRow('Role', swRole(e), tag('inferred'));
+        rows += factRow('Now', st.closed[e.sw] ? '<b style="color:var(--green)">closed by the operator</b>' : 'open', '');
+      } else {
+        rows += factRow('Feeder', e.kind === 'trafo' ? `head of ${feederName(e.id === 'T1' ? 1 : 2)}` : feederName(feederOf(e.b)), tag('inferred'));
+        if (!st.tripped.has(e.id)) {
+          const sim = analyse({...st, tripped: new Set([...st.tripped, e.id])});
+          const extra = sim.lost.filter(k => !A.lostSet.has(k));
+          rows += factRow('If it trips', extra.length ? `Buses ${range(extra)} lose supply (${extra.reduce((a, k) => a + LOADS[k], 0)} loads)` : 'no bus loses supply', tag('inferred'));
+        } else rows += factRow('Now', '<b style="color:var(--red)">tripped</b>', '');
+      }
+      const act = e.sw
+        ? `<button class="btn primary" data-act="sw:${e.sw}">${st.closed[e.sw] ? 'Open' : 'Close'} ${e.sw}</button>`
+        : `<button class="btn primary" data-act="trip:${e.id}">${st.tripped.has(e.id) ? 'Restore' : 'Trip'} ${edgeLabel(e)}</button>`;
+      panel.innerHTML = `<h4>${edgeLabel(e)}${e.sw ? ` &middot; ${e.sw}` : ''}</h4><p class="sub">id: _${e.id}</p><ul class="facts">${rows}</ul><div class="actions">${act}</div>`;
+    }
+  }
+
+  function renderStatus(A, ch) {
+    const parts = [];
+    if (st.tripped.size || Object.values(st.closed).some(Boolean)) {
+      const tr = [...st.tripped].map(id => edgeLabel(EDGE[id])).join(', ');
+      if (st.tripped.size) parts.push(`<b>${tr}</b> tripped.`);
+      if (A.lost.length) {
+        parts.push(`Buses <b class="red">${range(A.lost)}</b> lose supply (${A.loads} loads) ${tag('inferred')}`);
+        parts.push(A.ties.length ? `Could restore them: <b class="green">${A.ties.map(e => `${e.sw} on Line ${e.a}–${e.b}`).join(', ')}</b> ${tag('inferred')} &mdash; tap a switch to close it.`
+          : 'No normally open tie can restore them.');
+      } else if (st.tripped.size) parts.push('No bus loses supply.');
+      if (A.restored.size) parts.push(`Closing ${Object.keys(st.closed).filter(k => st.closed[k]).join(', ')} re-supplies buses <b class="green">${range([...A.restored])}</b>.
+        <div class="warn">&#9888; Inferred from the topology without a power flow: not a verified switching plan.</div>`);
+    }
+    if (st.scen) {
+      const names = UNITS.filter(u => ch.has(u.id)).map(u => esc(uname(u)));
+      parts.push(`<div style="margin-top:${parts.length ? 8 : 0}px"><b>Wind and solar &minus;50&nbsp;%:</b> the study changes <b>${ch.size} units</b>${st.layer ? '' : ' &mdash; <b class="red">without the layer it cannot tell what a unit is, so it cuts every generating unit</b>'}: ${names.join(', ')}.</div>`);
+    }
+    status.innerHTML = parts.length ? parts.join(' ') : '<span class="muted">No outage. Tap a line and trip it, or try the buttons above.</span>';
+  }
+
+  function act(a) {
+    const [k, x, y] = a.split(':');
+    if (k === 'trip') { st.tripped.has(x) ? st.tripped.delete(x) : st.tripped.add(x); }
+    if (k === 'sw') st.closed[x] = !st.closed[x];
+    if (k === 'decl') st.declared[x] = y;
+    if (k === 'undecl') delete st.declared[x];
+    render();
+  }
+  function select(el) {
+    const [kind, id] = el.split(':');
+    st.sel = {kind, id: kind === 'bus' ? +id : id};
+    render();
+  }
+  svg.addEventListener('click', ev => { const t = ev.target.closest('[data-el]'); if (t) select(t.dataset.el); });
+  svg.addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.dataset && ev.target.dataset.el) { ev.preventDefault(); select(ev.target.dataset.el); const again = svg.querySelector(`[data-el="${ev.target.dataset.el}"]`); again && again.focus(); } });
+  panel.addEventListener('click', ev => { const b = ev.target.closest('[data-act]'); if (b) act(b.dataset.act); });
+  status.addEventListener('click', ev => { const b = ev.target.closest('[data-act]'); if (b) act(b.dataset.act); });
+  const tog = (btn, key) => btn.addEventListener('click', () => { st[key] = !st[key]; btn.setAttribute('aria-pressed', st[key]); render(); });
+  tog($('#t-scen'), 'scen'); tog($('#t-layer'), 'layer'); tog($('#t-names'), 'names');
+  $('#t-trip23').onclick = () => { st.tripped = new Set(['L2-3']); st.closed = {}; st.sel = {kind: 'edge', id: 'L14-8'}; render(); };
+  $('#t-reset').onclick = () => {
+    Object.assign(st, {tripped: new Set(), closed: {}, declared: {}, layer: true, names: false, scen: false, sel: null});
+    $('#t-scen').setAttribute('aria-pressed', 'false'); $('#t-layer').setAttribute('aria-pressed', 'true'); $('#t-names').setAttribute('aria-pressed', 'false');
+    render();
+  };
+  render();
+  return {st, analyse, render};
+})();
+window.__net = net;
+
+/* =========================================================== section 5: checks */
+(() => {
+  const BASE = {
+    verdict: 'No.', n: '9', lim: '0.95', bus: 'Bus 11', v: '0.942', kv: '20&nbsp;kV', unit: 'PV 11', src: 'solar', q: 'derived from an assumed 0.97 power factor', extra: ''
+  };
+  const ERR = [
+    {id: 'none', label: 'No error'},
+    {id: 'num', label: 'A number changed by a few %', set: {v: '0.969'}, mark: 'v', check: 'num',
+      msg: '0.969 matches no solver result, study parameter or value in the question.', paper: ['A number changed by a few %', 1424, 93.5]},
+    {id: 'other', label: "Another element's number", set: {v: '0.946'}, mark: 'v', check: 'num',
+      msg: '0.946 is a result for another bus, not for Bus 11, the bus its sentence is about.', paper: ["Another element's number", 59, 100]},
+    {id: 'secure', label: 'An insecure result called secure', set: {verdict: 'Yes, the grid is secure.'}, mark: 'verdict', check: 'num',
+      msg: "The study's own record says insecure.", paper: ['An insecure result called secure', 198, 100]},
+    {id: 'claim', label: 'A claim beyond its evidence', set: {extra: ' No feasible corrective dispatch exists.'}, mark: 'extra', check: 'num',
+      msg: 'The optimiser only failed to find a dispatch; the sentence claims none exists.', paper: ['A claim beyond its evidence', 262, 98.1]},
+    {id: 'src', label: 'A unit called the wrong source', set: {src: 'wind'}, mark: 'src', check: 'stm',
+      msg: 'The layer says PV 11 is solar (stated in the data).', paper: ['A unit called the wrong source', 427, 100]},
+    {id: 'kv', label: 'A bus at a voltage it does not have', set: {kv: '110&nbsp;kV'}, mark: 'kv', check: 'stm',
+      msg: 'The layer says Bus 11 is a 20 kV bus (stated).', paper: ['A bus at a voltage it does not have', 1748, 100]},
+    {id: 'meas', label: 'An assumed value called measured', set: {q: 'measured'}, mark: 'q', check: 'stm',
+      msg: "The layer says this reactive power is derived from an assumed 0.97 power factor, not measured.", paper: ['An assumed value called measured', 1507, 100]},
+    {id: 'ghost', label: 'An element the network does not have', set: {unit: 'PV 17'}, mark: 'unit', check: 'stm',
+      msg: 'The network has no element called PV 17.', paper: ['An element the network does not have', 2457, 99.5]},
+  ];
+  const T5 = [
+    ['Numbers', null], ['A number changed by a few %', 1424, 93.5], ["Another element's number", 59, 100], ['An insecure result called secure', 198, 100], ['A claim beyond its evidence', 262, 98.1],
+    ['Statements about elements, against the CIM layer', null], ['A unit called the wrong source', 427, 100], ['A source the network does not state', 642, 100],
+    ['A bus at a voltage it does not have', 1748, 100], ['A line called a transformer', 514, 99.6], ['An assumed value called measured', 1507, 100], ['An element the network does not have', 2457, 99.5],
+    ['True statements flagged (controls)', 3534, 0],
+  ];
+  const pick = $('#c-pick'), ans = $('#c-answer'), rows = $('#c-rows'), stat = $('#c-stat'), table = $('#c-table');
+  let cur = 'none';
+  pick.innerHTML = ERR.map(e => `<button class="btn" data-id="${e.id}" aria-pressed="${e.id === cur}">${e.label}</button>`).join('');
+  function draw() {
+    const e = ERR.find(x => x.id === cur), a = {...BASE, ...(e.set || {})};
+    const m = key => (e.mark === key ? `<mark class="bad">` : '<mark>') + a[key] + '</mark>';
+    ans.innerHTML = `<span class="who">AI agent</span>${m('verdict')} At the evening peak, ${m('n')} buses are below ${m('lim')}&nbsp;p.u.; the lowest is ${m('bus')} at ${m('v')}&nbsp;p.u. Bus 11 is a ${m('kv')} bus, and ${m('unit')} there is a ${m('src')} unit; its load's reactive power is ${m('q')}.${a.extra ? m('extra') : ''}`;
+    const row = (ok, name, det) => `<div class="checkrow"><span class="ic ${ok ? 'ok' : 'bad'}">${ok ? '&#10003;' : '&#10007;'}</span><span class="nm">${name}</span><span class="det">${det}</span></div>`;
+    rows.innerHTML =
+      row(e.check !== 'num', 'Numbers', e.check === 'num' ? e.msg : '9 = buses below the limit in the study; 0.95 = the study\'s voltage limit; 0.942 = the solver\'s result for Bus 11.') +
+      row(e.check !== 'stm', 'Statements', e.check === 'stm' ? e.msg : 'Bus 11 at 20 kV, PV 11 solar, reactive power derived: all supported by the CIM layer.') +
+      `<div class="checkrow"><span class="ic warn">&#8635;</span><span class="nm">Conclusion</span><span class="det">Re-run under other load power factors: at 1.00 instead of the default 0.97 there is no violation, so the answer reports both and asks which was meant. Try it below.</span></div>`;
+    stat.innerHTML = e.paper
+      ? `In the paper, this kind of error was planted <b>${fmt(e.paper[1])}</b> times; the checks flagged <b>${e.paper[2]}&nbsp;%</b> of them.`
+      : `No error planted: nothing is flagged. In the paper, <b>0</b> of <b>3,534</b> true statements were flagged.`;
+    table.innerHTML = '<tr><th>Error put into the answer</th><th class="n">Injected</th><th class="n">Flagged</th></tr>' +
+      T5.map(([l, n, p]) => n === null ? `<tr><td colspan="3" style="font-weight:700;color:var(--azul)">${l}</td></tr>`
+        : `<tr class="${e.paper && e.paper[0] === l ? 'hl' : ''}"><td>${l}</td><td class="n">${fmt(n)}</td><td class="n">${p}&nbsp;%</td></tr>`).join('');
+    pick.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === cur));
+  }
+  pick.addEventListener('click', ev => { const b = ev.target.closest('button'); if (b) { cur = b.dataset.id; draw(); } });
+  draw();
+})();
+
+/* =========================================================== section 5b: power factor */
+(() => {
+  const V97 = [0.985, 0.962, 0.949, 0.947, 0.946, 0.945, 0.944, 0.948, 0.946, 0.944, 0.942];
+  const V100 = [0.988, 0.968, 0.958, 0.956, 0.955, 0.954, 0.953, 0.957, 0.955, 0.953, 0.951];
+  const svg = $('#pf-svg'), rng = $('#pf-range'), val = $('#pf-val'), vd = $('#pf-verdict');
+  const x0 = 46, x1 = 505, y0 = 232, y1 = 30, vmin = 0.93, vmax = 1.0;
+  const yv = v => y0 - (v - vmin) / (vmax - vmin) * (y0 - y1);
+  const bw = (x1 - x0) / 11;
+  let ax = '';
+  for (const t of [0.94, 0.95, 0.96, 0.98, 1.0]) ax += `<line x1="${x0}" x2="${x1}" y1="${yv(t)}" y2="${yv(t)}" stroke="#eee8e0"/><text x="${x0 - 6}" y="${yv(t) + 4}" font-size="11" text-anchor="end" fill="#6b6760">${t.toFixed(2)}</text>`;
+  for (let i = 0; i < 11; i++) ax += `<text x="${x0 + bw * (i + .5)}" y="${y0 + 16}" font-size="11" text-anchor="middle" fill="#6b6760">${i + 1}</text>`;
+  ax += `<text x="${(x0 + x1) / 2}" y="${y0 + 34}" font-size="11" text-anchor="middle" fill="#6b6760">bus</text><text x="8" y="12" font-size="11" fill="#6b6760">p.u.</text>`;
+  ax += `<line x1="${x0}" x2="${x1}" y1="${y0}" y2="${y0}" stroke="#8f897f"/>`;
+  const bars = V97.map((_, i) => `<rect id="pfb${i}" x="${x0 + bw * i + 6}" width="${bw - 12}" rx="3"/>`).join('');
+  svg.innerHTML = ax + bars + `<line x1="${x0}" x2="${x1}" y1="${yv(.95)}" y2="${yv(.95)}" stroke="#c74300" stroke-width="2" stroke-dasharray="6 5"/><text x="${x1}" y="${yv(.95) - 6}" font-size="11" text-anchor="end" fill="#c74300">0.95 limit</text>`;
+  function upd() {
+    const pf = +rng.value, k = (pf - 0.97) / 0.03;
+    val.textContent = pf.toFixed(2) + (Math.abs(pf - 0.97) < 1e-9 ? ' (default)' : '');
+    let below = 0, lo = 9, lob = 0;
+    V97.forEach((v, i) => {
+      const u = v + k * (V100[i] - v), r = svg.querySelector('#pfb' + i);
+      if (u < 0.95 - 1e-9) below++;
+      if (u < lo) { lo = u; lob = i + 1; }
+      r.setAttribute('y', yv(u)); r.setAttribute('height', y0 - yv(u));
+      r.setAttribute('fill', u < 0.95 - 1e-9 ? '#d9534f' : '#5aa36a');
+    });
+    const insecure = below > 0, changed = insecure !== true;
+    vd.className = 'verdict-box ' + (insecure ? 'insecure' : 'secure');
+    vd.innerHTML = (insecure ? `Insecure: ${below} bus${below > 1 ? 'es' : ''} below 0.95` : 'Secure: no violation') +
+      `<small>${changed ? 'Conclusion changes from the default reading: the answer reports both.' : `Conclusion holds (lowest: Bus ${lob} at ${lo.toFixed(3)} p.u.)`}</small>`;
+  }
+  rng.addEventListener('input', upd);
+  upd();
+})();
+
+/* =========================================================== section 6: results */
+const COLS = ['#cfc8bc', '#8f897f', 'var(--azul)'];
+(() => {
+  const body = $('#r1-body'), seg = $('#r1-seg');
+  const FAM = [
+    ['What elements are, CIGRE MV', 5, 73, 77, 90], ['What elements are, IEEE 30', 5, 73, 77, 100],
+    ['Misleading names', 5, 20, 24, 100], ['Changes to wind and solar', 4, 42, 100, 100],
+    ['Combining several facts', 4, 68, 74, 96], ['Switches', 4, 22, 22, 100],
+    ['Where values come from', 6, 55, 55, 92], ['Consistency', 4, 100, 100, 98],
+  ];
+  const overall = () => `
+    <div class="bars">
+      ${[['No CIM layer', 55, COLS[0]], ['Layer read by the studies only', 65, COLS[1]], ['Agent reads raw data tables (studies read the layer)', 84, 'var(--turq)'], ['Layer read by agent and studies', 97, COLS[2]]]
+        .map(([l, v, c], i) => `<div class="barrow ${i === 3 ? 'hl' : ''}"><span class="lbl">${l}</span><div class="track"><div class="fill" style="background:${c}" data-w="${v}"></div></div><span class="val">${v}&nbsp;%</span></div>`).join('')}
+    </div>
+    <div class="stats3">
+      <div class="stat"><div class="big">42 &rarr; 95&nbsp;%</div><div class="cap">runs meeting every criterion, no layer &rarr; full layer</div></div>
+      <div class="stat"><div class="big">15 &rarr; 9&nbsp;s</div><div class="cap">per question: with the layer the agent is also faster (raw tables: 23&nbsp;s)</div></div>
+      <div class="stat"><div class="big">30 &rarr; 0</div><div class="cap">answers fooled by a misleading name, without &rarr; with the layer</div></div>
+    </div>`;
+  const fam = () => `
+    <div class="keyrow"><span><i style="background:${COLS[0]}"></i>no layer</span><span><i style="background:${COLS[1]}"></i>studies only</span><span><i style="background:${COLS[2]}"></i>agent and studies</span></div>
+    <div class="fam">${FAM.map(([l, n, a, b, c]) => `<div class="famrow"><span class="lbl">${l} <span class="muted">(${n})</span></span><div class="mini">
+      ${[a, b, c].map((v, i) => `<div style="background:${COLS[i]}" data-w="${v}" title="${v} %"></div>`).join('')}</div></div>`).join('')}</div>
+    <p class="fig-caption">Each bar is the share of criteria met; tasks per type in brackets. Misleading names and switches gain the most, but even the switch tasks, which plant no names, go from 22&nbsp;% to 100&nbsp;%.</p>`;
+  function show(v) {
+    body.innerHTML = v === 'all' ? overall() : fam();
+    seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+    grow(body);
+  }
+  seg.addEventListener('click', ev => { const b = ev.target.closest('button'); if (b) show(b.dataset.v); });
+  show('all');
+})();
+(() => {
+  const body = $('#r2-body'), seg = $('#r2-seg');
+  const ROWS = [
+    ['Full system', 97.1, 99.0, 96.3], ['without the CIM layer for the agent', 87.8, 64.1, 98.6],
+    ['without the re-run of parameters', 95.7, 95.9, 95.6], ['without routing rules', 95.0, 97.4, 93.9],
+    ['without evidence wording', 97.6, 96.9, 97.9], ['without asking first', 97.3, 97.9, 97.0],
+    ['without investigation tools', 84.8, 95.9, 79.7], ['Solvers only, as prior assistants', 84.6, 53.8, 98.6],
+  ];
+  body.innerHTML = ROWS.map(([l], i) => `<div class="barrow ${i === 0 || i === 7 ? 'hl' : ''}"><span class="lbl">${l}</span><div class="track"><div class="fill" style="background:${i === 0 ? 'var(--azul)' : i === 7 ? 'var(--granate)' : '#8f897f'}"></div></div><span class="val"></span></div>`).join('');
+  function show(c) {
+    [...body.children].forEach((r, i) => { const v = ROWS[i][1 + c]; r.querySelector('.fill').dataset.w = v; r.querySelector('.val').innerHTML = v.toFixed(1) + '&nbsp;%'; });
+    seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.v === c));
+    grow(body, true);
+  }
+  seg.addEventListener('click', ev => { const b = ev.target.closest('button'); if (b) show(+b.dataset.v); });
+  show(0);
+})();
+function grow(root, now) {
+  const go = () => root.querySelectorAll('[data-w]').forEach(el => el.style.width = el.dataset.w + '%');
+  if (now || root.dataset.seen) return requestAnimationFrame(go);
+  if (!('IntersectionObserver' in window)) return go();
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { root.dataset.seen = 1; go(); io.disconnect(); } }, {threshold: .25});
+  io.observe(root);
+}
+
+/* =========================================================== section 7: scale */
+(() => {
+  const rng = $('#sc-range'), svg = $('#sc-svg');
+  const NETS = [['CIGRE MV', 15], ['IEEE 30', 30], ['Oberrhein', 179], ['SmallGrid', 1225], ['PEGASE', 9241]];
+  const lo = 1, hi = 4.2, xa = 20, xb = 620;
+  const xs = b => xa + (Math.log10(b) - lo) / (hi - lo) * (xb - xa);
+  let s = `<line x1="${xa}" x2="${xb}" y1="40" y2="40" stroke="#cfc8bc" stroke-width="2"/>`;
+  for (const t of [10, 100, 1000, 10000]) s += `<line x1="${xs(t)}" x2="${xs(t)}" y1="34" y2="46" stroke="#8f897f"/><text x="${xs(t)}" y="62" font-size="11" text-anchor="middle" fill="#6b6760">${fmt(t)}</text>`;
+  NETS.forEach(([n, b], i) => s += `<g class="sc-net" data-b="${b}" style="cursor:pointer"><rect x="${xs(b) - 34}" y="${i % 2 ? 30 : 6}" width="68" height="${i % 2 ? 62 : 44}" fill="transparent"/><circle cx="${xs(b)}" cy="40" r="6" fill="#1a1f6c"/><text x="${xs(b)}" y="${i % 2 ? 86 : 22}" font-size="11.5" font-weight="700" text-anchor="middle" fill="#1a1f6c">${n}</text></g>`);
+  s += `<circle id="sc-cur" cy="40" r="9" fill="none" stroke="#ff5700" stroke-width="3"/>`;
+  svg.innerHTML = s;
+  function upd() {
+    let b = Math.round(10 ** +rng.value);
+    for (const [, nb] of NETS) if (Math.abs(Math.log10(nb) - +rng.value) < 0.015) b = nb;
+    const sig2 = n => { const p = 10 ** Math.max(0, Math.floor(Math.log10(n)) - 1); return Math.round(n / p) * p; };
+    const tok = sig2(b * 205), pages = Math.max(1, sig2(b * 800 / 3000));
+    $('#sc-buses').textContent = fmt(b);
+    const t = $('#sc-tok');
+    t.textContent = '≈ ' + (tok >= 1e6 ? (tok / 1e6).toFixed(1) + ' million' : fmt(tok));
+    t.className = 'big' + (tok >= 1e6 ? ' red' : '');
+    $('#sc-pages').textContent = '≈ ' + fmt(pages);
+    svg.querySelector('#sc-cur').setAttribute('cx', xs(b));
+  }
+  rng.addEventListener('input', upd);
+  svg.addEventListener('click', ev => { const g = ev.target.closest('.sc-net'); if (g) { rng.value = Math.log10(+g.dataset.b); upd(); } });
+  upd();
+})();
+})();
+</script>
+</body>
+</html>

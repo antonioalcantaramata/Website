@@ -19,7 +19,11 @@ index.html:
     publications.json, dissemination.json, software.json -> the highlight
     tiles under the hero (latest paper, latest talk, software)
 
-Also rewrites sitemap.xml from PAGES.
+blog.html:
+    blog.json -> the list of posts. The posts themselves (blog/<slug>.html)
+    are standalone pages with their own head and styles; they are not touched.
+
+Also rewrites sitemap.xml from PAGES and blog.json.
 
 Adding a paper or a tool should be one JSON object, not forty lines of markup,
 and changing a menu item should be one edit, not six. Output is written straight
@@ -28,8 +32,8 @@ HTML -- crawlers, Google Scholar and no-JS visitors still see everything.
 
     python3 build.py
 
-Run it after editing a partial, PAGES, publications.json, software.json or
-dissemination.json.
+Run it after editing a partial, PAGES, publications.json, software.json,
+dissemination.json or blog.json.
 """
 
 import datetime
@@ -44,6 +48,7 @@ PARTIALS = ROOT / "partials"
 PUBS = ROOT / "publications.json"
 SOFT = ROOT / "software.json"
 DISS = ROOT / "dissemination.json"
+BLOG = ROOT / "blog.json"
 
 SITE = "https://www.antonioalcantara.com/"
 NAME = "Antonio Alcántara Mata"
@@ -75,6 +80,12 @@ PAGES = {
         "description": f"Research interests, publications, software and talks by {NAME} - machine "
                        "learning, probabilistic forecasting and data-driven optimization for "
                        "energy systems.",
+    },
+    "blog.html": {
+        "path": "blog.html",
+        "title": f"Blog - {NAME}",
+        "description": f"Interactive explainers of research by {NAME} on machine learning and AI "
+                       "for power and energy systems.",
     },
     "teaching.html": {
         "path": "teaching.html",
@@ -232,11 +243,13 @@ def render_footer():
     return footer.replace("{year}", str(datetime.date.today().year))
 
 
-def render_sitemap():
+def render_sitemap(posts):
     out = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for meta in PAGES.values():
         out.append(f"  <url><loc>{SITE}{meta['path']}</loc></url>")
+    for p in posts:
+        out.append(f"  <url><loc>{SITE}{post_href(p)}</loc></url>")
     out.append("</urlset>")
     return "\n".join(out) + "\n"
 
@@ -247,6 +260,16 @@ def render_sitemap():
 
 def bibtex_key(bibtex):
     return re.match(r"@\w+\{([^,]+),", bibtex).group(1)
+
+
+def sorted_pubs(pubs):
+    """Newest first by year, then month; ties keep alphabetical order. Every
+    entry needs a month (1-12), so a new paper cannot silently sort last."""
+    bad = [p["title"] for p in pubs
+           if not isinstance(p.get("month"), int) or not 1 <= p["month"] <= 12]
+    if bad:
+        sys.exit("error: publications.json entries need a month (1-12): " + "; ".join(bad))
+    return sorted(pubs, key=lambda p: (-p["year"], -p["month"], p["title"]))
 
 
 def render_item(pub):
@@ -287,6 +310,11 @@ def render_item(pub):
     if pub.get("code_url"):
         out.append(f'            <a href="{esc(pub["code_url"])}" class="pub-link" target="_blank" rel="noopener">')
         out.append(f'                {ICON % "github"} Code')
+        out.append('            </a>')
+    # explainer_url is optional: a blog post on this site, so it opens in place
+    if pub.get("explainer_url"):
+        out.append(f'            <a href="{esc(pub["explainer_url"])}" class="pub-link">')
+        out.append(f'                {ICON % "star"} Interactive explainer')
         out.append('            </a>')
     if pub.get("bibtex"):
         bib_id = "bib-" + bibtex_key(pub["bibtex"])
@@ -556,9 +584,80 @@ def render_home_tiles(pubs, soft, diss):
     return "\n".join(out)
 
 
+# --------------------------------------------------------------------------
+# blog.html: the list of posts
+# --------------------------------------------------------------------------
+
+POST_FIELDS = ("date", "slug", "title", "kind", "summary", "image", "image_alt")
+
+
+def post_href(post):
+    return f"blog/{post['slug']}.html"
+
+
+def load_posts():
+    """blog.json's posts, checked and sorted newest first.
+
+    Every listed post must exist as blog/<slug>.html and have its card image
+    in images/blog/, so a typo fails the build instead of shipping a dead link.
+    """
+    data = json.loads(BLOG.read_text(encoding="utf-8"))
+    posts = data.get("posts", [])
+    for p in posts:
+        missing = [f for f in POST_FIELDS if not p.get(f)]
+        if missing:
+            sys.exit(f"error: blog.json: post {p.get('slug', '?')!r} lacks {', '.join(missing)}")
+        if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", p["date"]):
+            sys.exit(f"error: blog.json: date must be YYYY-MM, got {p['date']!r}")
+        if not (ROOT / post_href(p)).is_file():
+            sys.exit(f"error: blog.json: {post_href(p)} does not exist")
+        if not (ROOT / "images" / "blog" / p["image"]).is_file():
+            sys.exit(f"error: blog.json: images/blog/{p['image']} does not exist")
+    slugs = [p["slug"] for p in posts]
+    dupes = {s for s in slugs if slugs.count(s) > 1}
+    if dupes:
+        sys.exit(f"error: duplicate slugs in blog.json: {', '.join(sorted(dupes))}")
+    # sorted() is stable: posts in the same month keep their file order
+    return data, sorted(posts, key=lambda p: p["date"], reverse=True)
+
+
+def render_blog_list(posts, placeholder):
+    """One card per post: the 1200x630 preview image beside the text, the
+    whole card a single link, like the home page tiles."""
+    if not posts:
+        return f'<p class="section-placeholder">{esc(placeholder)}</p>'
+    out = ['<div class="blog-list">']
+    for p in posts:
+        year, month = p["date"].split("-")
+        meta = f'<time datetime="{year}-{month}">{MONTHS[int(month) - 1]} {year}</time>'
+        if p.get("topics"):
+            meta += f' &middot; {esc(p["topics"])}'
+        out += [
+            '    <article class="blog-card">',
+            f'        <a href="{esc(post_href(p))}" class="blog-card-link">',
+            f'            <img src="images/blog/{esc(p["image"])}" alt="{esc(p["image_alt"])}"'
+            ' class="blog-card-image" width="1200" height="630" loading="lazy" decoding="async">',
+            '            <div class="blog-card-body">',
+            f'                <span class="blog-card-kind">{esc(p["kind"])}</span>',
+            f'                <h2 class="blog-card-title">{esc(p["title"])}</h2>',
+            f'                <p class="blog-card-meta">{meta}</p>',
+            f'                <p class="blog-card-summary">{esc(p["summary"])}</p>',
+            '                <span class="tile-cta">Read and explore <span aria-hidden="true">&rarr;</span></span>',
+            '            </div>',
+            '        </a>',
+            '    </article>',
+        ]
+    out.append('</div>')
+    return "\n".join(out)
+
+
+def build_blog(page, data, posts):
+    print(f"  posts: {len(posts)}" + ("  (placeholder rendered)" if not posts else ""))
+    return splice(page, "blog-list", render_blog_list(posts, data.get("placeholder", "")), "blog.html")
+
+
 def build_index(page):
-    pubs = sorted(json.loads(PUBS.read_text(encoding="utf-8"))["publications"],
-                  key=lambda p: (-p["year"], p["title"]))
+    pubs = sorted_pubs(json.loads(PUBS.read_text(encoding="utf-8"))["publications"])
     soft = json.loads(SOFT.read_text(encoding="utf-8"))
     diss = json.loads(DISS.read_text(encoding="utf-8"))
     return splice(page, "home-tiles", render_home_tiles(pubs, soft, diss), "index.html")
@@ -577,7 +676,7 @@ def build_research(page):
         sys.exit(f"error: duplicate BibTeX keys in publications.json: {', '.join(sorted(dupes))}")
 
     # Newest first; the sort buttons re-order client-side from here.
-    pubs = sorted(pubs, key=lambda p: (-p["year"], p["title"]))
+    pubs = sorted_pubs(pubs)
 
     page = splice(page, "publications-list",
                   "\n\n".join(render_item(p) for p in pubs), "research.html")
@@ -612,6 +711,7 @@ def build_research(page):
 def main():
     sprite = (PARTIALS / "sprite.svg").read_text(encoding="utf-8").rstrip("\n")
     footer = render_footer()
+    blog_data, posts = load_posts()
 
     for filename, meta in PAGES.items():
         path = ROOT / filename
@@ -625,10 +725,12 @@ def main():
             page = build_research(page)
         if filename == "index.html":
             page = build_index(page)
+        if filename == "blog.html":
+            page = build_blog(page, blog_data, posts)
         path.write_text(page, encoding="utf-8")
 
-    (ROOT / "sitemap.xml").write_text(render_sitemap(), encoding="utf-8")
-    print(f"wrote sitemap.xml ({len(PAGES)} pages)")
+    (ROOT / "sitemap.xml").write_text(render_sitemap(posts), encoding="utf-8")
+    print(f"wrote sitemap.xml ({len(PAGES)} pages, {len(posts)} posts)")
 
 
 if __name__ == "__main__":
