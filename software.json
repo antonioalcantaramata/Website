@@ -10,8 +10,8 @@
       "role": "Main developer",
       "language": "Python",
       "license": "Apache-2.0",
-      "paper_title": "",
-      "paper_url": ""
+      "paper_title": "Paper (arXiv)",
+      "paper_url": "https://arxiv.org/abs/2611.20026"
     },
     {
       "name": "gridfm-trustlayer",

@@ -20,3 +20,6 @@ cv/*.fdb_latexmk
 cv/*.synctex.gz
 cv/*.bbl
 cv/*.blg
+
+# Local preview config for the Claude desktop app
+.claude/

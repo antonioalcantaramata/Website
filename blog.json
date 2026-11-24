@@ -1,0 +1,16 @@
+{
+  "_comment": "Source of truth for the post list on blog.html. Each post is a standalone page at blog/<slug>.html (hand-written; build.py does not touch it). Add the page, then an entry here, then run `python3 build.py`. Fields: date (YYYY-MM), slug, title, kind (small label above the title), summary, image (1200x630, in images/blog/, also the post's link-preview card) and image_alt are required; topics is optional. Posts are listed newest first and added to sitemap.xml.",
+  "placeholder": "Posts are on their way.",
+  "posts": [
+    {
+      "date": "2026-11",
+      "slug": "grids-own-language",
+      "title": "The Grid's Own Language",
+      "kind": "Interactive explainer",
+      "summary": "AI assistants for power-system operators compute with validated solvers, yet still read the network through names. A Common Information Model layer tells them what each element is, and how each fact is known. Trip lines, plant errors in an answer and explore the results.",
+      "topics": "LLM grid assistants · Common Information Model",
+      "image": "grids-own-language.jpg",
+      "image_alt": "The explainer's network figure after Line 2-3 trips: closing the normally open tie S1 re-supplies buses 3 to 11, beside what the CIM layer says about S1 and how each fact is known."
+    }
+  ]
+}

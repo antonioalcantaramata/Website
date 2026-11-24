@@ -11,6 +11,7 @@ dependencies beyond Python 3 for the build script.
 | a publication | `publications.json` | `python3 build.py` |
 | a software entry | `software.json` | `python3 build.py` |
 | a talk | `dissemination.json` (and the Selected Talks section of `cv/cv26.tex`) | `python3 build.py` |
+| a blog post | add `blog/<slug>.html` and its card image in `images/blog/`, then an entry in `blog.json` (see below) | `python3 build.py` |
 | the menu, footer or icons | `partials/` | `python3 build.py` |
 | a page title, description or link preview | `PAGES` at the top of `build.py` | `python3 build.py` |
 | page text (bio, news, courses, ...) | the page's `.html` file directly | nothing |
@@ -28,6 +29,8 @@ them: the site is served exactly as committed.
 | `research.html` | Research interests, publications (generated), software (generated), dissemination: talks (generated) |
 | `teaching.html` | Courses and student evaluations |
 | `contact.html` | Email, office and academic profiles |
+| `blog.html` | Blog: the list of posts (generated from `blog.json`) |
+| `blog/<slug>.html` | A post: a standalone page with its own head and styles, not touched by `build.py` |
 | `publications.html` | Redirect to `research.html#publications`, kept so old external links still work |
 
 ## build.py
@@ -55,7 +58,9 @@ the next build overwrites it. The script writes:
   Software tiles under the hero. The Teaching and CV tiles after them are
   hand-written in `index.html`; update the Teaching one when the current
   course changes.
-- **`sitemap.xml`**: from `PAGES`.
+- **`blog-list`** (`blog.html`): one card per post, newest first, from
+  `blog.json`. The build fails if a listed post or its image is missing.
+- **`sitemap.xml`**: from `PAGES`, plus every post in `blog.json`.
 
 The output is static HTML, so crawlers, Google Scholar and visitors without
 JavaScript see every entry. Running the build twice produces no changes.
@@ -65,10 +70,12 @@ JavaScript see every entry. Running the build twice produces no changes.
 | field | notes |
 |---|---|
 | `title`, `venue`, `year` | plain text |
+| `month` | required, 1-12; only orders papers within a year (not displayed). Use the issue month for journals, the v1 month for arXiv. The build fails if it is missing |
 | `authors` | trusted markup: keeps `<strong>` around your own name |
 | `type` | `journal`, `conference` or `working`; drives the badge and filters. A filter button only appears for types that have entries |
 | `url` | the article; renders "View Article" |
 | `code_url` | optional; renders a "Code" link |
+| `explainer_url` | optional; renders an "Interactive explainer" link to a blog post, e.g. `blog/<slug>.html` |
 | `bibtex` | optional; renders a "BibTeX" button that shows the entry with a Copy button. Keys must be unique (the build checks) |
 | `open_access` | `true` adds the Open Access badge |
 | `cover`, `cover_alt` | a file in `images/journal-covers/` |
@@ -107,6 +114,27 @@ While `software` is an empty list, the `placeholder` text is shown instead.
 The talks are also in the Selected Talks section of `cv/cv26.tex`; add a
 new talk to both.
 
+### blog.json
+
+| field | notes |
+|---|---|
+| `date` | `YYYY-MM` (the build checks); posts are listed newest first |
+| `slug` | the post is `blog/<slug>.html` (the build checks it exists) |
+| `title`, `summary` | shown on the card |
+| `kind` | the small label above the title, e.g. "Interactive explainer" |
+| `topics` | optional; shown after the date |
+| `image`, `image_alt` | a 1200x630 file in `images/blog/` (the build checks it exists) |
+
+While `posts` is an empty list, the `placeholder` text is shown instead.
+
+Posts are standalone pages: interactive explainers bring their own layout,
+styles and scripts, and `styles.css` would clash with them, so `build.py`
+leaves `blog/` alone. Each post therefore carries its own `<head>` (title,
+canonical URL, favicon, and link-preview tags pointing at its card image)
+and a slim bar at the top linking back to `../index.html`,
+`../research.html` and `../blog.html`. Copy those from an existing post;
+links inside `blog/` are relative to it, hence the `../`.
+
 ## Images
 
 Pages load WebP renditions sized for how they are displayed. Keep the
@@ -120,6 +148,7 @@ shift while images load.
 | `images/logos/*.webp` | CUNEF, DTU, UC3M and UGR logos |
 | `images/software/*.webp` | software logos |
 | `images/og-image.jpg` | 1200x630 card shown when a page link is shared |
+| `images/blog/*.jpg` | 1200x630 post images: the card on `blog.html` and the post's own link preview |
 | `favicon.ico`, `images/icon-192.png`, `apple-touch-icon.png` | browser and home-screen icons |
 
 Full-resolution originals are kept out of the repository (see `.gitignore`).
