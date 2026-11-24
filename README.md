@@ -60,7 +60,10 @@ the next build overwrites it. The script writes:
   course changes.
 - **`blog-list`** (`blog.html`): one card per post, newest first, from
   `blog.json`. The build fails if a listed post or its image is missing.
-- **`sitemap.xml`**: from `PAGES`, plus every post in `blog.json`.
+- **`sitemap.xml`**: from `PAGES`, plus every post in `blog.json` with its
+  date as `<lastmod>`.
+- **`feed.xml`**: an Atom feed of the blog posts, linked from every page's
+  head so feed readers find it.
 
 The output is static HTML, so crawlers, Google Scholar and visitors without
 JavaScript see every entry. Running the build twice produces no changes.
@@ -118,7 +121,7 @@ new talk to both.
 
 | field | notes |
 |---|---|
-| `date` | `YYYY-MM` (the build checks); posts are listed newest first |
+| `date` | `YYYY-MM-DD`, the day the post goes live (the build checks). Posts are listed newest first; the card shows month and year. It also sets the post's `<lastmod>` in the sitemap and its date in `feed.xml`, and must equal the post's `article:published_time` (the build checks) |
 | `slug` | the post is `blog/<slug>.html` (the build checks it exists) |
 | `title`, `summary` | shown on the card |
 | `kind` | the small label above the title, e.g. "Interactive explainer" |
@@ -130,7 +133,9 @@ While `posts` is an empty list, the `placeholder` text is shown instead.
 Posts are standalone pages: interactive explainers bring their own layout,
 styles and scripts, and `styles.css` would clash with them, so `build.py`
 leaves `blog/` alone. Each post therefore carries its own `<head>` (title,
-canonical URL, favicon, and link-preview tags pointing at its card image)
+canonical URL, favicon, feed link, link-preview tags pointing at its card
+image, `article:published_time`, and schema.org `BlogPosting` data whose
+author `@id` points at the home page's `Person`)
 and a slim bar at the top linking back to `../index.html`,
 `../research.html` and `../blog.html`. Copy those from an existing post;
 links inside `blog/` are relative to it, hence the `../`.

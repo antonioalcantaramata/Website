@@ -60,7 +60,7 @@ OG_IMAGE = "images/og-image.jpg"  # 1200x630, the card shown in link previews
 PAGES = {
     "index.html": {
         "path": "",
-        "title": f"{NAME} - Tenure-track Assistant Professor",
+        "title": f"{NAME} - Assistant Professor at CUNEF Universidad",
         "og_title": NAME,
         "description": f"{NAME} is a Tenure-track Assistant Professor in the Department of "
                        "Quantitative Methods at CUNEF Universidad, Madrid, working on machine "
@@ -106,7 +106,9 @@ PAGES = {
 PERSON = {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": SITE + "#person",  # blog posts name this as their author
     "name": NAME,
+    "alternateName": ["Antonio Alcántara", "A. Alcántara"],
     "givenName": "Antonio",
     "familyName": "Alcántara Mata",
     "url": SITE,
@@ -199,6 +201,7 @@ def render_head(filename, meta):
         '<link rel="icon" href="images/icon-192.png" type="image/png" sizes="192x192">',
         '<link rel="apple-touch-icon" href="apple-touch-icon.png">',
         '<meta name="theme-color" content="#1a1f6c">',
+        f'<link rel="alternate" type="application/atom+xml" title="Blog - {esc(NAME)}" href="feed.xml">',
         "",
         "<!-- Link previews (LinkedIn, Slack, WhatsApp, X, ...) -->",
         f'<meta property="og:type" content="{"profile" if filename == "index.html" else "website"}">',
@@ -249,8 +252,36 @@ def render_sitemap(posts):
     for meta in PAGES.values():
         out.append(f"  <url><loc>{SITE}{meta['path']}</loc></url>")
     for p in posts:
-        out.append(f"  <url><loc>{SITE}{post_href(p)}</loc></url>")
+        out.append(f"  <url><loc>{SITE}{post_href(p)}</loc><lastmod>{p['date']}</lastmod></url>")
     out.append("</urlset>")
+    return "\n".join(out) + "\n"
+
+
+def render_feed(posts):
+    """Atom feed of the blog, for feed readers and aggregators."""
+    def stamp(date):  # midday Madrid time, so the day never shifts across zones
+        return f"{date}T12:00:00+01:00"
+    updated = stamp(posts[0]["date"]) if posts else stamp(datetime.date.today().isoformat())
+    out = ['<?xml version="1.0" encoding="utf-8"?>',
+           '<feed xmlns="http://www.w3.org/2005/Atom">',
+           f'  <title>Blog - {esc(NAME)}</title>',
+           f'  <subtitle>{esc(PAGES["blog.html"]["description"])}</subtitle>',
+           f'  <link href="{SITE}blog.html"/>',
+           f'  <link rel="self" href="{SITE}feed.xml"/>',
+           f'  <id>{SITE}blog.html</id>',
+           f'  <updated>{updated}</updated>',
+           f'  <author><name>{esc(NAME)}</name><uri>{SITE}</uri></author>']
+    for p in posts:
+        url = SITE + post_href(p)
+        out += ['  <entry>',
+                f'    <title>{esc(p["title"])}</title>',
+                f'    <link href="{url}"/>',
+                f'    <id>{url}</id>',
+                f'    <published>{stamp(p["date"])}</published>',
+                f'    <updated>{stamp(p["date"])}</updated>',
+                f'    <summary>{esc(p["summary"])}</summary>',
+                '  </entry>']
+    out.append('</feed>')
     return "\n".join(out) + "\n"
 
 
@@ -607,17 +638,24 @@ def load_posts():
         missing = [f for f in POST_FIELDS if not p.get(f)]
         if missing:
             sys.exit(f"error: blog.json: post {p.get('slug', '?')!r} lacks {', '.join(missing)}")
-        if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", p["date"]):
-            sys.exit(f"error: blog.json: date must be YYYY-MM, got {p['date']!r}")
+        try:
+            datetime.date.fromisoformat(p["date"])
+        except ValueError:
+            sys.exit(f"error: blog.json: date must be YYYY-MM-DD, got {p['date']!r}")
         if not (ROOT / post_href(p)).is_file():
             sys.exit(f"error: blog.json: {post_href(p)} does not exist")
+        # The post's head is hand-written; keep its date in step with blog.json,
+        # which also feeds the sitemap and feed.xml.
+        stamp = f'<meta property="article:published_time" content="{p["date"]}">'
+        if stamp not in (ROOT / post_href(p)).read_text(encoding="utf-8"):
+            sys.exit(f"error: {post_href(p)} needs {stamp} to match blog.json")
         if not (ROOT / "images" / "blog" / p["image"]).is_file():
             sys.exit(f"error: blog.json: images/blog/{p['image']} does not exist")
     slugs = [p["slug"] for p in posts]
     dupes = {s for s in slugs if slugs.count(s) > 1}
     if dupes:
         sys.exit(f"error: duplicate slugs in blog.json: {', '.join(sorted(dupes))}")
-    # sorted() is stable: posts in the same month keep their file order
+    # sorted() is stable: posts on the same day keep their file order
     return data, sorted(posts, key=lambda p: p["date"], reverse=True)
 
 
@@ -628,8 +666,8 @@ def render_blog_list(posts, placeholder):
         return f'<p class="section-placeholder">{esc(placeholder)}</p>'
     out = ['<div class="blog-list">']
     for p in posts:
-        year, month = p["date"].split("-")
-        meta = f'<time datetime="{year}-{month}">{MONTHS[int(month) - 1]} {year}</time>'
+        year, month, _ = p["date"].split("-")
+        meta = f'<time datetime="{p["date"]}">{MONTHS[int(month) - 1]} {year}</time>'
         if p.get("topics"):
             meta += f' &middot; {esc(p["topics"])}'
         out += [
@@ -731,6 +769,8 @@ def main():
 
     (ROOT / "sitemap.xml").write_text(render_sitemap(posts), encoding="utf-8")
     print(f"wrote sitemap.xml ({len(PAGES)} pages, {len(posts)} posts)")
+    (ROOT / "feed.xml").write_text(render_feed(posts), encoding="utf-8")
+    print(f"wrote feed.xml ({len(posts)} posts)")
 
 
 if __name__ == "__main__":

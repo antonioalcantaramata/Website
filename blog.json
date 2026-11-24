@@ -1,9 +1,9 @@
 {
-  "_comment": "Source of truth for the post list on blog.html. Each post is a standalone page at blog/<slug>.html (hand-written; build.py does not touch it). Add the page, then an entry here, then run `python3 build.py`. Fields: date (YYYY-MM), slug, title, kind (small label above the title), summary, image (1200x630, in images/blog/, also the post's link-preview card) and image_alt are required; topics is optional. Posts are listed newest first and added to sitemap.xml.",
+  "_comment": "Source of truth for the post list on blog.html. Each post is a standalone page at blog/<slug>.html (hand-written; build.py does not touch it). Add the page, then an entry here, then run `python3 build.py`. Fields: date (YYYY-MM-DD, also the post's article:published_time), slug, title, kind (small label above the title), summary, image (1200x630, in images/blog/, also the post's link-preview card) and image_alt are required; topics is optional. Posts are listed newest first and added to sitemap.xml.",
   "placeholder": "Posts are on their way.",
   "posts": [
     {
-      "date": "2026-11",
+      "date": "2026-11-24",
       "slug": "grids-own-language",
       "title": "The Grid's Own Language",
       "kind": "Interactive explainer",
