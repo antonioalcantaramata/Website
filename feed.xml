@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Blog - Antonio Alcántara Mata</title>
+  <subtitle>Interactive explainers of research by Antonio Alcántara Mata on machine learning and AI for power and energy systems.</subtitle>
+  <link href="https://www.antonioalcantara.com/blog.html"/>
+  <link rel="self" href="https://www.antonioalcantara.com/feed.xml"/>
+  <id>https://www.antonioalcantara.com/blog.html</id>
+  <updated>2026-11-24T12:00:00+01:00</updated>
+  <author><name>Antonio Alcántara Mata</name><uri>https://www.antonioalcantara.com/</uri></author>
+  <entry>
+    <title>The Grid&#x27;s Own Language</title>
+    <link href="https://www.antonioalcantara.com/blog/grids-own-language.html"/>
+    <id>https://www.antonioalcantara.com/blog/grids-own-language.html</id>
+    <published>2026-11-24T12:00:00+01:00</published>
+    <updated>2026-11-24T12:00:00+01:00</updated>
+    <summary>AI assistants for power-system operators compute with validated solvers, yet still read the network through names. A Common Information Model layer tells them what each element is, and how each fact is known. Trip lines, plant errors in an answer and explore the results.</summary>
+  </entry>
+</feed>

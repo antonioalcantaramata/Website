@@ -37,6 +37,7 @@ dissemination.json or blog.json.
 """
 
 import datetime
+import hashlib
 import html
 import json
 import re
@@ -49,6 +50,7 @@ PUBS = ROOT / "publications.json"
 SOFT = ROOT / "software.json"
 DISS = ROOT / "dissemination.json"
 BLOG = ROOT / "blog.json"
+PAPERS = ROOT / "papers"  # one generated page per publication
 
 SITE = "https://www.antonioalcantara.com/"
 NAME = "Antonio Alcántara Mata"
@@ -60,7 +62,7 @@ OG_IMAGE = "images/og-image.jpg"  # 1200x630, the card shown in link previews
 PAGES = {
     "index.html": {
         "path": "",
-        "title": f"{NAME} - Tenure-track Assistant Professor",
+        "title": f"{NAME} - Assistant Professor at CUNEF Universidad",
         "og_title": NAME,
         "description": f"{NAME} is a Tenure-track Assistant Professor in the Department of "
                        "Quantitative Methods at CUNEF Universidad, Madrid, working on machine "
@@ -99,6 +101,14 @@ PAGES = {
         "description": f"Contact details and academic profiles of {NAME}, Department of "
                        "Quantitative Methods, CUNEF Universidad, Madrid.",
     },
+    # Served by GitHub Pages for any missing URL, at that URL's path: kept out
+    # of search results and the sitemap, with every link made root-relative.
+    "404.html": {
+        "path": "404.html",
+        "title": f"Page not found - {NAME}",
+        "description": f"This page does not exist. Find the publications, blog and profile of {NAME} here.",
+        "not_found": True,
+    },
 }
 
 # schema.org Person, embedded in the home page. This is what lets a search
@@ -106,7 +116,9 @@ PAGES = {
 PERSON = {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": SITE + "#person",  # blog posts name this as their author
     "name": NAME,
+    "alternateName": ["Antonio Alcántara", "A. Alcántara"],
     "givenName": "Antonio",
     "familyName": "Alcántara Mata",
     "url": SITE,
@@ -189,33 +201,42 @@ def splice_inline(page, name, text, filename):
 # Shared chrome
 # --------------------------------------------------------------------------
 
+def asset_version(name):
+    """A short fingerprint of a file's content, for cache-busting URLs."""
+    return hashlib.sha256((ROOT / name).read_bytes()).hexdigest()[:10]
+
+
 def render_head(filename, meta):
     url = SITE + meta["path"]
     out = [
         f'<title>{esc(meta["title"])}</title>',
         f'<meta name="description" content="{esc(meta["description"])}">',
-        f'<link rel="canonical" href="{url}">',
+        '<meta name="robots" content="noindex">' if meta.get("not_found")
+        else f'<link rel="canonical" href="{url}">',
         '<link rel="icon" href="favicon.ico" sizes="32x32">',
         '<link rel="icon" href="images/icon-192.png" type="image/png" sizes="192x192">',
         '<link rel="apple-touch-icon" href="apple-touch-icon.png">',
         '<meta name="theme-color" content="#1a1f6c">',
+        f'<link rel="alternate" type="application/atom+xml" title="Blog - {esc(NAME)}" href="feed.xml">',
         "",
         "<!-- Link previews (LinkedIn, Slack, WhatsApp, X, ...) -->",
-        f'<meta property="og:type" content="{"profile" if filename == "index.html" else "website"}">',
+        f'<meta property="og:type" content="{meta.get("og_type") or ("profile" if filename == "index.html" else "website")}">',
         f'<meta property="og:site_name" content="{esc(NAME)}">',
         f'<meta property="og:title" content="{esc(meta.get("og_title", meta["title"]))}">',
         f'<meta property="og:description" content="{esc(meta["description"])}">',
         f'<meta property="og:url" content="{url}">',
-        f'<meta property="og:image" content="{SITE}{OG_IMAGE}">',
+        f'<meta property="og:image" content="{SITE}{meta.get("og_image", OG_IMAGE)}">',
         '<meta property="og:image:width" content="1200">',
         '<meta property="og:image:height" content="630">',
-        f'<meta property="og:image:alt" content="{esc(NAME)}, Tenure-track Assistant Professor at CUNEF Universidad">',
+        f'<meta property="og:image:alt" content="{esc(meta.get("og_image_alt") or NAME + ", Tenure-track Assistant Professor at CUNEF Universidad")}">',
         '<meta name="twitter:card" content="summary_large_image">',
         "",
         # Set before first paint so CSS that depends on JavaScript (the Research
         # page's one-section-at-a-time view) never flashes its no-JS layout.
         "<script>document.documentElement.classList.add('js')</script>",
-        '<link rel="stylesheet" href="styles.css">',
+        # The query string changes whenever styles.css does, so browsers and
+        # GitHub Pages' cache fetch the new file instead of a stale copy.
+        f'<link rel="stylesheet" href="styles.css?v={asset_version("styles.css")}">',
         '<link rel="preconnect" href="https://fonts.googleapis.com">',
         '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
         "<!-- CUNEF brand faces: Aeonik is licensed and not redistributed here, so",
@@ -224,15 +245,87 @@ def render_head(filename, meta):
         '<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800'
         '&family=Taviraj:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">',
     ]
-    if filename == "index.html":
-        data = json.dumps(PERSON, ensure_ascii=False, indent=4)
+    data = structured_data(filename, meta)
+    if data:
+        # "<\/" keeps text such as an abstract from closing the <script> early
+        data = json.dumps(data, ensure_ascii=False, indent=4).replace("</", "<\\/")
         out += ["", '<script type="application/ld+json">', data, "</script>"]
     return "\n".join(out)
+
+
+def structured_data(filename, meta):
+    """schema.org data for search engines, or None. The home page says whose
+    site this is (ProfilePage, WebSite, Person); the Research page lists the
+    publications as ScholarlyArticles authored by that same Person."""
+    person = {k: v for k, v in PERSON.items() if k != "@context"}
+    if filename == "index.html":
+        return {"@context": "https://schema.org", "@graph": [
+            {"@type": "ProfilePage", "@id": SITE + "#profile", "url": SITE,
+             "name": meta["title"], "mainEntity": {"@id": PERSON["@id"]},
+             "isPartOf": {"@id": SITE + "#website"}},
+            # The site name Google shows above results, instead of the domain.
+            {"@type": "WebSite", "@id": SITE + "#website", "url": SITE, "name": NAME,
+             "alternateName": PERSON["alternateName"][0], "inLanguage": "en",
+             "author": {"@id": PERSON["@id"]}},
+            person,
+        ]}
+    if filename == "research.html":
+        pubs = sorted_pubs(json.loads(PUBS.read_text(encoding="utf-8"))["publications"])
+        return {"@context": "https://schema.org",
+                "@graph": [scholarly_article(p) for p in pubs]}
+    return None
+
+
+def parse_authors(pub):
+    """`authors` ("Last, I. I., <strong>Me, A.</strong>, & Last, I.") as
+    (is_me, last, initials) triples; the <strong> one is the site's Person."""
+    found = re.findall(r"\s*(<strong>)?([^,<]+?),\s*((?:[A-ZÁÉÍÓÚÑ][a-z]?\.\s*(?:-\s*)?)+)",
+                       pub["authors"].replace("&amp;", "").replace("&", ""))
+    if not found or not any(me for me, _, _ in found):
+        sys.exit(f"error: publications.json: cannot read authors of {pub['title']!r}")
+    return [(bool(me), last.strip(), initials.strip()) for me, last, initials in found]
+
+
+def pub_authors(pub):
+    """The authors as schema.org persons."""
+    return [{"@id": PERSON["@id"]} if me else {"@type": "Person", "name": f"{initials} {last}"}
+            for me, last, initials in parse_authors(pub)]
+
+
+def paper_href(pub):
+    return f"papers/{pub['slug']}.html"
+
+
+def scholarly_article(pub):
+    # The paper's page on this site is the item; the publisher's copy is sameAs.
+    page = SITE + paper_href(pub)
+    item = {"@type": "ScholarlyArticle", "@id": page + "#article", "name": pub["title"],
+            "url": page, "sameAs": pub["url"], "author": pub_authors(pub),
+            "datePublished": f'{pub["year"]}-{pub["month"]:02d}'}
+    if pub["type"] == "working":
+        item["publisher"] = {"@type": "Organization", "name": pub["venue"]}
+    else:
+        item["isPartOf"] = {"@type": "Periodical", "name": pub["venue"]}
+    if pub.get("abstract"):
+        item["abstract"] = pub["abstract"]
+    if pub.get("open_access"):
+        item["isAccessibleForFree"] = True
+    if pub.get("code_url"):
+        item["subjectOf"] = {"@type": "SoftwareSourceCode", "codeRepository": pub["code_url"]}
+    return item
+
+
+def root_relative(page):
+    """Point every relative href/src at the site root ("about.html" ->
+    "/about.html"), for a page served at whatever path was requested."""
+    return re.sub(r'\b(href|src)="(?![a-z]+:|/|#)', r'\1="/', page)
 
 
 def render_nav(filename):
     nav = (PARTIALS / "nav.html").read_text(encoding="utf-8").rstrip("\n")
     link = f'<a href="{filename}" class="nav-link">'
+    if PAGES[filename].get("not_found"):
+        return nav  # no menu entry to mark
     if link not in nav:
         sys.exit(f"error: partials/nav.html has no nav-link for {filename}")
     return nav.replace(link, f'<a href="{filename}" class="nav-link active" aria-current="page">')
@@ -243,14 +336,46 @@ def render_footer():
     return footer.replace("{year}", str(datetime.date.today().year))
 
 
-def render_sitemap(posts):
+def render_sitemap(posts, pubs):
     out = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for meta in PAGES.values():
+        if meta.get("not_found"):
+            continue
         out.append(f"  <url><loc>{SITE}{meta['path']}</loc></url>")
     for p in posts:
-        out.append(f"  <url><loc>{SITE}{post_href(p)}</loc></url>")
+        out.append(f"  <url><loc>{SITE}{post_href(p)}</loc><lastmod>{p['date']}</lastmod></url>")
+    for p in pubs:
+        out.append(f"  <url><loc>{SITE}{paper_href(p)}</loc></url>")
     out.append("</urlset>")
+    return "\n".join(out) + "\n"
+
+
+def render_feed(posts):
+    """Atom feed of the blog, for feed readers and aggregators."""
+    def stamp(date):  # midday Madrid time, so the day never shifts across zones
+        return f"{date}T12:00:00+01:00"
+    updated = stamp(posts[0]["date"]) if posts else stamp(datetime.date.today().isoformat())
+    out = ['<?xml version="1.0" encoding="utf-8"?>',
+           '<feed xmlns="http://www.w3.org/2005/Atom">',
+           f'  <title>Blog - {esc(NAME)}</title>',
+           f'  <subtitle>{esc(PAGES["blog.html"]["description"])}</subtitle>',
+           f'  <link href="{SITE}blog.html"/>',
+           f'  <link rel="self" href="{SITE}feed.xml"/>',
+           f'  <id>{SITE}blog.html</id>',
+           f'  <updated>{updated}</updated>',
+           f'  <author><name>{esc(NAME)}</name><uri>{SITE}</uri></author>']
+    for p in posts:
+        url = SITE + post_href(p)
+        out += ['  <entry>',
+                f'    <title>{esc(p["title"])}</title>',
+                f'    <link href="{url}"/>',
+                f'    <id>{url}</id>',
+                f'    <published>{stamp(p["date"])}</published>',
+                f'    <updated>{stamp(p["date"])}</updated>',
+                f'    <summary>{esc(p["summary"])}</summary>',
+                '  </entry>']
+    out.append('</feed>')
     return "\n".join(out) + "\n"
 
 
@@ -291,7 +416,8 @@ def render_item(pub):
     out.append('    </div>')
     out.append('    <div class="pub-content">')
     out.append('        <div class="pub-title-row">')
-    out.append(f'            <h3 class="pub-title">{esc(pub["title"])}</h3>')
+    out.append(f'            <h3 class="pub-title"><a href="{esc(paper_href(pub))}" class="pub-title-link">'
+               f'{esc(pub["title"])}</a></h3>')
     out.append('            <div class="pub-badges">')
     out.append(f'                <span class="pub-type-badge {esc(pub["type"])}">{esc(badge)}</span>')
     out.append('            </div>')
@@ -356,6 +482,187 @@ def render_item(pub):
     out.append('    </div>')
     out.append('</div>')
     return "\n".join(out)
+
+
+# --------------------------------------------------------------------------
+# papers/<slug>.html: one page per publication
+# --------------------------------------------------------------------------
+
+def bibtex_fields(bibtex):
+    """{field: value} of a BibTeX entry's `field = {value}` lines."""
+    return {k.lower(): v for k, v in re.findall(r"(\w+)\s*=\s*\{(.*)\},?\s*$", bibtex, re.M)}
+
+
+def summary(text, limit=155):
+    """The abstract cut at a word boundary, for meta descriptions."""
+    if len(text) <= limit:
+        return text
+    return text[:limit].rsplit(" ", 1)[0].rstrip(",;:.") + "\u2026"
+
+
+def citation_tags(pub):
+    """Highwire Press tags, the ones Google Scholar reads."""
+    tags = [("citation_title", pub["title"])]
+    for me, last, initials in parse_authors(pub):
+        tags.append(("citation_author", "Alcántara, Antonio" if me else f"{last}, {initials}"))
+    tags.append(("citation_publication_date", f'{pub["year"]}/{pub["month"]:02d}'))
+    fields = bibtex_fields(pub.get("bibtex", ""))
+    arxiv = re.search(r"arxiv\.org/abs/([\w.]+)", pub["url"])
+    if arxiv:
+        tags.append(("citation_arxiv_id", arxiv.group(1)))
+        tags.append(("citation_pdf_url", f"https://arxiv.org/pdf/{arxiv.group(1)}"))
+    else:
+        tags.append(("citation_journal_title", pub["venue"]))
+        for field, tag in (("volume", "citation_volume"), ("number", "citation_issue")):
+            if fields.get(field):
+                tags.append((tag, fields[field]))
+        pages = fields.get("pages", "").replace("--", "-").split("-")
+        if pages[0]:
+            tags.append(("citation_firstpage", pages[0]))
+            if len(pages) > 1:
+                tags.append(("citation_lastpage", pages[-1]))
+    doi = fields.get("doi") or (re.search(r"doi\.org/(.+)", pub["url"]) or [None, None])[1]
+    if doi:
+        tags.append(("citation_doi", doi))
+    tags.append(("citation_abstract_html_url", SITE + paper_href(pub)))
+    return [f'<meta name="{n}" content="{esc(v)}">' for n, v in tags]
+
+
+def render_paper(pub, sprite, footer):
+    """A whole page for one publication: title, authors, venue, abstract,
+    links and citation, with the tags search engines and Scholar read."""
+    href = paper_href(pub)
+    meta = {"path": href, "title": f'{pub["title"]} - {NAME}', "og_title": pub["title"],
+            "description": summary(pub.get("abstract") or pub["title"]), "og_type": "article"}
+    # Link-preview card made by tools/paper_cards.py; the site-wide image otherwise.
+    card = f"images/papers/{pub['slug']}.jpg"
+    if (ROOT / card).is_file():
+        meta["og_image"] = card
+        meta["og_image_alt"] = f'{pub["title"]} ({pub["venue"]}, {pub["year"]})'
+    data = {"@context": "https://schema.org", "@graph": [
+        scholarly_article(pub),
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE},
+            {"@type": "ListItem", "position": 2, "name": "Publications",
+             "item": SITE + "research.html#publications"},
+            {"@type": "ListItem", "position": 3, "name": pub["title"]},
+        ]},
+    ]}
+    head = [render_head(href, meta), "", "<!-- Google Scholar -->", *citation_tags(pub), "",
+            '<script type="application/ld+json">',
+            json.dumps(data, ensure_ascii=False, indent=4).replace("</", "<\\/"), "</script>"]
+
+    nav = (PARTIALS / "nav.html").read_text(encoding="utf-8").rstrip("\n")
+    nav = nav.replace('<a href="research.html" class="nav-link">',
+                      '<a href="research.html" class="nav-link active">')
+
+    badge = {"journal": "Journal Article", "conference": "Conference Paper",
+             "working": "Working Paper"}.get(pub["type"], pub["type"].title())
+    when = f'{MONTHS[pub["month"] - 1]} {pub["year"]}'
+    links = [f'<a href="{esc(pub["url"])}" class="btn btn-primary" target="_blank" rel="noopener">'
+             f'{ICON % "external-link"} {"Read on arXiv" if "arxiv.org" in pub["url"] else "View article"}</a>']
+    if pub.get("code_url"):
+        links.append(f'<a href="{esc(pub["code_url"])}" class="btn btn-secondary" target="_blank" rel="noopener">'
+                     f'{ICON % "github"} Code</a>')
+    if pub.get("explainer_url"):
+        links.append(f'<a href="{esc(pub["explainer_url"])}" class="btn btn-secondary">'
+                     f'{ICON % "star"} Interactive explainer</a>')
+
+    body = [
+        '<section id="main" tabindex="-1" class="page-header paper-header">',
+        '    <div class="container">',
+        '        <div class="page-header-content page-header-content-solo">',
+        '            <div class="page-header-text">',
+        '                <a href="research.html#publications" class="paper-back">&larr; Publications</a>',
+        f'                <h1 class="page-title paper-title">{esc(pub["title"])}</h1>',
+        # authors is trusted markup: it carries <strong> around his own name
+        f'                <p class="paper-authors">{pub["authors"]}</p>',
+        f'                <p class="paper-venue">{esc(pub["venue"])} &middot; '
+        f'<time datetime="{pub["year"]}-{pub["month"]:02d}">{when}</time></p>',
+        '                <div class="hero-buttons paper-links">',
+        *[f'                    {link}' for link in links],
+        '                </div>',
+        '            </div>',
+        '        </div>',
+        '    </div>',
+        '</section>',
+        '',
+        '<section class="paper-detail">',
+        '    <div class="container paper-layout">',
+        '        <div class="paper-side">',
+        f'            <img src="images/journal-covers/{esc(pub["cover"])}"'
+        f' alt="{esc(pub.get("cover_alt") or pub["venue"])}" class="journal-cover"'
+        ' width="200" height="267" decoding="async">',
+        '            <div class="pub-badges">',
+        f'                <span class="pub-type-badge {esc(pub["type"])}">{esc(badge)}</span>',
+    ]
+    if pub.get("open_access"):
+        body.append(f'                <span class="pub-open-access-badge">{ICON % "unlock-alt"} Open Access</span>')
+    body += ['            </div>', '        </div>', '        <div class="paper-main">']
+    if pub.get("abstract"):
+        body += ['            <h2 class="paper-section-title">Abstract</h2>',
+                 f'            <p class="paper-abstract">{esc(pub["abstract"])}</p>']
+    if pub.get("bibtex"):
+        pre = esc(pub["bibtex"]).replace("\n", "&#10;")
+        body += ['            <h2 class="paper-section-title">Cite</h2>',
+                 '            <div class="pub-bibtex">',
+                 f'                <button class="bibtex-copy" type="button" onclick="copyBibtex(this)">'
+                 f'{ICON % "copy"} <span>Copy</span></button>',
+                 f'                <pre><code>{pre}</code></pre>',
+                 '            </div>']
+    body += ['            <p class="paper-more"><a href="research.html#publications" class="inline-link">'
+             'All publications</a></p>',
+             '        </div>', '    </div>', '</section>']
+
+    def block(lines, pad="    "):
+        return "\n".join(pad + line if line else "" for line in "\n".join(lines).split("\n"))
+
+    page = "\n".join([
+        "<!DOCTYPE html>",
+        '<html lang="en">',
+        "<head>",
+        '    <meta charset="UTF-8">',
+        '    <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        "    <!-- Generated by build.py from publications.json: edit that file, not this one. -->",
+        block(head),
+        "</head>",
+        "<body>",
+        block([sprite]),
+        block([nav]),
+        "",
+        block(body),
+        "",
+        block([footer]),
+        "",
+        '    <script src="script.js"></script>',
+        "</body>",
+        "</html>",
+        "",
+    ])
+    # Served from papers/, so every site link is made root-relative.
+    return root_relative(page)
+
+
+def build_papers(sprite, footer):
+    """Write papers/<slug>.html for every publication and remove pages of
+    publications no longer listed (a renamed slug would otherwise linger)."""
+    pubs = sorted_pubs(json.loads(PUBS.read_text(encoding="utf-8"))["publications"])
+    slugs = [p.get("slug", "") for p in pubs]
+    bad = [s for s in slugs if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", s)]
+    if bad:
+        sys.exit(f"error: publications.json: every entry needs a slug like 'my-paper', got {bad}")
+    dupes = {s for s in slugs if slugs.count(s) > 1}
+    if dupes:
+        sys.exit(f"error: duplicate slugs in publications.json: {', '.join(sorted(dupes))}")
+    PAPERS.mkdir(exist_ok=True)
+    for pub in pubs:
+        (ROOT / paper_href(pub)).write_text(render_paper(pub, sprite, footer), encoding="utf-8")
+    for old in PAPERS.glob("*.html"):
+        if old.stem not in slugs:
+            old.unlink()
+            print(f"  removed {old.relative_to(ROOT)}")
+    print(f"wrote papers/ ({len(pubs)} pages)")
+    return pubs
 
 
 def render_filters(pubs, labels):
@@ -553,11 +860,12 @@ def render_home_tiles(pubs, soft, diss):
     if pubs:
         p = pubs[0]
         out += [
-            '<a href="research.html#publications" class="tile tile-paper">',
+            f'<a href="{esc(paper_href(p))}" class="tile tile-paper">',
             '    <span class="tile-eyebrow">Latest publication</span>',
             f'    <span class="tile-title">{esc(p["title"])}</span>',
             f'    <span class="tile-meta">{esc(p["venue"])} &middot; {p["year"]}</span>',
-            f'    <span class="tile-cta">All {len(pubs)} publications <span aria-hidden="true">&rarr;</span></span>',
+            # The tile opens the paper's own page; its CTA says so.
+            '    <span class="tile-cta">Abstract and links <span aria-hidden="true">&rarr;</span></span>',
             '</a>',
         ]
     talk = latest_talk(diss)
@@ -607,17 +915,24 @@ def load_posts():
         missing = [f for f in POST_FIELDS if not p.get(f)]
         if missing:
             sys.exit(f"error: blog.json: post {p.get('slug', '?')!r} lacks {', '.join(missing)}")
-        if not re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", p["date"]):
-            sys.exit(f"error: blog.json: date must be YYYY-MM, got {p['date']!r}")
+        try:
+            datetime.date.fromisoformat(p["date"])
+        except ValueError:
+            sys.exit(f"error: blog.json: date must be YYYY-MM-DD, got {p['date']!r}")
         if not (ROOT / post_href(p)).is_file():
             sys.exit(f"error: blog.json: {post_href(p)} does not exist")
+        # The post's head is hand-written; keep its date in step with blog.json,
+        # which also feeds the sitemap and feed.xml.
+        stamp = f'<meta property="article:published_time" content="{p["date"]}">'
+        if stamp not in (ROOT / post_href(p)).read_text(encoding="utf-8"):
+            sys.exit(f"error: {post_href(p)} needs {stamp} to match blog.json")
         if not (ROOT / "images" / "blog" / p["image"]).is_file():
             sys.exit(f"error: blog.json: images/blog/{p['image']} does not exist")
     slugs = [p["slug"] for p in posts]
     dupes = {s for s in slugs if slugs.count(s) > 1}
     if dupes:
         sys.exit(f"error: duplicate slugs in blog.json: {', '.join(sorted(dupes))}")
-    # sorted() is stable: posts in the same month keep their file order
+    # sorted() is stable: posts on the same day keep their file order
     return data, sorted(posts, key=lambda p: p["date"], reverse=True)
 
 
@@ -628,8 +943,8 @@ def render_blog_list(posts, placeholder):
         return f'<p class="section-placeholder">{esc(placeholder)}</p>'
     out = ['<div class="blog-list">']
     for p in posts:
-        year, month = p["date"].split("-")
-        meta = f'<time datetime="{year}-{month}">{MONTHS[int(month) - 1]} {year}</time>'
+        year, month, _ = p["date"].split("-")
+        meta = f'<time datetime="{p["date"]}">{MONTHS[int(month) - 1]} {year}</time>'
         if p.get("topics"):
             meta += f' &middot; {esc(p["topics"])}'
         out += [
@@ -727,10 +1042,16 @@ def main():
             page = build_index(page)
         if filename == "blog.html":
             page = build_blog(page, blog_data, posts)
+        if meta.get("not_found"):
+            page = root_relative(page)
         path.write_text(page, encoding="utf-8")
 
-    (ROOT / "sitemap.xml").write_text(render_sitemap(posts), encoding="utf-8")
-    print(f"wrote sitemap.xml ({len(PAGES)} pages, {len(posts)} posts)")
+    pubs = build_papers(sprite, footer)
+    (ROOT / "sitemap.xml").write_text(render_sitemap(posts, pubs), encoding="utf-8")
+    print(f"wrote sitemap.xml ({sum(not m.get('not_found') for m in PAGES.values())} pages, "
+          f"{len(posts)} posts, {len(pubs)} papers)")
+    (ROOT / "feed.xml").write_text(render_feed(posts), encoding="utf-8")
+    print(f"wrote feed.xml ({len(posts)} posts)")
 
 
 if __name__ == "__main__":

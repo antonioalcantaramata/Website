@@ -8,7 +8,7 @@ dependencies beyond Python 3 for the build script.
 
 | to change | edit | then |
 |---|---|---|
-| a publication | `publications.json` | `python3 build.py` |
+| a publication (and its page in `papers/`) | `publications.json` | `python3 tools/paper_cards.py` (needs Pillow; refreshes the link-preview images), then `python3 build.py` |
 | a software entry | `software.json` | `python3 build.py` |
 | a talk | `dissemination.json` (and the Selected Talks section of `cv/cv26.tex`) | `python3 build.py` |
 | a blog post | add `blog/<slug>.html` and its card image in `images/blog/`, then an entry in `blog.json` (see below) | `python3 build.py` |
@@ -32,6 +32,8 @@ them: the site is served exactly as committed.
 | `blog.html` | Blog: the list of posts (generated from `blog.json`) |
 | `blog/<slug>.html` | A post: a standalone page with its own head and styles, not touched by `build.py` |
 | `publications.html` | Redirect to `research.html#publications`, kept so old external links still work |
+| `papers/<slug>.html` | One page per publication: abstract, links, BibTeX, and the `citation_*` tags Google Scholar reads. **Generated whole** by `build.py` from `publications.json`; never edit these files |
+| `404.html` | Served by GitHub Pages for any missing URL. Built like the other pages but `noindex`, left out of the sitemap, and with every link root-relative (`/about.html`), since it can appear at any path |
 
 ## build.py
 
@@ -42,9 +44,15 @@ the next build overwrites it. The script writes:
 
 - **`head`** (every page): title, description, canonical URL, favicon,
   link-preview (Open Graph) tags, stylesheet and fonts, all from `PAGES` in
-  `build.py`. The home page also gets schema.org `Person` structured data
-  (`PERSON` in `build.py`), which links the site to the ORCID, Scholar,
-  GitHub and LinkedIn profiles for search engines.
+  `build.py`. The stylesheet URL carries a fingerprint of `styles.css`
+  (`styles.css?v=…`), so after any CSS change rerun the build: browsers then
+  fetch the new file instead of a cached old one. Two pages also get schema.org structured data for search
+  engines (`structured_data` in `build.py`): the home page a `ProfilePage`,
+  a `WebSite` (the site name Google shows above results) and the `Person`
+  (`PERSON`), which links the site to the ORCID, Scholar, GitHub and
+  LinkedIn profiles; `research.html` one `ScholarlyArticle` per publication,
+  authored by that `Person`. The authors string must keep the
+  `Last, I.` form with `<strong>` around your own name, or the build fails.
 - **`sprite`**, **`nav`**, **`footer`** (every page): from `partials/`. The
   current page's menu link is marked active at build time; the footer year is
   the year of the build.
@@ -60,7 +68,21 @@ the next build overwrites it. The script writes:
   course changes.
 - **`blog-list`** (`blog.html`): one card per post, newest first, from
   `blog.json`. The build fails if a listed post or its image is missing.
-- **`sitemap.xml`**: from `PAGES`, plus every post in `blog.json`.
+- **`sitemap.xml`**: from `PAGES`, plus every post in `blog.json` with its
+  date as `<lastmod>`.
+- **`papers/<slug>.html`**: a page per publication, written whole (no
+  markers). Title, authors, venue and month, buttons to the article, code
+  and explainer, the abstract and the BibTeX with a Copy button. The head
+  carries Highwire `citation_*` tags (from the entry and its BibTeX:
+  volume, issue, pages, DOI; arXiv ID and PDF for preprints), a
+  `ScholarlyArticle` and a breadcrumb. Links are root-relative, like the
+  404 page. Pages of publications no longer listed are deleted. When
+  `images/papers/<slug>.jpg` exists it is the page's link-preview image;
+  `tools/paper_cards.py` draws those 1200x630 cards (type, venue, title,
+  authors, cover) and is the only script that needs Pillow. On
+  `research.html` each title links to its page, and the sitemap lists them.
+- **`feed.xml`**: an Atom feed of the blog posts, linked from every page's
+  head so feed readers find it.
 
 The output is static HTML, so crawlers, Google Scholar and visitors without
 JavaScript see every entry. Running the build twice produces no changes.
@@ -70,6 +92,7 @@ JavaScript see every entry. Running the build twice produces no changes.
 | field | notes |
 |---|---|
 | `title`, `venue`, `year` | plain text |
+| `slug` | required; the page is `papers/<slug>.html`, lowercase words joined by `-` (the build checks format and uniqueness). Keep it once published: outside links point at it |
 | `month` | required, 1-12; only orders papers within a year (not displayed). Use the issue month for journals, the v1 month for arXiv. The build fails if it is missing |
 | `authors` | trusted markup: keeps `<strong>` around your own name |
 | `type` | `journal`, `conference` or `working`; drives the badge and filters. A filter button only appears for types that have entries |
@@ -118,7 +141,7 @@ new talk to both.
 
 | field | notes |
 |---|---|
-| `date` | `YYYY-MM` (the build checks); posts are listed newest first |
+| `date` | `YYYY-MM-DD`, the day the post goes live (the build checks). Posts are listed newest first; the card shows month and year. It also sets the post's `<lastmod>` in the sitemap and its date in `feed.xml`, and must equal the post's `article:published_time` (the build checks) |
 | `slug` | the post is `blog/<slug>.html` (the build checks it exists) |
 | `title`, `summary` | shown on the card |
 | `kind` | the small label above the title, e.g. "Interactive explainer" |
@@ -130,7 +153,9 @@ While `posts` is an empty list, the `placeholder` text is shown instead.
 Posts are standalone pages: interactive explainers bring their own layout,
 styles and scripts, and `styles.css` would clash with them, so `build.py`
 leaves `blog/` alone. Each post therefore carries its own `<head>` (title,
-canonical URL, favicon, and link-preview tags pointing at its card image)
+canonical URL, favicon, feed link, link-preview tags pointing at its card
+image, `article:published_time`, and schema.org `BlogPosting` data whose
+author `@id` points at the home page's `Person`)
 and a slim bar at the top linking back to `../index.html`,
 `../research.html` and `../blog.html`. Copy those from an existing post;
 links inside `blog/` are relative to it, hence the `../`.
