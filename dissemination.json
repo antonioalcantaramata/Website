@@ -1,5 +1,5 @@
 {
-  "_comment": "Source of truth for the Dissemination section of research.html (talks). Edit this file, then run `python3 build.py`. Entries are grouped by `type` (labels in `types`, rendered in that order) and sorted newest first within each group. Fields per talk: date (YYYY-MM), type, venue and title are required; location and url (event or session page, rendered as a link) are optional -- leave them as \"\" and they are simply not rendered. Keep this list in step with the Selected Talks section of cv/cv26.tex.",
+  "_comment": "Source of truth for talks.html. Edit this file, then run `python3 build.py`. Entries are grouped by `type` (labels in `types`, rendered in that order) and sorted newest first within each group. Fields per talk: date (YYYY-MM), type, venue and title are required; location and url (event or session page, rendered as a link) are optional -- leave them as \"\" and they are simply not rendered. Keep this list in step with the Selected Talks section of cv/cv26.tex.",
   "types": {
     "invited": "Invited Seminars",
     "conference": "Conference Presentations"

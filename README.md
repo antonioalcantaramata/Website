@@ -25,13 +25,14 @@ them: the site is served exactly as committed.
 | file | content |
 |---|---|
 | `index.html` | Home: summary and recent news |
-| `about.html` | Bio, positions, education, awards |
-| `research.html` | Research interests, publications (generated), software (generated), dissemination: talks (generated) |
+| `about.html` | Bio, research interests (hand-written, `#interests`), positions, education, awards |
+| `publications.html` | Publications with filters (generated) and the Software section (generated, `#software`) |
+| `talks.html` | Talks: one card per kind (generated from `dissemination.json`) |
 | `teaching.html` | Courses and student evaluations |
 | `contact.html` | Email, office and academic profiles |
 | `blog.html` | Blog: the list of posts (generated from `blog.json`) |
 | `blog/<slug>.html` | A post: a standalone page with its own head and styles, not touched by `build.py` |
-| `publications.html` | Redirect to `research.html#publications`, kept so old external links still work |
+| `research.html` | Redirect, not built: the Research page was split in November 2026. It sends `#interests` to `about.html#interests`, `#software` to `publications.html#software`, `#dissemination` to `talks.html`, anything else to `publications.html`, so old links and search results keep working |
 | `papers/<slug>.html` | One page per publication: abstract, links, BibTeX, and the `citation_*` tags Google Scholar reads. **Generated whole** by `build.py` from `publications.json`; never edit these files |
 | `404.html` | Served by GitHub Pages for any missing URL. Built like the other pages but `noindex`, left out of the sitemap, and with every link root-relative (`/about.html`), since it can appear at any path |
 
@@ -50,18 +51,17 @@ the next build overwrites it. The script writes:
   engines (`structured_data` in `build.py`): the home page a `ProfilePage`,
   a `WebSite` (the site name Google shows above results) and the `Person`
   (`PERSON`), which links the site to the ORCID, Scholar, GitHub and
-  LinkedIn profiles; `research.html` one `ScholarlyArticle` per publication,
+  LinkedIn profiles; `publications.html` one `ScholarlyArticle` per publication,
   authored by that `Person`. The authors string must keep the
   `Last, I.` form with `<strong>` around your own name, or the build fails.
 - **`sprite`**, **`nav`**, **`footer`** (every page): from `partials/`. The
   current page's menu link is marked active at build time; the footer year is
   the year of the build.
 - **`publications-list`**, **`publication-filters`**, **`last-updated`**,
-  **`software`**, **`dissemination`** (`research.html`): from
-  `publications.json`, `software.json` and `dissemination.json`.
-- **`research-hub`** (`research.html`): the four overview tiles at the top --
-  counts and latest item per section, from the same files plus the Research
-  Interests boxes' headings.
+  **`software`** (`publications.html`): from `publications.json` and
+  `software.json`.
+- **`talks`** (`talks.html`): one card per talk type, in the order of
+  `types` in `dissemination.json`, newest first.
 - **`home-tiles`** (`index.html`): the Latest publication, Latest talk and
   Software tiles under the hero. The Teaching and CV tiles after them are
   hand-written in `index.html`; update the Teaching one when the current
@@ -80,7 +80,7 @@ the next build overwrites it. The script writes:
   `images/papers/<slug>.jpg` exists it is the page's link-preview image;
   `tools/paper_cards.py` draws those 1200x630 cards (type, venue, title,
   authors, cover) and is the only script that needs Pillow. On
-  `research.html` each title links to its page, and the sitemap lists them.
+  `publications.html` each title links to its page, and the sitemap lists them.
 - **`feed.xml`**: an Atom feed of the blog posts, linked from every page's
   head so feed readers find it.
 
@@ -157,7 +157,7 @@ canonical URL, favicon, feed link, link-preview tags pointing at its card
 image, `article:published_time`, and schema.org `BlogPosting` data whose
 author `@id` points at the home page's `Person`)
 and a slim bar at the top linking back to `../index.html`,
-`../research.html` and `../blog.html`. Copy those from an existing post;
+`../publications.html` and `../blog.html`. Copy those from an existing post;
 links inside `blog/` are relative to it, hence the `../`.
 
 ## Images
@@ -195,11 +195,9 @@ Turquesa dark for publications, Granate for software, Naranja dark for talks.
 
 ## Other files
 
-- `script.js`: mobile menu, smooth in-page scrolling, the Research page's
-  tiles (one section at a time, chosen by the URL hash, e.g.
-  `research.html#publications`, plus a compact bar once the tiles scroll
-  away), publication filter/sort, abstract and BibTeX toggles. Without
-  JavaScript every Research section is shown.
+- `script.js`: mobile menu, smooth in-page scrolling, publication
+  filter/sort, abstract and BibTeX toggles. Everything works without it
+  except those conveniences.
 - `robots.txt`: allows everything and points to `sitemap.xml`.
 - `CNAME`: the custom domain for GitHub Pages.
 
