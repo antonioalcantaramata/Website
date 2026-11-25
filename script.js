@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
     initSmoothScrolling();
     initPublicationFilters();
-    initResearchTabs();
 });
 
 // Navigation functionality. The current page's link is marked active by
@@ -50,9 +49,7 @@ function initNavigation() {
 
 // Smooth scrolling for anchor links
 function initSmoothScrolling() {
-    // Research section links are handled by initResearchTabs instead.
-    const links = document.querySelectorAll(
-        'a[href^="#"]:not(.hub-tile):not(.section-nav-link)');
+    const links = document.querySelectorAll('a[href^="#"]');
 
     links.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -64,8 +61,7 @@ function initSmoothScrolling() {
             if (targetElement) {
                 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                 // scrollIntoView honours each target's CSS scroll-margin-top,
-                // so the fixed navbar (and the sticky section nav on the
-                // Research page) never covers the heading we land on.
+                // so the fixed navbar never covers the heading we land on.
                 targetElement.scrollIntoView({
                     behavior: reduce ? 'auto' : 'smooth',
                     block: 'start'
@@ -81,67 +77,6 @@ function initSmoothScrolling() {
     });
 }
 
-// Research page: the overview tiles (and the compact bar that stands in for
-// them once they scroll away) show one section at a time. The URL hash names
-// the section, so research.html#publications -- including the old
-// publications.html redirect -- still opens straight on it. Without
-// JavaScript none of this runs and every section is shown, as before.
-function initResearchTabs() {
-    const hub = document.querySelector('.research-hub');
-    const bar = document.querySelector('.section-nav');
-    if (!hub) return;
-
-    const panels = Array.from(document.querySelectorAll('.research-section'));
-    const ids = panels.map(p => p.id);
-    const links = Array.from(document.querySelectorAll('.hub-tile, .section-nav-link'));
-
-    function show(id) {
-        if (!ids.includes(id)) id = ids[0];
-        panels.forEach(p => p.classList.toggle('is-active', p.id === id));
-        links.forEach(link => {
-            const on = link.getAttribute('href') === '#' + id;
-            link.classList.toggle('active', on);
-            if (on) link.setAttribute('aria-current', 'true');
-            else link.removeAttribute('aria-current');
-        });
-        return panels[ids.indexOf(id)];
-    }
-
-    links.forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            const id = link.getAttribute('href').slice(1);
-            const panel = show(id);
-            if (history.replaceState) history.replaceState(null, '', '#' + id);
-            // From the compact bar the reader is deep in the page: bring the
-            // tiles back into view, the new one highlighted and its section
-            // right under it. From the tiles themselves nothing needs to move.
-            // Instant, not smooth: the page height has just changed under the
-            // scroll, and a smooth scroll across that can stop short.
-            if (hub.getBoundingClientRect().top < 0) {
-                hub.scrollIntoView({ behavior: 'instant', block: 'start' });
-            }
-            // Keyboard and screen-reader users land in the content they chose.
-            panel.focus({ preventScroll: true });
-        });
-    });
-
-    window.addEventListener('hashchange', () => show(location.hash.slice(1)));
-    show(location.hash.slice(1));
-
-    // The compact bar appears only once the tiles have scrolled up behind the
-    // fixed navbar. One getBoundingClientRect per scroll event is cheap, and
-    // checking directly (no IntersectionObserver, no rAF) behaves the same
-    // everywhere.
-    if (bar) {
-        const navbar = document.getElementById('navbar');
-        const update = () => bar.classList.toggle('is-visible',
-            hub.getBoundingClientRect().bottom < (navbar ? navbar.offsetHeight : 70));
-        window.addEventListener('scroll', update, { passive: true });
-        update();
-    }
-}
-
 // Publication Filters
 function initPublicationFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
@@ -151,7 +86,7 @@ function initPublicationFilters() {
     const publicationItems = Array.from(document.querySelectorAll('.publication-item'));
     const publicationsList = document.querySelector('.publications-list');
 
-    if (filterButtons.length === 0) return; // Exit if not on the Research page
+    if (filterButtons.length === 0) return; // Exit if not on the Publications page
 
     // Current filter and sort state
     let currentFilter = 'all';

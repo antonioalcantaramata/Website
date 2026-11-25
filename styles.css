@@ -1874,8 +1874,9 @@ section {
     opacity: 0.8;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
+/* Menu collapses into the hamburger below 1025px: eight entries plus the
+   name do not fit on one line on tablets and narrow windows. */
+@media (max-width: 1024px) {
     .hamburger {
         display: flex;
     }
@@ -1927,7 +1928,10 @@ section {
     .hamburger.active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }
-    
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
     /* Page header mobile fix */
     .page-header {
         padding: 100px 0 40px;
@@ -3390,66 +3394,21 @@ section {
 }
 
 /* ==========================================================================
-   Research page
+   Publications, software and talks pages
    ========================================================================== */
 
-/* In-page section nav, sticky under the fixed 70px navbar. */
-.section-nav {
-    position: sticky;
-    top: 70px;
-    z-index: 900;
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.section-nav-list {
-    display: flex;
-    gap: 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.section-nav-list::-webkit-scrollbar {
-    display: none;
-}
-
-.section-nav-link {
-    display: inline-block;
-    padding: 0.85rem 0.9rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 600;
-    white-space: nowrap;
-    border-bottom: 3px solid transparent;
-    transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-.section-nav-link:hover {
-    color: var(--cunef-azul);
-}
-
-.section-nav-link.active {
-    color: var(--cunef-azul);
-    border-bottom-color: var(--cunef-naranja);
-}
-
-/* Sections are anchor targets; clear the navbar plus the sticky section nav. */
-.research-section {
+/* Sections are anchor targets; clear the fixed navbar. */
+.content-section {
     padding: 2.5rem 0 1rem;
-    scroll-margin-top: 130px;
+    scroll-margin-top: 90px;
 }
 
-.research-section:focus,
-.research-section:focus-visible {
+.content-section:focus,
+.content-section:focus-visible {
     outline: none;
 }
 
-.research-section:last-of-type {
+.content-section:last-of-type {
     padding-bottom: 3.5rem;
 }
 
@@ -3595,7 +3554,9 @@ section {
     gap: 0.4rem;
     align-items: center;
     flex-wrap: wrap;
-    flex-shrink: 0;
+    /* Never wider than the card: on a phone the chips wrap under the name. */
+    max-width: 100%;
+    min-width: 0;
 }
 
 /* Involvement chip. Azul-tinted so it is clearly distinct from the turquesa
@@ -3655,17 +3616,8 @@ section {
 }
 
 @media (max-width: 768px) {
-    .section-nav {
-        top: 60px;
-    }
-
-    .research-section {
-        scroll-margin-top: 116px;
-    }
-
-    .section-nav-link {
-        padding: 0.75rem 0.7rem;
-        font-size: 0.9rem;
+    .content-section {
+        scroll-margin-top: 76px;
     }
 
     .software-logo {
@@ -3684,33 +3636,32 @@ section {
     }
 }
 
-@media print {
-    .section-nav {
-        display: none !important;
-    }
-}
-
 /* --- Dissemination: talks, one list per type -----------------------------
    The month/year block sits in the 80px slot the journal covers and software
    logos use, so all three lists on the page share one left edge. Rows are
    divided rather than carded: twelve-plus cards of two short lines each read
    as noise next to the richer publication cards above. */
-.talk-group + .talk-group {
-    margin-top: 2rem;
+/* Each kind of talk is its own card; the count rides beside its heading,
+   centred on it (section headings otherwise align their items to the top). */
+.content-section .talks-section h2 {
+    gap: 0.6rem;
 }
 
-.talk-group-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--cunef-azul);
-    margin: 0 0 0.4rem;
+.talks-section h2 .talk-count {
+    align-self: center;
+}
+
+@media (max-width: 768px) {
+    /* Small screens stack section headings; keep the count on the heading's line. */
+    .content-section .talks-section h2 {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 }
 
 .talk-count {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+    letter-spacing: 0;
     font-weight: 600;
     color: var(--cunef-azul);
     background: var(--cunef-azul-claro);
@@ -3930,7 +3881,7 @@ body {
 .publications,
 .recent-news,
 .home-tiles,
-.research-section {
+.content-section {
     background: transparent;
 }
 
@@ -3938,8 +3889,7 @@ body {
 /* The bars share the page's Beige Claro, fully opaque: the Azul headers run
    up underneath the fixed navbar, and any translucency tints it grey. */
 .navbar,
-.navbar.scrolled,
-.section-nav {
+.navbar.scrolled {
     background: var(--cunef-beige-claro);
     border-bottom: 1px solid var(--line);
     box-shadow: none;
@@ -3951,7 +3901,7 @@ body {
     letter-spacing: -0.02em;
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
     .nav-menu {
         gap: 0.15rem;
         align-items: center;
@@ -4010,7 +3960,7 @@ body {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .nav-menu {
         background-color: var(--cunef-beige-claro);
         border-bottom: 1px solid var(--line);
@@ -4120,18 +4070,9 @@ body {
     box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.08);
 }
 
-/* Pages whose first block overlaps the header need it a little taller. */
-.page-header:has(+ .research-hub) {
-    padding-bottom: 104px;
-}
-
 @media (max-width: 768px) {
     .page-header {
         padding: 100px 0 44px;
-    }
-
-    .page-header:has(+ .research-hub) {
-        padding-bottom: 84px;
     }
 
     .page-header-content {
@@ -4246,20 +4187,12 @@ body {
     }
 }
 
-/* --- Tiles (home highlights and Research overview) ---------------------- */
-.home-tiles,
-.research-hub {
+/* --- Tiles (home highlights) --------------------------------------------- */
+.home-tiles {
     position: relative;
     z-index: 2;
     padding: 0;
     margin-top: -88px;
-}
-
-.research-hub {
-    margin-top: -64px;
-    /* Where the compact bar's links scroll back to: just under the navbar,
-       with the Azul header edge still showing above the tiles. */
-    scroll-margin-top: 96px;
 }
 
 .tile-grid {
@@ -4268,8 +4201,7 @@ body {
     gap: 16px;
 }
 
-.tile,
-.hub-tile {
+.tile {
     --tile-c: var(--cunef-azul);
     display: flex;
     flex-direction: column;
@@ -4295,8 +4227,7 @@ body {
    like the Naranja one over each heading. A full-width top border would curl
    around the rounded corners. */
 .tile::before,
-.hub-tile::before,
-.research-section .detail-item::before {
+.content-section .detail-item::before {
     content: '';
     position: absolute;
     top: -1px;
@@ -4311,8 +4242,7 @@ body {
     border-color: var(--tile-c);
 }
 
-.tile-eyebrow,
-.hub-label {
+.tile-eyebrow {
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -4399,160 +4329,29 @@ body {
     }
 }
 
-/* Research overview: the selected tile fills with its colour. */
-.hub-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-}
-
-.hub-interests     { --tile-c: var(--c-interests); }
-.hub-publications  { --tile-c: var(--c-publications); }
-.hub-software      { --tile-c: var(--c-software); }
-.hub-dissemination { --tile-c: var(--c-talks); }
-
-/* No fade on the selected fill: it should read as chosen immediately. */
-.hub-tile {
-    position: relative;
-    transition: border-color 0.2s ease;
-}
-
-.hub-count {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-
-.hub-count strong {
-    font-size: 2.3rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: var(--tile-c);
-    margin-right: 0.15rem;
-}
-
-.hub-latest {
-    font-size: 0.85rem;
-    line-height: 1.45;
-    color: var(--text-muted);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.hub-tile:hover {
-    border-color: var(--tile-c);
-    background: color-mix(in srgb, var(--tile-c) 5%, white);
-}
-
-/* Selected: a light tint of the tile's colour and a 2px outline (the inset
-   shadow adds the second pixel without shifting the layout). Not a solid
-   fill -- an Azul tile would vanish into the Azul header behind it. */
-.hub-tile.active {
-    background: color-mix(in srgb, var(--tile-c) 7%, white);
-    border-color: var(--tile-c);
-    box-shadow: inset 0 0 0 1px var(--tile-c);
-}
-
-.hub-tile.active::before {
-    width: 56px;
-}
-
-.hub-tile.active .hub-count {
-    color: var(--text-color);
-}
-
-/* Small pointer from the selected tile down to its content. */
-.hub-tile.active::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: -10px;
-    width: 16px;
-    height: 16px;
-    background: var(--tile-c);
-    transform: translateX(-50%) rotate(45deg);
-    border-radius: 2px;
-}
-
-@media (max-width: 900px) {
-    .hub-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-
-    .hub-tile {
-        padding: 1rem 1.1rem;
-    }
-
-    .hub-count strong {
-        font-size: 1.9rem;
-    }
-
-    .hub-tile.active::after {
-        display: none;
-    }
-}
-
-/* One section at a time once script.js is running (the `js` class is set in
-   <head> before first paint). Without JavaScript every section shows. */
-.js .research-section:not(.is-active) {
-    display: none;
-}
-
-.js .research-section {
-    padding-top: 2rem;
-}
-
-/* The compact bar: with JavaScript it is fixed under the navbar and slides
-   in only after the tiles scroll out of view. */
-.js .section-nav {
-    position: fixed;
-    top: 70px;
-    left: 0;
-    right: 0;
-    transform: translateY(-110%);
-    visibility: hidden;
-    transition: transform 0.25s ease, visibility 0.25s;
-}
-
-.js .section-nav.is-visible {
-    transform: none;
-    visibility: visible;
-}
-
-@media (max-width: 768px) {
-    .js .section-nav {
-        top: 60px;
-    }
-}
-
 /* Each section's panel carries its tile's colour as the tab at top-left. */
-.research-section .detail-item {
+.content-section .detail-item {
     position: relative;
 }
 
-#interests     { --tile-c: var(--c-interests); }
-#publications  { --tile-c: var(--c-publications); }
-#software      { --tile-c: var(--c-software); }
-#dissemination { --tile-c: var(--c-talks); }
+#publications   { --tile-c: var(--c-publications); }
+#software       { --tile-c: var(--c-software); }
+.talks-section  { --tile-c: var(--c-talks); }
 
-.research-section .detail-item::before {
+.content-section .detail-item::before {
     left: 2.5rem;
     width: 48px;
 }
 
 /* The old small-screen layout centres .detail-item text, headings (via a
-   column flexbox) and paragraphs; Research sections read better ragged-right. */
-.research-section .detail-item,
-.research-section .detail-item h2,
-.research-section .detail-item p {
+   column flexbox) and paragraphs; these sections read better ragged-right. */
+.content-section .detail-item,
+.content-section .detail-item h2,
+.content-section .detail-item p {
     text-align: left;
 }
 
-.research-section .detail-item h2 {
+.content-section .detail-item h2 {
     align-items: flex-start;
 }
 
@@ -4741,25 +4540,25 @@ body {
     border-radius: var(--radius-lg);
 }
 
-/* Printing the Research page prints every section, not just the open one. */
 @media print {
-    .js .research-section:not(.is-active) {
-        display: block;
-    }
-
-    .research-hub,
     .home-tiles {
         display: none;
     }
 }
 
 @media (max-width: 768px) {
-    .research-section .detail-item::before {
+    .content-section .detail-item::before {
         left: 1.5rem;
     }
 }
 
 /* --- Research Interests boxes: white, bordered, square icon ------------- */
+/* About#interests is a link target (old research.html#interests lands here):
+   keep its heading clear of the fixed navbar. */
+#interests {
+    scroll-margin-top: 90px;
+}
+
 .interest-box {
     background: var(--cunef-blanco);
     border: 1px solid var(--line);
@@ -4801,6 +4600,12 @@ body {
     gap: 1.5rem;
     align-items: stretch;
     margin-bottom: 1.5rem;
+}
+
+/* Research Interests card between the intro and Positions/Education: same
+   1.5rem rhythm as the blocks around it, so the cards never touch. */
+.about-text > .interests-section {
+    margin: 0 0 1.5rem;
 }
 
 .about-intro .bio-box {
@@ -5783,7 +5588,7 @@ body {
 
 .paper-side .pub-badges {
     display: flex;
-    flex-direction: row;      /* the Research list stacks them right-aligned */
+    flex-direction: row;      /* the Publications list stacks them right-aligned */
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
@@ -5827,7 +5632,7 @@ body {
     margin-top: 2.5rem;
 }
 
-/* On the Research list, the title opens the paper's page. */
+/* On the Publications list, the title opens the paper's page. */
 .pub-title-link {
     color: inherit;
     text-decoration: none;
